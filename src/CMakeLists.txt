@@ -82,7 +82,7 @@ target_link_libraries(red_test soem_static ${CMAKE_THREAD_LIBS_INIT})
 # Install files into system directories
 INSTALL(TARGETS ebox simple_test slaveinfo red_test eepromtool DESTINATION bin)
 INSTALL(TARGETS soem DESTINATION lib)
-INSTALL(FILES ${SOEM_HDRS} DESTINATION include)
+INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
 
 
 ### OPTIONAL ###
