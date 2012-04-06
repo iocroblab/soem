@@ -59,6 +59,35 @@
 */
 #define EC_CONFIGEND 0xffffffff
 
+/** Slave configuration structure */
+typedef const struct
+{
+	/** Manufacturer code of slave */
+	uint32				man;
+	/** ID of slave */
+	uint32				id;
+	/** Readable name */
+	char				name[EC_MAXNAME + 1];
+	/** Data type */
+	uint8				Dtype;
+	/** Input bits */
+	uint16				Ibits;
+	/** Output bits */
+	uint16				Obits;
+	/** SyncManager 2 address */
+	uint16				SM2a;
+	/** SyncManager 2 flags */
+	uint32				SM2f;
+	/** SyncManager 3 address */
+	uint16				SM3a;
+	/** SyncManager 3 flags */
+	uint32				SM3f;
+	/** FMMU 0 activation */
+	uint8				FM0ac;
+	/** FMMU 1 activation */
+	uint8				FM1ac;
+} ec_configlist_t;
+
 ec_configlist_t ec_configlist[] = {
       {/*Man=*/0x00000000,/*ID=*/0x00000000,/*Name=*/""          ,/*dtype=*/0,/*Ibits=*/ 0,/*Obits=*/ 0},
       {/*Man=*/0x00000002,/*ID=*/0x044c2c52,/*Name=*/"EK1100"    ,/*dtype=*/1,/*Ibits=*/ 0,/*Obits=*/ 0},

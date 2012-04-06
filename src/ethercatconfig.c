@@ -57,6 +57,7 @@
 #include "ethercatcoe.h"
 #include "ethercatsoe.h"
 #include "ethercatconfig.h"
+#include "ethercatconfiglist.h"
 
 // define if debug printf is needed
 //#define EC_DEBUG
@@ -66,37 +67,6 @@
 #else
 #define EC_PRINT(...) do {} while (0)
 #endif
-
-/** Slave configuration structure */
-typedef const struct
-{
-	/** Manufacturer code of slave */
-	uint32				man;
-	/** ID of slave */
-	uint32				id;
-	/** Readable name */
-	char				name[EC_MAXNAME + 1];
-	/** Data type */
-	uint8				Dtype;
-	/** Input bits */
-	uint16				Ibits;
-	/** Output bits */
-	uint16				Obits;
-	/** SyncManager 2 address */
-	uint16				SM2a;
-	/** SyncManager 2 flags */
-	uint32				SM2f;
-	/** SyncManager 3 address */
-	uint16				SM3a;
-	/** SyncManager 3 flags */
-	uint32				SM3f;
-	/** FMMU 0 activation */
-	uint8				FM0ac;
-	/** FMMU 1 activation */
-	uint8				FM1ac;
-} ec_configlist_t;
-
-#include "ethercatconfiglist.h"
 
 /** standard SM0 flags configuration for mailbox slaves */
 #define EC_DEFAULTMBXSM0	0x00010026
