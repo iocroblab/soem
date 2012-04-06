@@ -1,0 +1,1114 @@
+<?xml version="1.0"?>
+<GCC_XML cvs_revision="1.135">
+  <Namespace id="_1" name="::" members="_3 _4 _5 _6 _7 _8 _9 _11 _12 _13 _14 _16 _17 _18 _20 _21 _22 _23 _25 _26 _27 _28 _29 _31 _32 _33 _34 _35 _37 _39 _41 _43 _44 _45 _46 _47 _49 _50 _51 _52 _53 _54 _55 _56 _57 _58 _59 _60 _61 _62 _63 _64 _65 _66 _67 _68 _69 _70 _71 _73 _74 _75 _79 _80 _81 _82 _83 _85 _86 _78 _87 _88 _89 _90 _91 _93 _94 _95 _96 _97 _98 _99 _100 _101 _102 _103 _104 _105 _106 _107 _108 _110 _111 _112 _113 _114 _115 _116 _117 _118 _119 _120 _121 _122 _123 _124 _125 _126 _127 _128 _130 _131 _132 _133 _134 _135 _136 _138 _139 _140 _141 _142 _143 _144 _145 _146 _147 _148 _150 _151 _152 _153 _154 _155 _156 _157 _158 _159 _160 _161 _162 _163 _164 _165 _166 _168 _2 _169 _170 _24 _92 _77 _72 _38 _76 _10 _171 _172 _173 _174 _175 _176 _177 _178 _179 _180 _181 _182 _183 _184 _185 _186 _187 _188 _189 _190 _191 _192 _193 _194 _195 _196 _197 _198 _199 _200 _201 _202 _203 _204 _205 _206 _207 _208 _209 _211 _212 _213 _214 _215 _216 _217 _219 _220 _221 _222 _223 _224 _225 _226 _227 _228 _229 _230 _232 _233 _234 _235 _236 _237 _238 _167 _239 _240 _241 _242 _243 _244 _245 _137 _129 _247 _248 _249 _250 _251 _252 _253 _254 _255 _256 _257 _258 _259 _260 _261 _262 _263 _264 _265 _266 _267 _268 _269 _270 _271 _272 _273 _275 " mangled="_Z2::" demangled="::"/>
+  <Namespace id="_2" name="std" context="_1" members="" mangled="_Z3std" demangled="std"/>
+  <Function id="_3" name="__builtin_nans" returns="_276" context="_1" location="f0:21" file="f0" line="21" extern="1" attributes="nothrow const nonnull">
+    <Argument name="str" type="_277" location="f0:21" file="f0" line="21"/>
+  </Function>
+  <Function id="_4" name="__builtin_acosf" returns="_278" context="_1" mangled="acosf" location="f0:25" file="f0" line="25" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:25" file="f0" line="25"/>
+  </Function>
+  <Function id="_5" name="__builtin_acosl" returns="_279" context="_1" mangled="acosl" location="f0:26" file="f0" line="26" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:26" file="f0" line="26"/>
+  </Function>
+  <Struct id="_6" name="timeval" context="_1" mangled="7timeval" demangled="timeval" location="f1:76" file="f1" line="76" artificial="1" size="128" align="64" members="_280 _281 _282 _283 _284 _285 " bases=""/>
+  <Function id="_7" name="__builtin_va_arg_pack" returns="_286" context="_1" location="f0:147" file="f0" line="147" extern="1">
+    <Ellipsis/>
+  </Function>
+  <Function id="_8" name="__builtin_log10" returns="_276" context="_1" mangled="log10" location="f0:63" file="f0" line="63" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:63" file="f0" line="63"/>
+  </Function>
+  <Function id="_9" name="__builtin_popcountll" returns="_36" context="_1" location="f0:101" file="f0" line="101" extern="1" attributes="nothrow const">
+    <Argument type="_48" location="f0:101" file="f0" line="101"/>
+  </Function>
+  <Enumeration id="_10" name="ec_cmdtype" context="_1" location="f2:281" file="f2" line="281" size="32" align="32">
+    <EnumValue name="EC_CMD_NOP" init="0"/>
+    <EnumValue name="EC_CMD_APRD" init="1"/>
+    <EnumValue name="EC_CMD_APWR" init="2"/>
+    <EnumValue name="EC_CMD_APRW" init="3"/>
+    <EnumValue name="EC_CMD_FPRD" init="4"/>
+    <EnumValue name="EC_CMD_FPWR" init="5"/>
+    <EnumValue name="EC_CMD_FPRW" init="6"/>
+    <EnumValue name="EC_CMD_BRD" init="7"/>
+    <EnumValue name="EC_CMD_BWR" init="8"/>
+    <EnumValue name="EC_CMD_BRW" init="9"/>
+    <EnumValue name="EC_CMD_LRD" init="10"/>
+    <EnumValue name="EC_CMD_LWR" init="11"/>
+    <EnumValue name="EC_CMD_LRW" init="12"/>
+    <EnumValue name="EC_CMD_ARMW" init="13"/>
+    <EnumValue name="EC_CMD_FRMW" init="14"/>
+  </Enumeration>
+  <Function id="_11" name="__builtin_clogf" returns="_287" context="_1" mangled="clogf" location="f0:111" file="f0" line="111" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:111" file="f0" line="111"/>
+  </Function>
+  <Function id="_12" name="__builtin_clogl" returns="_288" context="_1" mangled="clogl" location="f0:113" file="f0" line="113" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:113" file="f0" line="113"/>
+  </Function>
+  <Function id="_13" name="__builtin_cexpf" returns="_287" context="_1" mangled="cexpf" location="f0:108" file="f0" line="108" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:108" file="f0" line="108"/>
+  </Function>
+  <Function id="_14" name="__builtin_cexpl" returns="_288" context="_1" mangled="cexpl" location="f0:110" file="f0" line="110" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:110" file="f0" line="110"/>
+  </Function>
+  <FundamentalType id="_15" name="unsigned char" size="8" align="8"/>
+  <Typedef id="_16" name="uint8" type="_15" context="_1" location="f2:72" file="f2" line="72"/>
+  <Function id="_17" name="__builtin_isless" returns="_286" context="_1" location="f0:141" file="f0" line="141" extern="1" attributes="nothrow const">
+    <Ellipsis/>
+  </Function>
+  <Function id="_18" name="__builtin_isnormal" returns="_286" context="_1" location="f0:145" file="f0" line="145" extern="1">
+    <Ellipsis/>
+  </Function>
+  <FundamentalType id="_19" name="long int" size="64" align="64"/>
+  <Typedef id="_20" name="__swblk_t" type="_19" context="_1" location="f3:154" file="f3" line="154"/>
+  <Function id="_21" name="__builtin_asinf" returns="_278" context="_1" mangled="asinf" location="f0:28" file="f0" line="28" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:28" file="f0" line="28"/>
+  </Function>
+  <Function id="_22" name="__builtin_asinl" returns="_279" context="_1" mangled="asinl" location="f0:29" file="f0" line="29" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:29" file="f0" line="29"/>
+  </Function>
+  <Function id="_23" name="__builtin_popcount" returns="_36" context="_1" location="f0:99" file="f0" line="99" extern="1" attributes="nothrow const">
+    <Argument type="_36" location="f0:99" file="f0" line="99"/>
+  </Function>
+  <Struct id="_24" name="__sigset_t" context="_1" mangled="10__sigset_t" demangled="__sigset_t" location="f4:32" file="f4" line="32" size="1024" align="64" members="_289 _290 _291 _292 _293 " bases=""/>
+  <Typedef id="_25" name="sigset_t" type="_24" context="_1" location="f5:38" file="f5" line="38"/>
+  <Function id="_26" name="__builtin_nansf" returns="_278" context="_1" location="f0:22" file="f0" line="22" extern="1" attributes="nothrow const nonnull">
+    <Argument name="str" type="_277" location="f0:22" file="f0" line="22"/>
+  </Function>
+  <Function id="_27" name="__builtin_nansl" returns="_279" context="_1" location="f0:23" file="f0" line="23" extern="1" attributes="nothrow const nonnull">
+    <Argument name="str" type="_277" location="f0:23" file="f0" line="23"/>
+  </Function>
+  <Function id="_28" name="__builtin_floorf" returns="_278" context="_1" mangled="floorf" location="f0:52" file="f0" line="52" extern="1" attributes="nothrow const">
+    <Argument type="_278" location="f0:52" file="f0" line="52"/>
+  </Function>
+  <Function id="_29" name="__builtin_floorl" returns="_279" context="_1" mangled="floorl" location="f0:53" file="f0" line="53" extern="1" attributes="nothrow const">
+    <Argument type="_279" location="f0:53" file="f0" line="53"/>
+  </Function>
+  <FundamentalType id="_30" name="short int" size="16" align="16"/>
+  <Typedef id="_31" name="int16" type="_30" context="_1" location="f2:70" file="f2" line="70"/>
+  <Function id="_32" name="ec_APWRw" returns="_36" context="_1" mangled="_Z8ec_APWRwttti" demangled="ec_APWRw(unsigned short, unsigned short, unsigned short, int)" location="f6:59" file="f6" line="59" extern="1">
+    <Argument name="ADP" type="_141" location="f6:59" file="f6" line="59"/>
+    <Argument name="ADO" type="_141" location="f6:59" file="f6" line="59"/>
+    <Argument name="data" type="_141" location="f6:59" file="f6" line="59"/>
+    <Argument name="timeout" type="_36" location="f6:59" file="f6" line="59"/>
+  </Function>
+  <Function id="_33" name="__builtin_ctanf" returns="_287" context="_1" mangled="ctanf" location="f0:123" file="f0" line="123" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:123" file="f0" line="123"/>
+  </Function>
+  <Function id="_34" name="__builtin_ctanh" returns="_294" context="_1" mangled="ctanh" location="f0:127" file="f0" line="127" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:127" file="f0" line="127"/>
+  </Function>
+  <Function id="_35" name="__builtin_ctanl" returns="_288" context="_1" mangled="ctanl" location="f0:125" file="f0" line="125" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:125" file="f0" line="125"/>
+  </Function>
+  <FundamentalType id="_36" name="int" size="32" align="32"/>
+  <Typedef id="_37" name="int32" type="_36" context="_1" location="f2:71" file="f2" line="71"/>
+  <Enumeration id="_38" name="ec_bufstate" context="_1" location="f2:213" file="f2" line="213" size="32" align="32">
+    <EnumValue name="EC_BUF_EMPTY" init="0"/>
+    <EnumValue name="EC_BUF_ALLOC" init="1"/>
+    <EnumValue name="EC_BUF_TX" init="2"/>
+    <EnumValue name="EC_BUF_RCVD" init="3"/>
+    <EnumValue name="EC_BUF_COMPLETE" init="4"/>
+  </Enumeration>
+  <Function id="_39" name="getitimer" returns="_36" throw="" context="_1" location="f7:128" file="f7" line="128" extern="1">
+    <Argument name="__which" type="_225" location="f7:128" file="f7" line="128"/>
+    <Argument name="__value" type="_295" location="f7:128" file="f7" line="128"/>
+  </Function>
+  <FundamentalType id="_40" name="long unsigned int" size="64" align="64"/>
+  <Typedef id="_41" name="__uint64_t" type="_40" context="_1" location="f3:45" file="f3" line="45"/>
+  <FundamentalType id="_42" name="unsigned int" size="32" align="32"/>
+  <Typedef id="_43" name="__id_t" type="_42" context="_1" location="f3:148" file="f3" line="148"/>
+  <Function id="_44" name="ec_FRMW" returns="_36" context="_1" mangled="_Z7ec_FRMWtttPvi" demangled="ec_FRMW(unsigned short, unsigned short, unsigned short, void*, int)" location="f6:55" file="f6" line="55" extern="1">
+    <Argument name="ADP" type="_141" location="f6:55" file="f6" line="55"/>
+    <Argument name="ADO" type="_141" location="f6:55" file="f6" line="55"/>
+    <Argument name="length" type="_141" location="f6:55" file="f6" line="55"/>
+    <Argument name="data" type="_218" location="f6:55" file="f6" line="55"/>
+    <Argument name="timeout" type="_36" location="f6:55" file="f6" line="55"/>
+  </Function>
+  <Typedef id="_45" name="time_t" type="_169" context="_1" location="f8:76" file="f8" line="76"/>
+  <Function id="_46" name="__builtin_carg" returns="_276" context="_1" mangled="carg" location="f0:94" file="f0" line="94" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:94" file="f0" line="94"/>
+  </Function>
+  <Function id="_47" name="__builtin_clog" returns="_294" context="_1" mangled="clog" location="f0:112" file="f0" line="112" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:112" file="f0" line="112"/>
+  </Function>
+  <FundamentalType id="_48" name="long long int" size="64" align="64"/>
+  <Typedef id="_49" name="int64" type="_48" context="_1" location="f2:75" file="f2" line="75"/>
+  <Typedef id="_50" name="__sig_atomic_t" type="_36" context="_1" location="f4:24" file="f4" line="24"/>
+  <Typedef id="_51" name="__intptr_t" type="_19" context="_1" location="f3:189" file="f3" line="189"/>
+  <Function id="_52" name="__builtin_logf" returns="_278" context="_1" mangled="logf" location="f0:66" file="f0" line="66" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:66" file="f0" line="66"/>
+  </Function>
+  <Function id="_53" name="__builtin_logl" returns="_279" context="_1" mangled="logl" location="f0:67" file="f0" line="67" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:67" file="f0" line="67"/>
+  </Function>
+  <Function id="_54" name="__builtin_fabs" returns="_276" context="_1" mangled="fabs" location="f0:48" file="f0" line="48" extern="1" attributes="nothrow const">
+    <Argument type="_276" location="f0:48" file="f0" line="48"/>
+  </Function>
+  <Function id="_55" name="__builtin_expf" returns="_278" context="_1" mangled="expf" location="f0:46" file="f0" line="46" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:46" file="f0" line="46"/>
+  </Function>
+  <Function id="_56" name="__builtin_expl" returns="_279" context="_1" mangled="expl" location="f0:47" file="f0" line="47" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:47" file="f0" line="47"/>
+  </Function>
+  <Typedef id="_57" name="__suseconds_t" type="_19" context="_1" location="f3:151" file="f3" line="151"/>
+  <Function id="_58" name="__builtin_isunordered" returns="_286" context="_1" location="f0:146" file="f0" line="146" extern="1" attributes="nothrow const">
+    <Ellipsis/>
+  </Function>
+  <Typedef id="_59" name="__socklen_t" type="_42" context="_1" location="f3:192" file="f3" line="192"/>
+  <Function id="_60" name="__builtin_csqrt" returns="_294" context="_1" mangled="csqrt" location="f0:121" file="f0" line="121" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:121" file="f0" line="121"/>
+  </Function>
+  <Typedef id="_61" name="__int16_t" type="_30" context="_1" location="f3:39" file="f3" line="39"/>
+  <Function id="_62" name="__builtin_sin" returns="_276" context="_1" mangled="sin" location="f0:75" file="f0" line="75" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_276" location="f0:75" file="f0" line="75"/>
+  </Function>
+  <Function id="_63" name="__builtin_ldexpf" returns="_278" context="_1" mangled="ldexpf" location="f0:60" file="f0" line="60" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:60" file="f0" line="60"/>
+    <Argument type="_36" location="f0:60" file="f0" line="60"/>
+  </Function>
+  <Function id="_64" name="__builtin_ldexpl" returns="_279" context="_1" mangled="ldexpl" location="f0:61" file="f0" line="61" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:61" file="f0" line="61"/>
+    <Argument type="_36" location="f0:61" file="f0" line="61"/>
+  </Function>
+  <Typedef id="_65" name="__loff_t" type="_220" context="_1" location="f3:184" file="f3" line="184"/>
+  <Function id="_66" name="__builtin_isinf_sign" returns="_286" context="_1" location="f0:140" file="f0" line="140" extern="1">
+    <Ellipsis/>
+  </Function>
+  <Typedef id="_67" name="__rlim64_t" type="_40" context="_1" location="f3:147" file="f3" line="147"/>
+  <Function id="_68" name="__builtin_islessequal" returns="_286" context="_1" location="f0:142" file="f0" line="142" extern="1" attributes="nothrow const">
+    <Ellipsis/>
+  </Function>
+  <Function id="_69" name="__builtin_tanf" returns="_278" context="_1" mangled="tanf" location="f0:85" file="f0" line="85" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_278" location="f0:85" file="f0" line="85"/>
+  </Function>
+  <Function id="_70" name="__builtin_tanh" returns="_276" context="_1" mangled="tanh" location="f0:86" file="f0" line="86" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_276" location="f0:86" file="f0" line="86"/>
+  </Function>
+  <Function id="_71" name="__builtin_tanl" returns="_279" context="_1" mangled="tanl" location="f0:89" file="f0" line="89" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_279" location="f0:89" file="f0" line="89"/>
+  </Function>
+  <Enumeration id="_72" name="ec_state" context="_1" location="f2:198" file="f2" line="198" size="32" align="32">
+    <EnumValue name="EC_STATE_INIT" init="1"/>
+    <EnumValue name="EC_STATE_PRE_OP" init="2"/>
+    <EnumValue name="EC_STATE_BOOT" init="3"/>
+    <EnumValue name="EC_STATE_SAFE_OP" init="4"/>
+    <EnumValue name="EC_STATE_OPERATIONAL" init="8"/>
+    <EnumValue name="EC_STATE_ACK" init="16"/>
+    <EnumValue name="EC_STATE_ERROR" init="16"/>
+  </Enumeration>
+  <Function id="_73" name="__builtin_ceil" returns="_276" context="_1" mangled="ceil" location="f0:36" file="f0" line="36" extern="1" attributes="nothrow const">
+    <Argument type="_276" location="f0:36" file="f0" line="36"/>
+  </Function>
+  <Function id="_74" name="__builtin_fmodf" returns="_278" context="_1" mangled="fmodf" location="f0:54" file="f0" line="54" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:54" file="f0" line="54"/>
+    <Argument type="_278" location="f0:54" file="f0" line="54"/>
+  </Function>
+  <Function id="_75" name="__builtin_fmodl" returns="_279" context="_1" mangled="fmodl" location="f0:55" file="f0" line="55" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:55" file="f0" line="55"/>
+    <Argument type="_279" location="f0:55" file="f0" line="55"/>
+  </Function>
+  <Enumeration id="_76" name="ec_datatype" context="_1" location="f2:245" file="f2" line="245" size="32" align="32">
+    <EnumValue name="ECT_BOOLEAN" init="1"/>
+    <EnumValue name="ECT_INTEGER8" init="2"/>
+    <EnumValue name="ECT_INTEGER16" init="3"/>
+    <EnumValue name="ECT_INTEGER32" init="4"/>
+    <EnumValue name="ECT_UNSIGNED8" init="5"/>
+    <EnumValue name="ECT_UNSIGNED16" init="6"/>
+    <EnumValue name="ECT_UNSIGNED32" init="7"/>
+    <EnumValue name="ECT_REAL32" init="8"/>
+    <EnumValue name="ECT_VISIBLE_STRING" init="9"/>
+    <EnumValue name="ECT_OCTET_STRING" init="10"/>
+    <EnumValue name="ECT_UNICODE_STRING" init="11"/>
+    <EnumValue name="ECT_TIME_OF_DAY" init="12"/>
+    <EnumValue name="ECT_TIME_DIFFERENCE" init="13"/>
+    <EnumValue name="ECT_DOMAIN" init="15"/>
+    <EnumValue name="ECT_INTEGER24" init="16"/>
+    <EnumValue name="ECT_REAL64" init="17"/>
+    <EnumValue name="ECT_INTEGER64" init="21"/>
+    <EnumValue name="ECT_UNSIGNED24" init="22"/>
+    <EnumValue name="ECT_UNSIGNED64" init="27"/>
+    <EnumValue name="ECT_BIT1" init="48"/>
+    <EnumValue name="ECT_BIT2" init="49"/>
+    <EnumValue name="ECT_BIT3" init="50"/>
+    <EnumValue name="ECT_BIT4" init="51"/>
+    <EnumValue name="ECT_BIT5" init="52"/>
+    <EnumValue name="ECT_BIT6" init="53"/>
+    <EnumValue name="ECT_BIT7" init="54"/>
+    <EnumValue name="ECT_BIT8" init="55"/>
+  </Enumeration>
+  <Enumeration id="_77" name="ec_err" context="_1" location="f2:180" file="f2" line="180" size="32" align="32">
+    <EnumValue name="EC_ERR_OK" init="0"/>
+    <EnumValue name="EC_ERR_ALREADY_INITIALIZED" init="1"/>
+    <EnumValue name="EC_ERR_NOT_INITIALIZED" init="2"/>
+    <EnumValue name="EC_ERR_TIMEOUT" init="3"/>
+    <EnumValue name="EC_ERR_NO_SLAVES" init="4"/>
+    <EnumValue name="EC_ERR_NOK" init="5"/>
+  </Enumeration>
+  <Struct id="_78" name="ec_etherheadert" context="_1" mangled="15ec_etherheadert" demangled="ec_etherheadert" location="f2:130" file="f2" line="130" attributes="__packed__" size="112" align="8" members="_296 _297 _298 _299 _300 _301 _302 _303 _304 _305 _306 " bases=""/>
+  <Function id="_79" name="setitimer" returns="_36" throw="" context="_1" location="f7:135" file="f7" line="135" extern="1">
+    <Argument name="__which" type="_225" location="f7:135" file="f7" line="135"/>
+    <Argument name="__new" type="_307r" location="f7:135" file="f7" line="135"/>
+    <Argument name="__old" type="_295r" location="f7:135" file="f7" line="135"/>
+  </Function>
+  <Function id="_80" name="utimes" returns="_36" throw="" context="_1" location="f7:141" file="f7" line="141" extern="1" attributes="__nonnull__()">
+    <Argument name="__file" type="_277" location="f7:141" file="f7" line="141"/>
+    <Argument name="__tvp" type="_310" location="f7:141" file="f7" line="141"/>
+  </Function>
+  <Function id="_81" name="ec_LRD" returns="_36" context="_1" mangled="_Z6ec_LRDjtPvi" demangled="ec_LRD(unsigned int, unsigned short, void*, int)" location="f6:64" file="f6" line="64" extern="1">
+    <Argument name="LogAdr" type="_145" location="f6:64" file="f6" line="64"/>
+    <Argument name="length" type="_141" location="f6:64" file="f6" line="64"/>
+    <Argument name="data" type="_218" location="f6:64" file="f6" line="64"/>
+    <Argument name="timeout" type="_36" location="f6:64" file="f6" line="64"/>
+  </Function>
+  <Function id="_82" name="ec_LRW" returns="_36" context="_1" mangled="_Z6ec_LRWjtPvi" demangled="ec_LRW(unsigned int, unsigned short, void*, int)" location="f6:63" file="f6" line="63" extern="1">
+    <Argument name="LogAdr" type="_145" location="f6:63" file="f6" line="63"/>
+    <Argument name="length" type="_141" location="f6:63" file="f6" line="63"/>
+    <Argument name="data" type="_218" location="f6:63" file="f6" line="63"/>
+    <Argument name="timeout" type="_36" location="f6:63" file="f6" line="63"/>
+  </Function>
+  <Function id="_83" name="__builtin_return" returns="_311" context="_1" location="f0:13" file="f0" line="13" extern="1" attributes="nothrow noreturn">
+    <Argument name="RESULT" type="_218" location="f0:13" file="f0" line="13"/>
+  </Function>
+  <FundamentalType id="_84" name="short unsigned int" size="16" align="16"/>
+  <Typedef id="_85" name="__uint16_t" type="_84" context="_1" location="f3:40" file="f3" line="40"/>
+  <Struct id="_86" name="fd_set" context="_1" mangled="6fd_set" demangled="fd_set" location="f5:78" file="f5" line="78" size="1024" align="64" members="_312 _313 _314 _315 _316 " bases=""/>
+  <Function id="_87" name="__builtin_sqrt" returns="_276" context="_1" mangled="sqrt" location="f0:81" file="f0" line="81" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:81" file="f0" line="81"/>
+  </Function>
+  <Function id="_88" name="__builtin_cpow" returns="_294" context="_1" mangled="cpow" location="f0:130" file="f0" line="130" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:130" file="f0" line="130"/>
+    <Argument type="_294" location="f0:130" file="f0" line="130"/>
+  </Function>
+  <Function id="_89" name="ec_LWR" returns="_36" context="_1" mangled="_Z6ec_LWRjtPvi" demangled="ec_LWR(unsigned int, unsigned short, void*, int)" location="f6:65" file="f6" line="65" extern="1">
+    <Argument name="LogAdr" type="_145" location="f6:65" file="f6" line="65"/>
+    <Argument name="length" type="_141" location="f6:65" file="f6" line="65"/>
+    <Argument name="data" type="_218" location="f6:65" file="f6" line="65"/>
+    <Argument name="timeout" type="_36" location="f6:65" file="f6" line="65"/>
+  </Function>
+  <Function id="_90" name="__builtin_coshf" returns="_278" context="_1" mangled="coshf" location="f0:42" file="f0" line="42" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:42" file="f0" line="42"/>
+  </Function>
+  <Function id="_91" name="__builtin_coshl" returns="_279" context="_1" mangled="coshl" location="f0:43" file="f0" line="43" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:43" file="f0" line="43"/>
+  </Function>
+  <Struct id="_92" name="ec_comt" context="_1" mangled="7ec_comt" demangled="ec_comt" location="f2:152" file="f2" line="152" attributes="__packed__" size="96" align="8" members="_317 _318 _319 _320 _321 _322 _323 _324 _325 _326 _327 " bases=""/>
+  <Function id="_93" name="__builtin_cexp" returns="_294" context="_1" mangled="cexp" location="f0:109" file="f0" line="109" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:109" file="f0" line="109"/>
+  </Function>
+  <Function id="_94" name="__builtin_atan2" returns="_276" context="_1" mangled="atan2" location="f0:31" file="f0" line="31" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:31" file="f0" line="31"/>
+    <Argument type="_276" location="f0:31" file="f0" line="31"/>
+  </Function>
+  <Function id="_95" name="__builtin_memchr" returns="_218" context="_1" location="f0:12" file="f0" line="12" extern="1">
+    <Argument type="_328" location="f0:12" file="f0" line="12"/>
+    <Argument type="_36" location="f0:12" file="f0" line="12"/>
+    <Argument type="_42" location="f0:12" file="f0" line="12"/>
+  </Function>
+  <Function id="_96" name="__builtin_atanf" returns="_278" context="_1" mangled="atanf" location="f0:34" file="f0" line="34" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_278" location="f0:34" file="f0" line="34"/>
+  </Function>
+  <Function id="_97" name="__builtin_atanl" returns="_279" context="_1" mangled="atanl" location="f0:35" file="f0" line="35" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_279" location="f0:35" file="f0" line="35"/>
+  </Function>
+  <Function id="_98" name="__builtin_ctan" returns="_294" context="_1" mangled="ctan" location="f0:124" file="f0" line="124" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:124" file="f0" line="124"/>
+  </Function>
+  <Function id="_99" name="__builtin_log" returns="_276" context="_1" mangled="log" location="f0:62" file="f0" line="62" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:62" file="f0" line="62"/>
+  </Function>
+  <Typedef id="_100" name="__mode_t" type="_42" context="_1" location="f3:139" file="f3" line="139"/>
+  <Function id="_101" name="__builtin_isfinite" returns="_286" context="_1" location="f0:136" file="f0" line="136" extern="1">
+    <Ellipsis/>
+  </Function>
+  <Function id="_102" name="futimesat" returns="_36" throw="" context="_1" location="f7:157" file="f7" line="157" extern="1">
+    <Argument name="__fd" type="_36" location="f7:157" file="f7" line="157"/>
+    <Argument name="__file" type="_277" location="f7:157" file="f7" line="157"/>
+    <Argument name="__tvp" type="_310" location="f7:157" file="f7" line="157"/>
+  </Function>
+  <Function id="_103" name="__builtin_asin" returns="_276" context="_1" mangled="asin" location="f0:27" file="f0" line="27" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:27" file="f0" line="27"/>
+  </Function>
+  <Function id="_104" name="__builtin_frexp" returns="_276" context="_1" mangled="frexp" location="f0:56" file="f0" line="56" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:56" file="f0" line="56"/>
+    <Argument type="_329" location="f0:56" file="f0" line="56"/>
+  </Function>
+  <Function id="_105" name="adjtime" returns="_36" throw="" context="_1" location="f7:88" file="f7" line="88" extern="1">
+    <Argument name="__delta" type="_310" location="f7:88" file="f7" line="88"/>
+    <Argument name="__olddelta" type="_330" location="f7:88" file="f7" line="88"/>
+  </Function>
+  <Function id="_106" name="ec_FPRDw" returns="_141" context="_1" mangled="_Z8ec_FPRDwtts" demangled="ec_FPRDw(unsigned short, unsigned short, short)" location="f6:58" file="f6" line="58" extern="1">
+    <Argument name="ADP" type="_141" location="f6:58" file="f6" line="58"/>
+    <Argument name="ADO" type="_141" location="f6:58" file="f6" line="58"/>
+    <Argument name="timeout" type="_31" location="f6:58" file="f6" line="58"/>
+  </Function>
+  <Function id="_107" name="__builtin_isgreaterequal" returns="_286" context="_1" location="f0:138" file="f0" line="138" extern="1" attributes="nothrow const">
+    <Ellipsis/>
+  </Function>
+  <Function id="_108" name="ec_ARMW" returns="_36" context="_1" mangled="_Z7ec_ARMWtttPvi" demangled="ec_ARMW(unsigned short, unsigned short, unsigned short, void*, int)" location="f6:54" file="f6" line="54" extern="1">
+    <Argument name="ADP" type="_141" location="f6:54" file="f6" line="54"/>
+    <Argument name="ADO" type="_141" location="f6:54" file="f6" line="54"/>
+    <Argument name="length" type="_141" location="f6:54" file="f6" line="54"/>
+    <Argument name="data" type="_218" location="f6:54" file="f6" line="54"/>
+    <Argument name="timeout" type="_36" location="f6:54" file="f6" line="54"/>
+  </Function>
+  <FundamentalType id="_109" name="signed char" size="8" align="8"/>
+  <Typedef id="_110" name="__int8_t" type="_109" context="_1" location="f3:37" file="f3" line="37"/>
+  <Function id="_111" name="__builtin_log10f" returns="_278" context="_1" mangled="log10f" location="f0:64" file="f0" line="64" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:64" file="f0" line="64"/>
+  </Function>
+  <Function id="_112" name="__builtin_log10l" returns="_279" context="_1" mangled="log10l" location="f0:65" file="f0" line="65" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:65" file="f0" line="65"/>
+  </Function>
+  <Typedef id="_113" name="__useconds_t" type="_42" context="_1" location="f3:150" file="f3" line="150"/>
+  <Function id="_114" name="__builtin_ctzl" returns="_36" context="_1" location="f0:97" file="f0" line="97" extern="1" attributes="nothrow const">
+    <Argument type="_19" location="f0:97" file="f0" line="97"/>
+  </Function>
+  <Typedef id="_115" name="int8" type="_109" context="_1" location="f2:69" file="f2" line="69"/>
+  <Typedef id="_116" name="__ino_t" type="_40" context="_1" location="f3:137" file="f3" line="137"/>
+  <Function id="_117" name="__builtin_powif" returns="_278" context="_1" location="f0:73" file="f0" line="73" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_278" location="f0:73" file="f0" line="73"/>
+    <Argument type="_36" location="f0:73" file="f0" line="73"/>
+  </Function>
+  <Function id="_118" name="__builtin_powil" returns="_279" context="_1" location="f0:74" file="f0" line="74" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_279" location="f0:74" file="f0" line="74"/>
+    <Argument type="_36" location="f0:74" file="f0" line="74"/>
+  </Function>
+  <Function id="_119" name="__builtin_modff" returns="_278" context="_1" mangled="modff" location="f0:68" file="f0" line="68" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:68" file="f0" line="68"/>
+    <Argument type="_331" location="f0:68" file="f0" line="68"/>
+  </Function>
+  <Function id="_120" name="__builtin_exp" returns="_276" context="_1" mangled="exp" location="f0:45" file="f0" line="45" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:45" file="f0" line="45"/>
+  </Function>
+  <Function id="_121" name="__builtin_modfl" returns="_279" context="_1" mangled="modfl" location="f0:69" file="f0" line="69" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:69" file="f0" line="69"/>
+    <Argument type="_332" location="f0:69" file="f0" line="69"/>
+  </Function>
+  <Enumeration id="_122" name="__itimer_which" context="_1" location="f7:93" file="f7" line="93" artificial="1" size="32" align="32">
+    <EnumValue name="ITIMER_REAL" init="0"/>
+    <EnumValue name="ITIMER_VIRTUAL" init="1"/>
+    <EnumValue name="ITIMER_PROF" init="2"/>
+  </Enumeration>
+  <Function id="_123" name="__builtin_prefetch" returns="_311" context="_1" location="f0:17" file="f0" line="17" extern="1" attributes="no vops">
+    <Argument name="ADDR" type="_328" location="f0:17" file="f0" line="17"/>
+    <Ellipsis/>
+  </Function>
+  <Function id="_124" name="__builtin_tan" returns="_276" context="_1" mangled="tan" location="f0:84" file="f0" line="84" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_276" location="f0:84" file="f0" line="84"/>
+  </Function>
+  <Function id="_125" name="__builtin_fabsf" returns="_278" context="_1" mangled="fabsf" location="f0:49" file="f0" line="49" extern="1" attributes="nothrow const">
+    <Argument type="_278" location="f0:49" file="f0" line="49"/>
+  </Function>
+  <Function id="_126" name="__builtin_fabsl" returns="_279" context="_1" mangled="fabsl" location="f0:50" file="f0" line="50" extern="1" attributes="nothrow const">
+    <Argument type="_279" location="f0:50" file="f0" line="50"/>
+  </Function>
+  <Typedef id="_127" name="__pid_t" type="_36" context="_1" location="f3:143" file="f3" line="143"/>
+  <Function id="_128" name="settimeofday" returns="_36" throw="" context="_1" location="f7:81" file="f7" line="81" extern="1" attributes="__nonnull__()">
+    <Argument name="__tv" type="_310" location="f7:81" file="f7" line="81"/>
+    <Argument name="__tz" type="_333" location="f7:81" file="f7" line="81"/>
+  </Function>
+  <Struct id="_129" name="ec_errort" context="_1" mangled="9ec_errort" demangled="ec_errort" location="f2:523" file="f2" line="523" size="320" align="64" members="_334 _335 _336 _337 _338 _339 _340 _341 _342 _343 _344 _345 " bases=""/>
+  <Function id="_130" name="__builtin_inf" returns="_276" context="_1" location="f0:18" file="f0" line="18" extern="1" attributes="nothrow const"/>
+  <Typedef id="_131" name="__dev_t" type="_40" context="_1" location="f3:134" file="f3" line="134"/>
+  <Namespace id="_132" name="__cxxabiv1" context="_1" members="" mangled="_Z10__cxxabiv1" demangled="__cxxabiv1"/>
+  <Struct id="_133" name="timespec" context="_1" mangled="8timespec" demangled="timespec" location="f8:121" file="f8" line="121" artificial="1" size="128" align="64" members="_346 _347 _348 _349 _350 _351 " bases=""/>
+  <Typedef id="_134" name="__blkcnt64_t" type="_19" context="_1" location="f3:170" file="f3" line="170"/>
+  <Function id="_135" name="__builtin_frame_address" returns="_218" context="_1" location="f0:15" file="f0" line="15" extern="1">
+    <Argument name="LEVEL" type="_42" location="f0:15" file="f0" line="15"/>
+  </Function>
+  <Function id="_136" name="ec_BRD" returns="_36" context="_1" mangled="_Z6ec_BRDtttPvi" demangled="ec_BRD(unsigned short, unsigned short, unsigned short, void*, int)" location="f6:52" file="f6" line="52" extern="1">
+    <Argument name="ADP" type="_141" location="f6:52" file="f6" line="52"/>
+    <Argument name="ADO" type="_141" location="f6:52" file="f6" line="52"/>
+    <Argument name="length" type="_141" location="f6:52" file="f6" line="52"/>
+    <Argument name="data" type="_218" location="f6:52" file="f6" line="52"/>
+    <Argument name="timeout" type="_36" location="f6:52" file="f6" line="52"/>
+  </Function>
+  <Enumeration id="_137" name="ec_err_type" context="_1" location="f2:492" file="f2" line="492" size="32" align="32">
+    <EnumValue name="EC_ERR_TYPE_SDO_ERROR" init="0"/>
+    <EnumValue name="EC_ERR_TYPE_EMERGENCY" init="1"/>
+    <EnumValue name="EC_ERR_TYPE_PACKET_ERROR" init="3"/>
+    <EnumValue name="EC_ERR_TYPE_SDOINFO_ERROR" init="4"/>
+    <EnumValue name="EC_ERR_TYPE_FOE_ERROR" init="5"/>
+    <EnumValue name="EC_ERR_TYPE_FOE_BUF2SMALL" init="6"/>
+    <EnumValue name="EC_ERR_TYPE_FOE_PACKETNUMBER" init="7"/>
+    <EnumValue name="EC_ERR_TYPE_SOE_ERROR" init="8"/>
+  </Enumeration>
+  <Function id="_138" name="__builtin_cabs" returns="_276" context="_1" mangled="cabs" location="f0:91" file="f0" line="91" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:91" file="f0" line="91"/>
+  </Function>
+  <Function id="_139" name="ec_BWR" returns="_36" context="_1" mangled="_Z6ec_BWRtttPvi" demangled="ec_BWR(unsigned short, unsigned short, unsigned short, void*, int)" location="f6:51" file="f6" line="51" extern="1">
+    <Argument name="ADP" type="_141" location="f6:51" file="f6" line="51"/>
+    <Argument name="ADO" type="_141" location="f6:51" file="f6" line="51"/>
+    <Argument name="length" type="_141" location="f6:51" file="f6" line="51"/>
+    <Argument name="data" type="_218" location="f6:51" file="f6" line="51"/>
+    <Argument name="timeout" type="_36" location="f6:51" file="f6" line="51"/>
+  </Function>
+  <Function id="_140" name="pselect" returns="_36" context="_1" location="f5:125" file="f5" line="125" extern="1">
+    <Argument name="__nfds" type="_36" location="f5:125" file="f5" line="125"/>
+    <Argument name="__readfds" type="_352r" location="f5:125" file="f5" line="125"/>
+    <Argument name="__writefds" type="_352r" location="f5:125" file="f5" line="125"/>
+    <Argument name="__exceptfds" type="_352r" location="f5:125" file="f5" line="125"/>
+    <Argument name="__timeout" type="_354r" location="f5:125" file="f5" line="125"/>
+    <Argument name="__sigmask" type="_356r" location="f5:125" file="f5" line="125"/>
+  </Function>
+  <Typedef id="_141" name="uint16" type="_84" context="_1" location="f2:73" file="f2" line="73"/>
+  <Typedef id="_142" name="__uint32_t" type="_42" context="_1" location="f3:42" file="f3" line="42"/>
+  <Function id="_143" name="__builtin_atan2f" returns="_278" context="_1" mangled="atan2f" location="f0:32" file="f0" line="32" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:32" file="f0" line="32"/>
+    <Argument type="_278" location="f0:32" file="f0" line="32"/>
+  </Function>
+  <Function id="_144" name="__builtin_atan2l" returns="_279" context="_1" mangled="atan2l" location="f0:33" file="f0" line="33" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:33" file="f0" line="33"/>
+    <Argument type="_279" location="f0:33" file="f0" line="33"/>
+  </Function>
+  <Typedef id="_145" name="uint32" type="_42" context="_1" location="f2:74" file="f2" line="74"/>
+  <Typedef id="_146" name="boolean" type="_15" context="_1" location="f2:66" file="f2" line="66"/>
+  <Function id="_147" name="__builtin_isinf" returns="_286" context="_1" mangled="isinf" location="f0:139" file="f0" line="139" extern="1" attributes="nothrow const">
+    <Ellipsis/>
+  </Function>
+  <Function id="_148" name="__builtin_fpclassify" returns="_286" context="_1" location="f0:135" file="f0" line="135" extern="1">
+    <Ellipsis/>
+  </Function>
+  <FundamentalType id="_149" name="long long unsigned int" size="64" align="64"/>
+  <Typedef id="_150" name="uint64" type="_149" context="_1" location="f2:76" file="f2" line="76"/>
+  <Typedef id="_151" name="__daddr_t" type="_36" context="_1" location="f3:153" file="f3" line="153"/>
+  <Function id="_152" name="__builtin_ccoshf" returns="_287" context="_1" mangled="ccoshf" location="f0:105" file="f0" line="105" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:105" file="f0" line="105"/>
+  </Function>
+  <Function id="_153" name="__builtin_ccoshl" returns="_288" context="_1" mangled="ccoshl" location="f0:107" file="f0" line="107" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:107" file="f0" line="107"/>
+  </Function>
+  <Typedef id="_154" name="__ssize_t" type="_19" context="_1" location="f3:180" file="f3" line="180"/>
+  <Typedef id="_155" name="__fsfilcnt_t" type="_40" context="_1" location="f3:177" file="f3" line="177"/>
+  <Function id="_156" name="__builtin_atan" returns="_276" context="_1" mangled="atan" location="f0:30" file="f0" line="30" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_276" location="f0:30" file="f0" line="30"/>
+  </Function>
+  <Function id="_157" name="__builtin_sinhf" returns="_278" context="_1" mangled="sinhf" location="f0:78" file="f0" line="78" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:78" file="f0" line="78"/>
+  </Function>
+  <Function id="_158" name="__builtin_sinhl" returns="_279" context="_1" mangled="sinhl" location="f0:79" file="f0" line="79" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:79" file="f0" line="79"/>
+  </Function>
+  <Typedef id="_159" name="__blkcnt_t" type="_19" context="_1" location="f3:169" file="f3" line="169"/>
+  <Function id="_160" name="__builtin_sqrtf" returns="_278" context="_1" mangled="sqrtf" location="f0:82" file="f0" line="82" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:82" file="f0" line="82"/>
+  </Function>
+  <Function id="_161" name="__builtin_sqrtl" returns="_279" context="_1" mangled="sqrtl" location="f0:83" file="f0" line="83" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:83" file="f0" line="83"/>
+  </Function>
+  <Typedef id="_162" name="__u_int" type="_42" context="_1" location="f3:33" file="f3" line="33"/>
+  <Function id="_163" name="__builtin_frexpf" returns="_278" context="_1" mangled="frexpf" location="f0:57" file="f0" line="57" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:57" file="f0" line="57"/>
+    <Argument type="_329" location="f0:57" file="f0" line="57"/>
+  </Function>
+  <Function id="_164" name="__builtin_frexpl" returns="_279" context="_1" mangled="frexpl" location="f0:58" file="f0" line="58" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:58" file="f0" line="58"/>
+    <Argument type="_329" location="f0:58" file="f0" line="58"/>
+  </Function>
+  <Function id="_165" name="__builtin_cpowf" returns="_287" context="_1" mangled="cpowf" location="f0:129" file="f0" line="129" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:129" file="f0" line="129"/>
+    <Argument type="_287" location="f0:129" file="f0" line="129"/>
+  </Function>
+  <Function id="_166" name="__builtin_cpowl" returns="_288" context="_1" mangled="cpowl" location="f0:131" file="f0" line="131" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:131" file="f0" line="131"/>
+    <Argument type="_288" location="f0:131" file="f0" line="131"/>
+  </Function>
+  <Enumeration id="_167" name="ec_ecmdtype" context="_1" location="f2:294" file="f2" line="294" size="32" align="32">
+    <EnumValue name="EC_ECMD_NOP" init="0"/>
+    <EnumValue name="EC_ECMD_READ" init="256"/>
+    <EnumValue name="EC_ECMD_WRITE" init="513"/>
+    <EnumValue name="EC_ECMD_RELOAD" init="768"/>
+  </Enumeration>
+  <Function id="_168" name="ec_FPRD" returns="_36" context="_1" mangled="_Z7ec_FPRDtttPvi" demangled="ec_FPRD(unsigned short, unsigned short, unsigned short, void*, int)" location="f6:57" file="f6" line="57" extern="1">
+    <Argument name="ADP" type="_141" location="f6:57" file="f6" line="57"/>
+    <Argument name="ADO" type="_141" location="f6:57" file="f6" line="57"/>
+    <Argument name="length" type="_141" location="f6:57" file="f6" line="57"/>
+    <Argument name="data" type="_218" location="f6:57" file="f6" line="57"/>
+    <Argument name="timeout" type="_36" location="f6:57" file="f6" line="57"/>
+  </Function>
+  <Typedef id="_169" name="__time_t" type="_19" context="_1" location="f3:149" file="f3" line="149"/>
+  <Struct id="_170" name="__fsid_t" context="_1" mangled="8__fsid_t" demangled="__fsid_t" location="f3:144" file="f3" line="144" size="64" align="32" members="_358 _359 _360 _361 _362 " bases=""/>
+  <Function id="_171" name="ec_setupdatagram" returns="_36" context="_1" mangled="_Z16ec_setupdatagramPvhhtttS_" demangled="ec_setupdatagram(void*, unsigned char, unsigned char, unsigned short, unsigned short, unsigned short, void*)" location="f6:49" file="f6" line="49" extern="1">
+    <Argument name="frame" type="_218" location="f6:49" file="f6" line="49"/>
+    <Argument name="com" type="_16" location="f6:49" file="f6" line="49"/>
+    <Argument name="idx" type="_16" location="f6:49" file="f6" line="49"/>
+    <Argument name="ADP" type="_141" location="f6:49" file="f6" line="49"/>
+    <Argument name="ADO" type="_141" location="f6:49" file="f6" line="49"/>
+    <Argument name="length" type="_141" location="f6:49" file="f6" line="49"/>
+    <Argument name="data" type="_218" location="f6:49" file="f6" line="49"/>
+  </Function>
+  <Typedef id="_172" name="__off_t" type="_19" context="_1" location="f3:141" file="f3" line="141"/>
+  <Typedef id="_173" name="suseconds_t" type="_57" context="_1" location="f5:49" file="f5" line="49"/>
+  <Function id="_174" name="ec_FPWR" returns="_36" context="_1" mangled="_Z7ec_FPWRtttPvi" demangled="ec_FPWR(unsigned short, unsigned short, unsigned short, void*, int)" location="f6:62" file="f6" line="62" extern="1">
+    <Argument name="ADP" type="_141" location="f6:62" file="f6" line="62"/>
+    <Argument name="ADO" type="_141" location="f6:62" file="f6" line="62"/>
+    <Argument name="length" type="_141" location="f6:62" file="f6" line="62"/>
+    <Argument name="data" type="_218" location="f6:62" file="f6" line="62"/>
+    <Argument name="timeout" type="_36" location="f6:62" file="f6" line="62"/>
+  </Function>
+  <Function id="_175" name="__builtin_tanhf" returns="_278" context="_1" mangled="tanhf" location="f0:87" file="f0" line="87" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_278" location="f0:87" file="f0" line="87"/>
+  </Function>
+  <Function id="_176" name="__builtin_tanhl" returns="_279" context="_1" mangled="tanhl" location="f0:88" file="f0" line="88" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_279" location="f0:88" file="f0" line="88"/>
+  </Function>
+  <Function id="_177" name="__builtin_cabsf" returns="_278" context="_1" mangled="cabsf" location="f0:90" file="f0" line="90" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:90" file="f0" line="90"/>
+  </Function>
+  <Function id="_178" name="__builtin_cabsl" returns="_279" context="_1" mangled="cabsl" location="f0:92" file="f0" line="92" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:92" file="f0" line="92"/>
+  </Function>
+  <Function id="_179" name="ec_LRWDC" returns="_36" context="_1" mangled="_Z8ec_LRWDCjtPvtPxi" demangled="ec_LRWDC(unsigned int, unsigned short, void*, unsigned short, long long*, int)" location="f6:66" file="f6" line="66" extern="1">
+    <Argument name="LogAdr" type="_145" location="f6:66" file="f6" line="66"/>
+    <Argument name="length" type="_141" location="f6:66" file="f6" line="66"/>
+    <Argument name="data" type="_218" location="f6:66" file="f6" line="66"/>
+    <Argument name="DCrs" type="_141" location="f6:66" file="f6" line="66"/>
+    <Argument name="DCtime" type="_363" location="f6:66" file="f6" line="66"/>
+    <Argument name="timeout" type="_36" location="f6:66" file="f6" line="66"/>
+  </Function>
+  <Function id="_180" name="__builtin_powf" returns="_278" context="_1" mangled="powf" location="f0:70" file="f0" line="70" extern="1" attributes="nothrow">
+    <Argument type="_278" location="f0:70" file="f0" line="70"/>
+    <Argument type="_278" location="f0:70" file="f0" line="70"/>
+  </Function>
+  <Function id="_181" name="__builtin_powi" returns="_276" context="_1" location="f0:72" file="f0" line="72" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_276" location="f0:72" file="f0" line="72"/>
+    <Argument type="_36" location="f0:72" file="f0" line="72"/>
+  </Function>
+  <Function id="_182" name="__builtin_powl" returns="_279" context="_1" mangled="powl" location="f0:71" file="f0" line="71" extern="1" attributes="nothrow">
+    <Argument type="_279" location="f0:71" file="f0" line="71"/>
+    <Argument type="_279" location="f0:71" file="f0" line="71"/>
+  </Function>
+  <Typedef id="_183" name="__fsblkcnt64_t" type="_40" context="_1" location="f3:174" file="f3" line="174"/>
+  <Typedef id="_184" name="__int64_t" type="_19" context="_1" location="f3:44" file="f3" line="44"/>
+  <Typedef id="_185" name="__fsblkcnt_t" type="_40" context="_1" location="f3:173" file="f3" line="173"/>
+  <Typedef id="_186" name="__clockid_t" type="_36" context="_1" location="f3:158" file="f3" line="158"/>
+  <Function id="_187" name="__builtin_ccos" returns="_294" context="_1" mangled="ccos" location="f0:103" file="f0" line="103" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:103" file="f0" line="103"/>
+  </Function>
+  <Typedef id="_188" name="__fsfilcnt64_t" type="_40" context="_1" location="f3:178" file="f3" line="178"/>
+  <Function id="_189" name="ec_APRDw" returns="_141" context="_1" mangled="_Z8ec_APRDwtti" demangled="ec_APRDw(unsigned short, unsigned short, int)" location="f6:56" file="f6" line="56" extern="1">
+    <Argument name="ADP" type="_141" location="f6:56" file="f6" line="56"/>
+    <Argument name="ADO" type="_141" location="f6:56" file="f6" line="56"/>
+    <Argument name="timeout" type="_36" location="f6:56" file="f6" line="56"/>
+  </Function>
+  <Typedef id="_190" name="__u_char" type="_15" context="_1" location="f3:31" file="f3" line="31"/>
+  <Function id="_191" name="__builtin_expect" returns="_19" context="_1" location="f0:16" file="f0" line="16" extern="1" attributes="nothrow const">
+    <Argument name="EXP" type="_19" location="f0:16" file="f0" line="16"/>
+    <Argument name="C" type="_19" location="f0:16" file="f0" line="16"/>
+  </Function>
+  <Typedef id="_192" name="__uid_t" type="_42" context="_1" location="f3:135" file="f3" line="135"/>
+  <Function id="_193" name="__builtin_popcountl" returns="_36" context="_1" location="f0:100" file="f0" line="100" extern="1" attributes="nothrow const">
+    <Argument type="_19" location="f0:100" file="f0" line="100"/>
+  </Function>
+  <Struct id="_194" name="timezone" context="_1" mangled="8timezone" demangled="timezone" location="f7:58" file="f7" line="58" artificial="1" size="64" align="32" members="_364 _365 _366 _367 _368 _369 " bases=""/>
+  <Typedef id="_195" name="__gid_t" type="_42" context="_1" location="f3:136" file="f3" line="136"/>
+  <Typedef id="_196" name="__uint8_t" type="_15" context="_1" location="f3:38" file="f3" line="38"/>
+  <Function id="_197" name="ec_FPWRw" returns="_36" context="_1" mangled="_Z8ec_FPWRwttti" demangled="ec_FPWRw(unsigned short, unsigned short, unsigned short, int)" location="f6:61" file="f6" line="61" extern="1">
+    <Argument name="ADP" type="_141" location="f6:61" file="f6" line="61"/>
+    <Argument name="ADO" type="_141" location="f6:61" file="f6" line="61"/>
+    <Argument name="data" type="_141" location="f6:61" file="f6" line="61"/>
+    <Argument name="timeout" type="_36" location="f6:61" file="f6" line="61"/>
+  </Function>
+  <Typedef id="_198" name="__key_t" type="_36" context="_1" location="f3:155" file="f3" line="155"/>
+  <Function id="_199" name="lutimes" returns="_36" throw="" context="_1" location="f7:146" file="f7" line="146" extern="1" attributes="__nonnull__()">
+    <Argument name="__file" type="_277" location="f7:146" file="f7" line="146"/>
+    <Argument name="__tvp" type="_310" location="f7:146" file="f7" line="146"/>
+  </Function>
+  <Struct id="_200" name="itimerval" context="_1" mangled="9itimerval" demangled="itimerval" location="f7:110" file="f7" line="110" artificial="1" size="256" align="64" members="_370 _371 _372 _373 _374 _375 " bases=""/>
+  <Function id="_201" name="__builtin_inff" returns="_278" context="_1" location="f0:19" file="f0" line="19" extern="1" attributes="nothrow const"/>
+  <Function id="_202" name="__builtin_infl" returns="_279" context="_1" location="f0:20" file="f0" line="20" extern="1" attributes="nothrow const"/>
+  <Function id="_203" name="__builtin_cos" returns="_276" context="_1" mangled="cos" location="f0:39" file="f0" line="39" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_276" location="f0:39" file="f0" line="39"/>
+  </Function>
+  <Typedef id="_204" name="__fd_mask" type="_19" context="_1" location="f5:55" file="f5" line="55"/>
+  <Typedef id="_205" name="__u_short" type="_84" context="_1" location="f3:32" file="f3" line="32"/>
+  <Enumeration id="_206" name="._11" context="_1" location="f2:310" file="f2" line="310" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_SII_STRING" init="10"/>
+    <EnumValue name="ECT_SII_GENERAL" init="30"/>
+    <EnumValue name="ECT_SII_FMMU" init="40"/>
+    <EnumValue name="ECT_SII_SM" init="41"/>
+    <EnumValue name="ECT_SII_PDO" init="50"/>
+  </Enumeration>
+  <Function id="_207" name="ec_APRD" returns="_36" context="_1" mangled="_Z7ec_APRDtttPvi" demangled="ec_APRD(unsigned short, unsigned short, unsigned short, void*, int)" location="f6:53" file="f6" line="53" extern="1">
+    <Argument name="ADP" type="_141" location="f6:53" file="f6" line="53"/>
+    <Argument name="ADO" type="_141" location="f6:53" file="f6" line="53"/>
+    <Argument name="length" type="_141" location="f6:53" file="f6" line="53"/>
+    <Argument name="data" type="_218" location="f6:53" file="f6" line="53"/>
+    <Argument name="timeout" type="_36" location="f6:53" file="f6" line="53"/>
+  </Function>
+  <Enumeration id="_208" name="._15" context="_1" location="f2:372" file="f2" line="372" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_SDO_DOWN_INIT" init="33"/>
+    <EnumValue name="ECT_SDO_DOWN_INIT_CA" init="49"/>
+    <EnumValue name="ECT_SDO_UP_REQ" init="64"/>
+    <EnumValue name="ECT_SDO_UP_REQ_CA" init="80"/>
+    <EnumValue name="ECT_SDO_SEG_UP_REQ" init="96"/>
+    <EnumValue name="ECT_SDO_ABORT" init="128"/>
+  </Enumeration>
+  <Enumeration id="_209" name="._16" context="_1" location="f2:383" file="f2" line="383" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_GET_ODLIST_REQ" init="1"/>
+    <EnumValue name="ECT_GET_ODLIST_RES" init="2"/>
+    <EnumValue name="ECT_GET_OD_REQ" init="3"/>
+    <EnumValue name="ECT_GET_OD_RES" init="4"/>
+    <EnumValue name="ECT_GET_OE_REQ" init="5"/>
+    <EnumValue name="ECT_GET_OE_RES" init="6"/>
+    <EnumValue name="ECT_SDOINFO_ERROR" init="7"/>
+  </Enumeration>
+  <ArrayType id="_210" min="0" max="1517u" type="_16" size="12144" align="8"/>
+  <Typedef id="_211" name="ec_bufT" type="_210" context="_1" location="f2:119" file="f2" line="119"/>
+  <Enumeration id="_212" name="._18" context="_1" location="f2:406" file="f2" line="406" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_SOE_READREQ" init="1"/>
+    <EnumValue name="ECT_SOE_READRES" init="2"/>
+    <EnumValue name="ECT_SOE_WRITEREQ" init="3"/>
+    <EnumValue name="ECT_SOE_WRITERES" init="4"/>
+    <EnumValue name="ECT_SOE_NOTIFICATION" init="5"/>
+    <EnumValue name="ECT_SOE_EMERGENCY" init="6"/>
+  </Enumeration>
+  <Function id="_213" name="futimes" returns="_36" throw="" context="_1" location="f7:149" file="f7" line="149" extern="1">
+    <Argument name="__fd" type="_36" location="f7:149" file="f7" line="149"/>
+    <Argument name="__tvp" type="_310" location="f7:149" file="f7" line="149"/>
+  </Function>
+  <Function id="_214" name="__builtin_ctz" returns="_36" context="_1" location="f0:96" file="f0" line="96" extern="1" attributes="nothrow const">
+    <Argument type="_36" location="f0:96" file="f0" line="96"/>
+  </Function>
+  <Function id="_215" name="__builtin_return_address" returns="_218" context="_1" location="f0:14" file="f0" line="14" extern="1">
+    <Argument name="LEVEL" type="_42" location="f0:14" file="f0" line="14"/>
+  </Function>
+  <Function id="_216" name="__builtin_isnan" returns="_286" context="_1" mangled="isnan" location="f0:144" file="f0" line="144" extern="1" attributes="nothrow const">
+    <Ellipsis/>
+  </Function>
+  <Function id="_217" name="ec_APWR" returns="_36" context="_1" mangled="_Z7ec_APWRtttPvi" demangled="ec_APWR(unsigned short, unsigned short, unsigned short, void*, int)" location="f6:60" file="f6" line="60" extern="1">
+    <Argument name="ADP" type="_141" location="f6:60" file="f6" line="60"/>
+    <Argument name="ADO" type="_141" location="f6:60" file="f6" line="60"/>
+    <Argument name="length" type="_141" location="f6:60" file="f6" line="60"/>
+    <Argument name="data" type="_218" location="f6:60" file="f6" line="60"/>
+    <Argument name="timeout" type="_36" location="f6:60" file="f6" line="60"/>
+  </Function>
+  <PointerType id="_218" type="_311" size="64" align="64"/>
+  <Typedef id="_219" name="__timer_t" type="_218" context="_1" location="f3:161" file="f3" line="161"/>
+  <Typedef id="_220" name="__off64_t" type="_19" context="_1" location="f3:142" file="f3" line="142"/>
+  <Function id="_221" name="__builtin_csinhf" returns="_287" context="_1" mangled="csinhf" location="f0:117" file="f0" line="117" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:117" file="f0" line="117"/>
+  </Function>
+  <Function id="_222" name="__builtin_csinhl" returns="_288" context="_1" mangled="csinhl" location="f0:119" file="f0" line="119" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:119" file="f0" line="119"/>
+  </Function>
+  <Function id="_223" name="__builtin_csqrtf" returns="_287" context="_1" mangled="csqrtf" location="f0:120" file="f0" line="120" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:120" file="f0" line="120"/>
+  </Function>
+  <Function id="_224" name="__builtin_csqrtl" returns="_288" context="_1" mangled="csqrtl" location="f0:122" file="f0" line="122" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:122" file="f0" line="122"/>
+  </Function>
+  <Typedef id="_225" name="__itimer_which_t" type="_36" context="_1" location="f7:122" file="f7" line="122"/>
+  <Typedef id="_226" name="__quad_t" type="_19" context="_1" location="f3:53" file="f3" line="53"/>
+  <Typedef id="_227" name="__u_long" type="_40" context="_1" location="f3:34" file="f3" line="34"/>
+  <Function id="_228" name="__builtin_floor" returns="_276" context="_1" mangled="floor" location="f0:51" file="f0" line="51" extern="1" attributes="nothrow const">
+    <Argument type="_276" location="f0:51" file="f0" line="51"/>
+  </Function>
+  <Function id="_229" name="__builtin_ldexp" returns="_276" context="_1" mangled="ldexp" location="f0:59" file="f0" line="59" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:59" file="f0" line="59"/>
+    <Argument type="_36" location="f0:59" file="f0" line="59"/>
+  </Function>
+  <Function id="_230" name="gettimeofday" returns="_36" throw="" context="_1" location="f7:74" file="f7" line="74" extern="1" attributes="__nonnull__()">
+    <Argument name="__tv" type="_330r" location="f7:74" file="f7" line="74"/>
+    <Argument name="__tz" type="_247" location="f7:74" file="f7" line="74"/>
+  </Function>
+  <PointerType id="_231" type="_226" size="64" align="64"/>
+  <Typedef id="_232" name="__qaddr_t" type="_231" context="_1" location="f3:185" file="f3" line="185"/>
+  <Function id="_233" name="__builtin_ccosf" returns="_287" context="_1" mangled="ccosf" location="f0:102" file="f0" line="102" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:102" file="f0" line="102"/>
+  </Function>
+  <Function id="_234" name="__builtin_ccosh" returns="_294" context="_1" mangled="ccosh" location="f0:106" file="f0" line="106" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:106" file="f0" line="106"/>
+  </Function>
+  <Function id="_235" name="__builtin_ccosl" returns="_288" context="_1" mangled="ccosl" location="f0:104" file="f0" line="104" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:104" file="f0" line="104"/>
+  </Function>
+  <Function id="_236" name="__builtin_va_arg_pack_len" returns="_36" context="_1" location="f0:148" file="f0" line="148" extern="1">
+    <Ellipsis/>
+  </Function>
+  <Function id="_237" name="__builtin_islessgreater" returns="_286" context="_1" location="f0:143" file="f0" line="143" extern="1" attributes="nothrow const">
+    <Ellipsis/>
+  </Function>
+  <Typedef id="_238" name="fd_mask" type="_204" context="_1" location="f5:85" file="f5" line="85"/>
+  <Enumeration id="_239" name="._12" context="_1" location="f2:325" file="f2" line="325" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_SII_MANUF" init="8"/>
+    <EnumValue name="ECT_SII_ID" init="10"/>
+    <EnumValue name="ECT_SII_REV" init="12"/>
+    <EnumValue name="ECT_SII_BOOTRXMBX" init="20"/>
+    <EnumValue name="ECT_SII_BOOTTXMBX" init="22"/>
+    <EnumValue name="ECT_SII_MBXSIZE" init="25"/>
+    <EnumValue name="ECT_SII_TXMBXADR" init="26"/>
+    <EnumValue name="ECT_SII_RXMBXADR" init="24"/>
+    <EnumValue name="ECT_SII_MBXPROTO" init="28"/>
+  </Enumeration>
+  <Enumeration id="_240" name="._13" context="_1" location="f2:340" file="f2" line="340" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_MBXT_ERR" init="0"/>
+    <EnumValue name="ECT_MBXT_AOE" init="1"/>
+    <EnumValue name="ECT_MBXT_EOE" init="2"/>
+    <EnumValue name="ECT_MBXT_COE" init="3"/>
+    <EnumValue name="ECT_MBXT_FOE" init="4"/>
+    <EnumValue name="ECT_MBXT_SOE" init="5"/>
+    <EnumValue name="ECT_MBXT_VOE" init="15"/>
+  </Enumeration>
+  <Enumeration id="_241" name="._14" context="_1" location="f2:359" file="f2" line="359" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_COES_EMERGENCY" init="1"/>
+    <EnumValue name="ECT_COES_SDOREQ" init="2"/>
+    <EnumValue name="ECT_COES_SDORES" init="3"/>
+    <EnumValue name="ECT_COES_TXPDO" init="4"/>
+    <EnumValue name="ECT_COES_RXPDO" init="5"/>
+    <EnumValue name="ECT_COES_TXPDO_RR" init="6"/>
+    <EnumValue name="ECT_COES_RXPDO_RR" init="7"/>
+    <EnumValue name="ECT_COES_SDOINFO" init="8"/>
+  </Enumeration>
+  <Enumeration id="_242" name="._17" context="_1" location="f2:395" file="f2" line="395" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_FOE_READ" init="1"/>
+    <EnumValue name="ECT_FOE_WRITE" init="2"/>
+    <EnumValue name="ECT_FOE_DATA" init="3"/>
+    <EnumValue name="ECT_FOE_ACK" init="4"/>
+    <EnumValue name="ECT_FOE_ERROR" init="5"/>
+    <EnumValue name="ECT_FOE_BUSY" init="6"/>
+  </Enumeration>
+  <Enumeration id="_243" name="._19" context="_1" location="f2:417" file="f2" line="417" artificial="1" size="32" align="32">
+    <EnumValue name="ECT_REG_TYPE" init="0"/>
+    <EnumValue name="ECT_REG_PORTDES" init="7"/>
+    <EnumValue name="ECT_REG_ESCSUP" init="8"/>
+    <EnumValue name="ECT_REG_STADR" init="16"/>
+    <EnumValue name="ECT_REG_ALIAS" init="18"/>
+    <EnumValue name="ECT_REG_DLCTL" init="256"/>
+    <EnumValue name="ECT_REG_DLPORT" init="257"/>
+    <EnumValue name="ECT_REG_DLALIAS" init="259"/>
+    <EnumValue name="ECT_REG_DLSTAT" init="272"/>
+    <EnumValue name="ECT_REG_ALCTL" init="288"/>
+    <EnumValue name="ECT_REG_ALSTAT" init="304"/>
+    <EnumValue name="ECT_REG_ALSTATCODE" init="308"/>
+    <EnumValue name="ECT_REG_PDICTL" init="320"/>
+    <EnumValue name="ECT_REG_IRQMASK" init="512"/>
+    <EnumValue name="ECT_REG_RXERR" init="768"/>
+    <EnumValue name="ECT_REG_EEPCFG" init="1280"/>
+    <EnumValue name="ECT_REG_EEPCTL" init="1282"/>
+    <EnumValue name="ECT_REG_EEPSTAT" init="1282"/>
+    <EnumValue name="ECT_REG_EEPADR" init="1284"/>
+    <EnumValue name="ECT_REG_EEPDAT" init="1288"/>
+    <EnumValue name="ECT_REG_FMMU0" init="1536"/>
+    <EnumValue name="ECT_REG_FMMU1" init="1552"/>
+    <EnumValue name="ECT_REG_FMMU2" init="1568"/>
+    <EnumValue name="ECT_REG_FMMU3" init="1584"/>
+    <EnumValue name="ECT_REG_SM0" init="2048"/>
+    <EnumValue name="ECT_REG_SM1" init="2056"/>
+    <EnumValue name="ECT_REG_SM2" init="2064"/>
+    <EnumValue name="ECT_REG_SM3" init="2072"/>
+    <EnumValue name="ECT_REG_SM0STAT" init="2053"/>
+    <EnumValue name="ECT_REG_SM1STAT" init="2061"/>
+    <EnumValue name="ECT_REG_SM1ACT" init="2062"/>
+    <EnumValue name="ECT_REG_SM1CONTR" init="2063"/>
+    <EnumValue name="ECT_REG_DCTIME0" init="2304"/>
+    <EnumValue name="ECT_REG_DCTIME1" init="2308"/>
+    <EnumValue name="ECT_REG_DCTIME2" init="2312"/>
+    <EnumValue name="ECT_REG_DCTIME3" init="2316"/>
+    <EnumValue name="ECT_REG_DCSYSTIME" init="2320"/>
+    <EnumValue name="ECT_REG_DCSOF" init="2328"/>
+    <EnumValue name="ECT_REG_DCSYSOFFSET" init="2336"/>
+    <EnumValue name="ECT_REG_DCSYSDELAY" init="2344"/>
+    <EnumValue name="ECT_REG_DCSYSDIFF" init="2348"/>
+    <EnumValue name="ECT_REG_DCSPEEDCNT" init="2352"/>
+    <EnumValue name="ECT_REG_DCTIMEFILT" init="2356"/>
+    <EnumValue name="ECT_REG_DCCUC" init="2432"/>
+    <EnumValue name="ECT_REG_DCSYNCACT" init="2433"/>
+    <EnumValue name="ECT_REG_DCSTART0" init="2448"/>
+    <EnumValue name="ECT_REG_DCCYCLE0" init="2464"/>
+    <EnumValue name="ECT_REG_DCCYCLE1" init="2468"/>
+  </Enumeration>
+  <Function id="_244" name="__builtin_ctanhf" returns="_287" context="_1" mangled="ctanhf" location="f0:126" file="f0" line="126" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:126" file="f0" line="126"/>
+  </Function>
+  <Function id="_245" name="__builtin_ctanhl" returns="_288" context="_1" mangled="ctanhl" location="f0:128" file="f0" line="128" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:128" file="f0" line="128"/>
+  </Function>
+  <PointerType id="_246" type="_194" size="64" align="64"/>
+  <Typedef id="_247" name="__timezone_ptr_t" type="_246r" context="_1" location="f7:63" file="f7" line="63"/>
+  <Function id="_248" name="__builtin_ceilf" returns="_278" context="_1" mangled="ceilf" location="f0:37" file="f0" line="37" extern="1" attributes="nothrow const">
+    <Argument type="_278" location="f0:37" file="f0" line="37"/>
+  </Function>
+  <Function id="_249" name="__builtin_ceill" returns="_279" context="_1" mangled="ceill" location="f0:38" file="f0" line="38" extern="1" attributes="nothrow const">
+    <Argument type="_279" location="f0:38" file="f0" line="38"/>
+  </Function>
+  <Typedef id="_250" name="__u_quad_t" type="_40" context="_1" location="f3:54" file="f3" line="54"/>
+  <Function id="_251" name="__builtin_csinf" returns="_287" context="_1" mangled="csinf" location="f0:114" file="f0" line="114" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:114" file="f0" line="114"/>
+  </Function>
+  <Function id="_252" name="__builtin_csinh" returns="_294" context="_1" mangled="csinh" location="f0:118" file="f0" line="118" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:118" file="f0" line="118"/>
+  </Function>
+  <Function id="_253" name="__builtin_csinl" returns="_288" context="_1" mangled="csinl" location="f0:116" file="f0" line="116" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:116" file="f0" line="116"/>
+  </Function>
+  <Function id="_254" name="__builtin_acos" returns="_276" context="_1" mangled="acos" location="f0:24" file="f0" line="24" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:24" file="f0" line="24"/>
+  </Function>
+  <Typedef id="_255" name="__rlim_t" type="_40" context="_1" location="f3:146" file="f3" line="146"/>
+  <Function id="_256" name="__builtin_ctzll" returns="_36" context="_1" location="f0:98" file="f0" line="98" extern="1" attributes="nothrow const">
+    <Argument type="_48" location="f0:98" file="f0" line="98"/>
+  </Function>
+  <Function id="_257" name="__builtin_cargf" returns="_278" context="_1" mangled="cargf" location="f0:93" file="f0" line="93" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_287" location="f0:93" file="f0" line="93"/>
+  </Function>
+  <Function id="_258" name="__builtin_cargl" returns="_279" context="_1" mangled="cargl" location="f0:95" file="f0" line="95" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_288" location="f0:95" file="f0" line="95"/>
+  </Function>
+  <Typedef id="_259" name="__nlink_t" type="_40" context="_1" location="f3:140" file="f3" line="140"/>
+  <Function id="_260" name="__builtin_cosf" returns="_278" context="_1" mangled="cosf" location="f0:40" file="f0" line="40" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_278" location="f0:40" file="f0" line="40"/>
+  </Function>
+  <Function id="_261" name="__builtin_cosh" returns="_276" context="_1" mangled="cosh" location="f0:41" file="f0" line="41" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:41" file="f0" line="41"/>
+  </Function>
+  <Function id="_262" name="__builtin_cosl" returns="_279" context="_1" mangled="cosl" location="f0:44" file="f0" line="44" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_279" location="f0:44" file="f0" line="44"/>
+  </Function>
+  <Function id="_263" name="select" returns="_36" context="_1" location="f5:112" file="f5" line="112" extern="1">
+    <Argument name="__nfds" type="_36" location="f5:112" file="f5" line="112"/>
+    <Argument name="__readfds" type="_352r" location="f5:112" file="f5" line="112"/>
+    <Argument name="__writefds" type="_352r" location="f5:112" file="f5" line="112"/>
+    <Argument name="__exceptfds" type="_352r" location="f5:112" file="f5" line="112"/>
+    <Argument name="__timeout" type="_330r" location="f5:112" file="f5" line="112"/>
+  </Function>
+  <Function id="_264" name="__builtin_isgreater" returns="_286" context="_1" location="f0:137" file="f0" line="137" extern="1" attributes="nothrow const">
+    <Ellipsis/>
+  </Function>
+  <Typedef id="_265" name="__blksize_t" type="_19" context="_1" location="f3:164" file="f3" line="164"/>
+  <Typedef id="_266" name="__ino64_t" type="_40" context="_1" location="f3:138" file="f3" line="138"/>
+  <Function id="_267" name="__builtin_sinf" returns="_278" context="_1" mangled="sinf" location="f0:76" file="f0" line="76" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_278" location="f0:76" file="f0" line="76"/>
+  </Function>
+  <Function id="_268" name="__builtin_sinh" returns="_276" context="_1" mangled="sinh" location="f0:77" file="f0" line="77" extern="1" attributes="nothrow">
+    <Argument type="_276" location="f0:77" file="f0" line="77"/>
+  </Function>
+  <Function id="_269" name="__builtin_sinl" returns="_279" context="_1" mangled="sinl" location="f0:80" file="f0" line="80" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_279" location="f0:80" file="f0" line="80"/>
+  </Function>
+  <Function id="_270" name="__builtin_csin" returns="_294" context="_1" mangled="csin" location="f0:115" file="f0" line="115" extern="1" attributes="nothrow pure no vops">
+    <Argument type="_294" location="f0:115" file="f0" line="115"/>
+  </Function>
+  <Typedef id="_271" name="__clock_t" type="_19" context="_1" location="f3:145" file="f3" line="145"/>
+  <Function id="_272" name="ec_adddatagram" returns="_36" context="_1" mangled="_Z14ec_adddatagramPvhhhtttS_" demangled="ec_adddatagram(void*, unsigned char, unsigned char, unsigned char, unsigned short, unsigned short, unsigned short, void*)" location="f6:50" file="f6" line="50" extern="1">
+    <Argument name="frame" type="_218" location="f6:50" file="f6" line="50"/>
+    <Argument name="com" type="_16" location="f6:50" file="f6" line="50"/>
+    <Argument name="idx" type="_16" location="f6:50" file="f6" line="50"/>
+    <Argument name="more" type="_146" location="f6:50" file="f6" line="50"/>
+    <Argument name="ADP" type="_141" location="f6:50" file="f6" line="50"/>
+    <Argument name="ADO" type="_141" location="f6:50" file="f6" line="50"/>
+    <Argument name="length" type="_141" location="f6:50" file="f6" line="50"/>
+    <Argument name="data" type="_218" location="f6:50" file="f6" line="50"/>
+  </Function>
+  <Typedef id="_273" name="__int32_t" type="_36" context="_1" location="f3:41" file="f3" line="41"/>
+  <PointerType id="_274" type="_378" size="64" align="64"/>
+  <Typedef id="_275" name="__caddr_t" type="_274" context="_1" location="f3:186" file="f3" line="186"/>
+  <FundamentalType id="_276" name="double" size="64" align="64"/>
+  <PointerType id="_277" type="_378c" size="64" align="64"/>
+  <FundamentalType id="_278" name="float" size="32" align="32"/>
+  <FundamentalType id="_279" name="long double" size="128" align="128"/>
+  <Field id="_280" name="tv_sec" type="_169" offset="0" context="_6" access="public" location="f1:77" file="f1" line="77"/>
+  <Field id="_281" name="tv_usec" type="_57" offset="64" context="_6" access="public" location="f1:78" file="f1" line="78"/>
+  <Destructor id="_282" name="timeval" artificial="1" throw="" context="_6" access="public" mangled="_ZN7timevalD1Ev *INTERNAL* " demangled="timeval::~timeval()" location="f1:76" file="f1" line="76" endline="76" inline="1">
+  </Destructor>
+  <OperatorMethod id="_283" name="=" returns="_380" artificial="1" throw="" context="_6" access="public" mangled="_ZN7timevalaSERKS_" demangled="timeval::operator=(timeval const&amp;)" location="f1:76" file="f1" line="76" endline="76" inline="1">
+    <Argument type="_381" location="f1:76" file="f1" line="76"/>
+  </OperatorMethod>
+  <Constructor id="_284" name="timeval" artificial="1" throw="" context="_6" access="public" mangled="_ZN7timevalC1ERKS_ *INTERNAL* " demangled="timeval::timeval(timeval const&amp;)" location="f1:76" file="f1" line="76" endline="76" inline="1">
+    <Argument type="_381" location="f1:76" file="f1" line="76"/>
+  </Constructor>
+  <Constructor id="_285" name="timeval" artificial="1" throw="" context="_6" access="public" mangled="_ZN7timevalC1Ev *INTERNAL* " demangled="timeval::timeval()" location="f1:76" file="f1" line="76" inline="1"/>
+  <FundamentalType id="_286" name="bool" size="8" align="8"/>
+  <FundamentalType id="_287" name="complex float" size="64" align="32"/>
+  <FundamentalType id="_288" name="complex long double" size="256" align="128"/>
+  <Field id="_289" name="__val" type="_382" offset="0" context="_24" access="public" location="f4:31" file="f4" line="31"/>
+  <Destructor id="_290" name="._1" artificial="1" throw="" context="_24" access="public" mangled="_ZN10__sigset_tD1Ev *INTERNAL* " demangled="__sigset_t::~__sigset_t()" location="f4:32" file="f4" line="32" endline="32" inline="1">
+  </Destructor>
+  <OperatorMethod id="_291" name="=" returns="_383" artificial="1" throw="" context="_24" access="public" mangled="_ZN10__sigset_taSERKS_" demangled="__sigset_t::operator=(__sigset_t const&amp;)" location="f4:32" file="f4" line="32" endline="32" inline="1">
+    <Argument type="_384" location="f4:30" file="f4" line="30"/>
+  </OperatorMethod>
+  <Constructor id="_292" name="._1" artificial="1" throw="" context="_24" access="public" mangled="_ZN10__sigset_tC1ERKS_ *INTERNAL* " demangled="__sigset_t::__sigset_t(__sigset_t const&amp;)" location="f4:32" file="f4" line="32" endline="32" inline="1">
+    <Argument type="_384" location="f4:30" file="f4" line="30"/>
+  </Constructor>
+  <Constructor id="_293" name="._1" artificial="1" throw="" context="_24" access="public" mangled="_ZN10__sigset_tC1Ev *INTERNAL* " demangled="__sigset_t::__sigset_t()" location="f4:32" file="f4" line="32" inline="1"/>
+  <FundamentalType id="_294" name="complex double" size="128" align="64"/>
+  <PointerType id="_295" type="_200" size="64" align="64"/>
+  <Field id="_296" name="da0" type="_141" offset="0" context="_78" access="public" location="f2:125" file="f2" line="125"/>
+  <Field id="_297" name="da1" type="_141" offset="16" context="_78" access="public" location="f2:125" file="f2" line="125"/>
+  <Field id="_298" name="da2" type="_141" offset="32" context="_78" access="public" location="f2:125" file="f2" line="125"/>
+  <Field id="_299" name="sa0" type="_141" offset="48" context="_78" access="public" location="f2:127" file="f2" line="127"/>
+  <Field id="_300" name="sa1" type="_141" offset="64" context="_78" access="public" location="f2:127" file="f2" line="127"/>
+  <Field id="_301" name="sa2" type="_141" offset="80" context="_78" access="public" location="f2:127" file="f2" line="127"/>
+  <Field id="_302" name="etype" type="_141" offset="96" context="_78" access="public" location="f2:129" file="f2" line="129"/>
+  <Destructor id="_303" name="._3" artificial="1" throw="" context="_78" access="public" mangled="_ZN15ec_etherheadertD1Ev *INTERNAL* " demangled="ec_etherheadert::~ec_etherheadert()" location="f2:130" file="f2" line="130" endline="130" inline="1">
+  </Destructor>
+  <OperatorMethod id="_304" name="=" returns="_385" artificial="1" throw="" context="_78" access="public" mangled="_ZN15ec_etherheadertaSERKS_" demangled="ec_etherheadert::operator=(ec_etherheadert const&amp;)" location="f2:130" file="f2" line="130" endline="130" inline="1">
+    <Argument type="_386" location="f2:123" file="f2" line="123"/>
+  </OperatorMethod>
+  <Constructor id="_305" name="._3" artificial="1" throw="" context="_78" access="public" mangled="_ZN15ec_etherheadertC1ERKS_ *INTERNAL* " demangled="ec_etherheadert::ec_etherheadert(ec_etherheadert const&amp;)" location="f2:130" file="f2" line="130" endline="130" inline="1">
+    <Argument type="_386" location="f2:123" file="f2" line="123"/>
+  </Constructor>
+  <Constructor id="_306" name="._3" artificial="1" throw="" context="_78" access="public" mangled="_ZN15ec_etherheadertC1Ev *INTERNAL* " demangled="ec_etherheadert::ec_etherheadert()" location="f2:130" file="f2" line="130" inline="1"/>
+  <PointerType id="_307" type="_200c" size="64" align="64"/>
+  <CvQualifiedType id="_307r" type="_307" restrict="1"/>
+  <CvQualifiedType id="_295r" type="_295" restrict="1"/>
+  <PointerType id="_310" type="_6c" size="64" align="64"/>
+  <FundamentalType id="_311" name="void" align="8"/>
+  <Field id="_312" name="fds_bits" type="_389" offset="0" context="_86" access="public" location="f5:72" file="f5" line="72"/>
+  <Destructor id="_313" name="._2" artificial="1" throw="" context="_86" access="public" mangled="_ZN6fd_setD1Ev *INTERNAL* " demangled="fd_set::~fd_set()" location="f5:78" file="f5" line="78" endline="78" inline="1">
+  </Destructor>
+  <OperatorMethod id="_314" name="=" returns="_390" artificial="1" throw="" context="_86" access="public" mangled="_ZN6fd_setaSERKS_" demangled="fd_set::operator=(fd_set const&amp;)" location="f5:78" file="f5" line="78" endline="78" inline="1">
+    <Argument type="_391" location="f5:68" file="f5" line="68"/>
+  </OperatorMethod>
+  <Constructor id="_315" name="._2" artificial="1" throw="" context="_86" access="public" mangled="_ZN6fd_setC1ERKS_ *INTERNAL* " demangled="fd_set::fd_set(fd_set const&amp;)" location="f5:78" file="f5" line="78" endline="78" inline="1">
+    <Argument type="_391" location="f5:68" file="f5" line="68"/>
+  </Constructor>
+  <Constructor id="_316" name="._2" artificial="1" throw="" context="_86" access="public" mangled="_ZN6fd_setC1Ev *INTERNAL* " demangled="fd_set::fd_set()" location="f5:78" file="f5" line="78" inline="1"/>
+  <Field id="_317" name="elength" type="_141" offset="0" context="_92" access="public" location="f2:139" file="f2" line="139"/>
+  <Field id="_318" name="command" type="_16" offset="16" context="_92" access="public" location="f2:141" file="f2" line="141"/>
+  <Field id="_319" name="index" type="_16" offset="24" context="_92" access="public" location="f2:143" file="f2" line="143"/>
+  <Field id="_320" name="ADP" type="_141" offset="32" context="_92" access="public" location="f2:145" file="f2" line="145"/>
+  <Field id="_321" name="ADO" type="_141" offset="48" context="_92" access="public" location="f2:147" file="f2" line="147"/>
+  <Field id="_322" name="dlength" type="_141" offset="64" context="_92" access="public" location="f2:149" file="f2" line="149"/>
+  <Field id="_323" name="irpt" type="_141" offset="80" context="_92" access="public" location="f2:151" file="f2" line="151"/>
+  <Destructor id="_324" name="._4" artificial="1" throw="" context="_92" access="public" mangled="_ZN7ec_comtD1Ev *INTERNAL* " demangled="ec_comt::~ec_comt()" location="f2:152" file="f2" line="152" endline="152" inline="1">
+  </Destructor>
+  <OperatorMethod id="_325" name="=" returns="_392" artificial="1" throw="" context="_92" access="public" mangled="_ZN7ec_comtaSERKS_" demangled="ec_comt::operator=(ec_comt const&amp;)" location="f2:152" file="f2" line="152" endline="152" inline="1">
+    <Argument type="_393" location="f2:137" file="f2" line="137"/>
+  </OperatorMethod>
+  <Constructor id="_326" name="._4" artificial="1" throw="" context="_92" access="public" mangled="_ZN7ec_comtC1ERKS_ *INTERNAL* " demangled="ec_comt::ec_comt(ec_comt const&amp;)" location="f2:152" file="f2" line="152" endline="152" inline="1">
+    <Argument type="_393" location="f2:137" file="f2" line="137"/>
+  </Constructor>
+  <Constructor id="_327" name="._4" artificial="1" throw="" context="_92" access="public" mangled="_ZN7ec_comtC1Ev *INTERNAL* " demangled="ec_comt::ec_comt()" location="f2:152" file="f2" line="152" inline="1"/>
+  <PointerType id="_328" type="_311c" size="64" align="64"/>
+  <PointerType id="_329" type="_36" size="64" align="64"/>
+  <PointerType id="_330" type="_6" size="64" align="64"/>
+  <PointerType id="_331" type="_278" size="64" align="64"/>
+  <PointerType id="_332" type="_279" size="64" align="64"/>
+  <PointerType id="_333" type="_194c" size="64" align="64"/>
+  <Field id="_334" name="Time" type="_6" offset="0" context="_129" access="public" location="f2:498" file="f2" line="498"/>
+  <Field id="_335" name="Signal" type="_146" offset="128" context="_129" access="public" location="f2:500" file="f2" line="500"/>
+  <Field id="_336" name="Slave" type="_141" offset="144" context="_129" access="public" location="f2:502" file="f2" line="502"/>
+  <Field id="_337" name="Index" type="_141" offset="160" context="_129" access="public" location="f2:504" file="f2" line="504"/>
+  <Field id="_338" name="SubIdx" type="_16" offset="176" context="_129" access="public" location="f2:506" file="f2" line="506"/>
+  <Field id="_339" name="Etype" type="_137" offset="192" context="_129" access="public" location="f2:508" file="f2" line="508"/>
+  <Field id="_340" name="" type="_341" offset="224" context="_129" access="public" location="f2:522" file="f2" line="522"/>
+  <Union id="_341" context="_129" access="public" mangled="N9ec_errort4._22E" demangled="ec_errort::._22" location="f2:510" file="f2" line="510" artificial="1" size="64" align="32" members="_396 _397 _398 " bases=""/>
+  <Destructor id="_342" name="._21" artificial="1" throw="" context="_129" access="public" mangled="_ZN9ec_errortD1Ev *INTERNAL* " demangled="ec_errort::~ec_errort()" location="f2:523" file="f2" line="523" endline="523" inline="1">
+  </Destructor>
+  <OperatorMethod id="_343" name="=" returns="_399" artificial="1" throw="" context="_129" access="public" mangled="_ZN9ec_errortaSERKS_" demangled="ec_errort::operator=(ec_errort const&amp;)" location="f2:523" file="f2" line="523" endline="523" inline="1">
+    <Argument type="_400" location="f2:496" file="f2" line="496"/>
+  </OperatorMethod>
+  <Constructor id="_344" name="._21" artificial="1" throw="" context="_129" access="public" mangled="_ZN9ec_errortC1ERKS_ *INTERNAL* " demangled="ec_errort::ec_errort(ec_errort const&amp;)" location="f2:523" file="f2" line="523" endline="523" inline="1">
+    <Argument type="_400" location="f2:496" file="f2" line="496"/>
+  </Constructor>
+  <Constructor id="_345" name="._21" artificial="1" throw="" context="_129" access="public" mangled="_ZN9ec_errortC1Ev *INTERNAL* " demangled="ec_errort::ec_errort()" location="f2:523" file="f2" line="523" inline="1"/>
+  <Field id="_346" name="tv_sec" type="_169" offset="0" context="_133" access="public" location="f8:122" file="f8" line="122"/>
+  <Field id="_347" name="tv_nsec" type="_19" offset="64" context="_133" access="public" location="f8:123" file="f8" line="123"/>
+  <Destructor id="_348" name="timespec" artificial="1" throw="" context="_133" access="public" mangled="_ZN8timespecD1Ev *INTERNAL* " demangled="timespec::~timespec()" location="f8:121" file="f8" line="121" endline="121" inline="1">
+  </Destructor>
+  <OperatorMethod id="_349" name="=" returns="_401" artificial="1" throw="" context="_133" access="public" mangled="_ZN8timespecaSERKS_" demangled="timespec::operator=(timespec const&amp;)" location="f8:121" file="f8" line="121" endline="121" inline="1">
+    <Argument type="_402" location="f8:121" file="f8" line="121"/>
+  </OperatorMethod>
+  <Constructor id="_350" name="timespec" artificial="1" throw="" context="_133" access="public" mangled="_ZN8timespecC1ERKS_ *INTERNAL* " demangled="timespec::timespec(timespec const&amp;)" location="f8:121" file="f8" line="121" endline="121" inline="1">
+    <Argument type="_402" location="f8:121" file="f8" line="121"/>
+  </Constructor>
+  <Constructor id="_351" name="timespec" artificial="1" throw="" context="_133" access="public" mangled="_ZN8timespecC1Ev *INTERNAL* " demangled="timespec::timespec()" location="f8:121" file="f8" line="121" inline="1"/>
+  <PointerType id="_352" type="_86" size="64" align="64"/>
+  <CvQualifiedType id="_352r" type="_352" restrict="1"/>
+  <PointerType id="_354" type="_133c" size="64" align="64"/>
+  <CvQualifiedType id="_354r" type="_354" restrict="1"/>
+  <PointerType id="_356" type="_24c" size="64" align="64"/>
+  <CvQualifiedType id="_356r" type="_356" restrict="1"/>
+  <Field id="_358" name="__val" type="_405" offset="0" context="_170" access="public" location="f3:144" file="f3" line="144"/>
+  <Destructor id="_359" name="._0" artificial="1" throw="" context="_170" access="public" mangled="_ZN8__fsid_tD1Ev *INTERNAL* " demangled="__fsid_t::~__fsid_t()" location="f3:144" file="f3" line="144" endline="144" inline="1">
+  </Destructor>
+  <OperatorMethod id="_360" name="=" returns="_406" artificial="1" throw="" context="_170" access="public" mangled="_ZN8__fsid_taSERKS_" demangled="__fsid_t::operator=(__fsid_t const&amp;)" location="f3:144" file="f3" line="144" endline="144" inline="1">
+    <Argument type="_407" location="f3:144" file="f3" line="144"/>
+  </OperatorMethod>
+  <Constructor id="_361" name="._0" artificial="1" throw="" context="_170" access="public" mangled="_ZN8__fsid_tC1ERKS_ *INTERNAL* " demangled="__fsid_t::__fsid_t(__fsid_t const&amp;)" location="f3:144" file="f3" line="144" endline="144" inline="1">
+    <Argument type="_407" location="f3:144" file="f3" line="144"/>
+  </Constructor>
+  <Constructor id="_362" name="._0" artificial="1" throw="" context="_170" access="public" mangled="_ZN8__fsid_tC1Ev *INTERNAL* " demangled="__fsid_t::__fsid_t()" location="f3:144" file="f3" line="144" inline="1"/>
+  <PointerType id="_363" type="_49" size="64" align="64"/>
+  <Field id="_364" name="tz_minuteswest" type="_36" offset="0" context="_194" access="public" location="f7:59" file="f7" line="59"/>
+  <Field id="_365" name="tz_dsttime" type="_36" offset="32" context="_194" access="public" location="f7:60" file="f7" line="60"/>
+  <Destructor id="_366" name="timezone" artificial="1" throw="" context="_194" access="public" mangled="_ZN8timezoneD1Ev *INTERNAL* " demangled="timezone::~timezone()" location="f7:58" file="f7" line="58" endline="58" inline="1">
+  </Destructor>
+  <OperatorMethod id="_367" name="=" returns="_408" artificial="1" throw="" context="_194" access="public" mangled="_ZN8timezoneaSERKS_" demangled="timezone::operator=(timezone const&amp;)" location="f7:58" file="f7" line="58" endline="58" inline="1">
+    <Argument type="_409" location="f7:58" file="f7" line="58"/>
+  </OperatorMethod>
+  <Constructor id="_368" name="timezone" artificial="1" throw="" context="_194" access="public" mangled="_ZN8timezoneC1ERKS_ *INTERNAL* " demangled="timezone::timezone(timezone const&amp;)" location="f7:58" file="f7" line="58" endline="58" inline="1">
+    <Argument type="_409" location="f7:58" file="f7" line="58"/>
+  </Constructor>
+  <Constructor id="_369" name="timezone" artificial="1" throw="" context="_194" access="public" mangled="_ZN8timezoneC1Ev *INTERNAL* " demangled="timezone::timezone()" location="f7:58" file="f7" line="58" inline="1"/>
+  <Field id="_370" name="it_interval" type="_6" offset="0" context="_200" access="public" location="f7:112" file="f7" line="112"/>
+  <Field id="_371" name="it_value" type="_6" offset="128" context="_200" access="public" location="f7:114" file="f7" line="114"/>
+  <Destructor id="_372" name="itimerval" artificial="1" throw="" context="_200" access="public" mangled="_ZN9itimervalD1Ev *INTERNAL* " demangled="itimerval::~itimerval()" location="f7:110" file="f7" line="110" endline="110" inline="1">
+  </Destructor>
+  <OperatorMethod id="_373" name="=" returns="_410" artificial="1" throw="" context="_200" access="public" mangled="_ZN9itimervalaSERKS_" demangled="itimerval::operator=(itimerval const&amp;)" location="f7:110" file="f7" line="110" endline="110" inline="1">
+    <Argument type="_411" location="f7:110" file="f7" line="110"/>
+  </OperatorMethod>
+  <Constructor id="_374" name="itimerval" artificial="1" throw="" context="_200" access="public" mangled="_ZN9itimervalC1ERKS_ *INTERNAL* " demangled="itimerval::itimerval(itimerval const&amp;)" location="f7:110" file="f7" line="110" endline="110" inline="1">
+    <Argument type="_411" location="f7:110" file="f7" line="110"/>
+  </Constructor>
+  <Constructor id="_375" name="itimerval" artificial="1" throw="" context="_200" access="public" mangled="_ZN9itimervalC1Ev *INTERNAL* " demangled="itimerval::itimerval()" location="f7:110" file="f7" line="110" inline="1"/>
+  <CvQualifiedType id="_330r" type="_330" restrict="1"/>
+  <CvQualifiedType id="_246r" type="_246" restrict="1"/>
+  <ReferenceType id="_380" type="_6" size="64" align="64"/>
+  <ReferenceType id="_381" type="_6c" size="64" align="64"/>
+  <ArrayType id="_382" min="0" max="15u" type="_40" size="1024" align="64"/>
+  <ReferenceType id="_383" type="_24" size="64" align="64"/>
+  <ReferenceType id="_384" type="_24c" size="64" align="64"/>
+  <ReferenceType id="_385" type="_78" size="64" align="64"/>
+  <ReferenceType id="_386" type="_78c" size="64" align="64"/>
+  <ArrayType id="_389" min="0" max="15u" type="_204" size="1024" align="64"/>
+  <ReferenceType id="_390" type="_86" size="64" align="64"/>
+  <ReferenceType id="_391" type="_86c" size="64" align="64"/>
+  <ReferenceType id="_392" type="_92" size="64" align="64"/>
+  <ReferenceType id="_393" type="_92c" size="64" align="64"/>
+  <Field id="_396" name="AbortCode" type="_37" offset="0" context="_341" access="public" location="f2:512" file="f2" line="512"/>
+  <Field id="_397" name="" type="_398" offset="0" context="_341" access="public" location="f2:521" file="f2" line="521"/>
+  <Struct id="_398" context="_341" access="public" mangled="N9ec_errort4._224._23E" demangled="ec_errort::._22::._23" location="f2:515" file="f2" line="515" artificial="1" size="64" align="16" members="_415 _416 _417 _418 _419 " bases=""/>
+  <ReferenceType id="_399" type="_129" size="64" align="64"/>
+  <ReferenceType id="_400" type="_129c" size="64" align="64"/>
+  <ReferenceType id="_401" type="_133" size="64" align="64"/>
+  <ReferenceType id="_402" type="_133c" size="64" align="64"/>
+  <ArrayType id="_405" min="0" max="1u" type="_36" size="64" align="32"/>
+  <ReferenceType id="_406" type="_170" size="64" align="64"/>
+  <ReferenceType id="_407" type="_170c" size="64" align="64"/>
+  <ReferenceType id="_408" type="_194" size="64" align="64"/>
+  <ReferenceType id="_409" type="_194c" size="64" align="64"/>
+  <ReferenceType id="_410" type="_200" size="64" align="64"/>
+  <ReferenceType id="_411" type="_200c" size="64" align="64"/>
+  <Field id="_415" name="ErrorCode" type="_141" offset="0" context="_398" access="public" location="f2:516" file="f2" line="516"/>
+  <Field id="_416" name="ErrorReg" type="_16" offset="16" context="_398" access="public" location="f2:517" file="f2" line="517"/>
+  <Field id="_417" name="b1" type="_16" offset="24" context="_398" access="public" location="f2:518" file="f2" line="518"/>
+  <Field id="_418" name="w1" type="_141" offset="32" context="_398" access="public" location="f2:519" file="f2" line="519"/>
+  <Field id="_419" name="w2" type="_141" offset="48" context="_398" access="public" location="f2:520" file="f2" line="520"/>
+  <FundamentalType id="_378" name="char" size="8" align="8"/>
+  <CvQualifiedType id="_378c" type="_378" const="1"/>
+  <CvQualifiedType id="_311c" type="_311" const="1"/>
+  <CvQualifiedType id="_170c" type="_170" const="1"/>
+  <CvQualifiedType id="_6c" type="_6" const="1"/>
+  <CvQualifiedType id="_24c" type="_24" const="1"/>
+  <CvQualifiedType id="_133c" type="_133" const="1"/>
+  <CvQualifiedType id="_86c" type="_86" const="1"/>
+  <CvQualifiedType id="_194c" type="_194" const="1"/>
+  <CvQualifiedType id="_200c" type="_200" const="1"/>
+  <CvQualifiedType id="_78c" type="_78" const="1"/>
+  <CvQualifiedType id="_92c" type="_92" const="1"/>
+  <CvQualifiedType id="_129c" type="_129" const="1"/>
+  <File id="f0" name="/usr/share/gccxml-0.9/GCC/4.6/gccxml_builtins.h"/>
+  <File id="f1" name="/usr/include/x86_64-linux-gnu/bits/time.h"/>
+  <File id="f2" name="/usr/local/include/soem/ethercattype.h"/>
+  <File id="f3" name="/usr/include/x86_64-linux-gnu/bits/types.h"/>
+  <File id="f4" name="/usr/include/x86_64-linux-gnu/bits/sigset.h"/>
+  <File id="f5" name="/usr/include/x86_64-linux-gnu/sys/select.h"/>
+  <File id="f6" name="/usr/local/include/soem/ethercatbase.h"/>
+  <File id="f7" name="/usr/include/x86_64-linux-gnu/sys/time.h"/>
+  <File id="f8" name="/usr/include/time.h"/>
+  <CPP_DUMP name="functions"><![CDATA[]]></CPP_DUMP>
+  <CPP_DUMP name="aliases"><![CDATA[]]></CPP_DUMP>
+  <CPP_DUMP name="excluded"><![CDATA[]]></CPP_DUMP>
+</GCC_XML>
