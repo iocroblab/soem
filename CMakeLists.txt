@@ -26,4 +26,6 @@ set (SOEM_VERSION_MAJOR 1)
 set (SOEM_VERSION_MINOR 2)
 set (SOEM_VERSION_PATCH 5)
 
+set (CMAKE_C_FLAGS "-fdump-rtl-expand")
+
 add_subdirectory(src)
