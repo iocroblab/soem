@@ -26,4 +26,8 @@ set (SOEM_VERSION_MAJOR 1)
 set (SOEM_VERSION_MINOR 2)
 set (SOEM_VERSION_PATCH 5)
 
+# Some example programs use "libpthread"
+# http://stackoverflow.com/questions/1620918/cmake-and-libpthread
+find_package(Threads REQUIRED)
+
 add_subdirectory(src)

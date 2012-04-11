@@ -19,9 +19,7 @@
 
 set(CMAKE_BUILD_TYPE Release)
 
-# Some example programs use "libpthread"
-# http://stackoverflow.com/questions/1620918/cmake-and-libpthread
-find_package(Threads REQUIRED)
+
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
