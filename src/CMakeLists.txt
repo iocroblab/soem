@@ -19,9 +19,7 @@
 
 set(CMAKE_BUILD_TYPE Release)
 
-# Some example programs use "libpthread"
-# http://stackoverflow.com/questions/1620918/cmake-and-libpthread
-find_package(Threads REQUIRED)
+
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -56,9 +54,32 @@ set(SOEM_SRC
 
 # Create static library (.a) with all basic SOEM functions
 add_library(soem_static STATIC ${SOEM_SRC})
-
+set_target_properties(soem_static 
+  PROPERTIES DEFINE_SYMBOL "SOEM_DLL_EXPORT"
+  OUTPUT_NAME soem
+# Set accumulated compilation flags: (.so and .a)
+  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD}"
+  LINK_FLAGS "${CMAKE_LD_FLAGS_ADD}"
+  VERSION "${SOEM_VERSION}"
+  CLEAN_DIRECT_OUTPUT 1)
 # Create dynamic library (.so) with all basic SOEM functions
-add_library(soem SHARED ${SOEM_SRC})
+add_library(soem_dynamic SHARED ${SOEM_SRC})
+set_target_properties( soem_dynamic PROPERTIES
+  DEFINE_SYMBOL "SOEM_DLL_EXPORT"
+  SOVERSION "${SOEM_VERSION_MAJOR}.${SOEM_VERSION_MINOR}.${SOEM_VERSION_PATCH}"
+  VERSION "${SOEM_VERSION}"
+  OUTPUT_NAME soem
+# Set accumulated compilation flags: (.so and .a)
+  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD}"
+  LINK_FLAGS "${CMAKE_LD_FLAGS_ADD}"
+  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+  CLEAN_DIRECT_OUTPUT 1)
+  IF (UNIX AND NOT APPLE)
+	SET_TARGET_PROPERTIES( soem_dynamic PROPERTIES
+	  LINK_FLAGS "-Wl,-zdefs")
+  ENDIF ()
+
+
 
 # Build example executables
 # NOTE: The executables are statically linked (soem functions embedded)
@@ -81,7 +102,7 @@ target_link_libraries(red_test soem_static ${CMAKE_THREAD_LIBS_INIT})
 
 # Install files into system directories
 INSTALL(TARGETS ebox simple_test slaveinfo red_test eepromtool DESTINATION bin)
-INSTALL(TARGETS soem DESTINATION lib)
+INSTALL(TARGETS soem_static soem_dynamic DESTINATION lib)
 INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
 
 

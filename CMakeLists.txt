@@ -22,9 +22,14 @@ cmake_minimum_required (VERSION 2.8)
 project(SOEM)
 
 # SOEM version. Defined here but not exported to header files, because it's already defined there 
-set (SOEM_VERSION_MAJOR 1)
-set (SOEM_VERSION_MINOR 2)
-set (SOEM_VERSION_PATCH 5)
+set( SOEM_VERSION 1.2.5 )
+string( REGEX MATCHALL "[0-9]+" SOEM_VERSIONS ${SOEM_VERSION} )
+LIST( GET SOEM_VERSIONS 0 SOEM_VERSION_MAJOR)
+LIST( GET SOEM_VERSIONS 1 SOEM_VERSION_MINOR)
+LIST( GET SOEM_VERSIONS 2 SOEM_VERSION_PATCH)
+# Some example programs use "libpthread"
+# http://stackoverflow.com/questions/1620918/cmake-and-libpthread
+find_package(Threads REQUIRED)
 
 set (CMAKE_C_FLAGS "-fdump-rtl-expand")
 
