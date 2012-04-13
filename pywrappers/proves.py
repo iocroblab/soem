@@ -8,7 +8,8 @@ import time
 
 # Definició de variables globals
 #IOmap = ct.c_uint8(0)*4096
-IOmap = ct.c_buffer(b'\0'*4096)
+#IOmap = ct.c_buffer(b'\0'*4096)
+IOmap = ct.create_string_buffer(4096)
 
 # Definició de constants:
 EC_STATE_SAFE_OP = ecty.EC_STATE_SAFE_OP
@@ -28,7 +29,7 @@ ec_close = ecmn.ec_close
 #
 ec_config_init = ecfg.ec_config_init
 ec_config_map = ecfg.ec_config_map
-# ec_config = ec_config_init + ec_config_map
+# 'ec_config' equival a 'ec_config_init' seguit de 'ec_config_map'
 ec_config = ecfg.ec_config
 #
 ec_statecheck = ecmn.ec_statecheck
