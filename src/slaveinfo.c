@@ -22,6 +22,11 @@
 #include "ethercatdc.h"
 #include "ethercatprint.h"
 
+#ifdef HAVE_RTNET
+#include <native/task.h>
+#include <sys/mman.h>
+#endif
+
 char IOmap[4096];
 ec_ODlistt ODlist;
 ec_OElistt OElist;
@@ -281,6 +286,11 @@ int main(int argc, char *argv[])
 	
 	if (argc > 1)
 	{		
+#ifdef HAVE_RTNET
+	  RT_TASK mtask;
+	  mlockall(MCL_CURRENT | MCL_FUTURE);
+	  rt_task_shadow ( &mtask, "slaveinfo", 1, 0);
+#endif
 		if ((argc > 2) && (strncmp(argv[2], "-sdo", sizeof("-sdo")) == 0)) printSDO = TRUE;
 		/* start slaveinfo */
 		slaveinfo(argv[1]);
