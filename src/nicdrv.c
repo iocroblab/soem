@@ -64,22 +64,27 @@
  * compensate. If needed the packets from interface A are resend through interface B.
  * This layer if fully transparent for the higher layers.
  */
-
-#include <sys/types.h>
+#ifdef HAVE_RTNET
+#include <rtnet.h>
+#else
 #include <sys/ioctl.h>
-#include <net/if.h> 
 #include <sys/socket.h> 
+#include <sys/types.h>
+#include <fcntl.h>
+#endif
+
+#include <net/if.h> 
 #include <unistd.h>
 #include <sys/time.h> 
 #include <arpa/inet.h>
 #include <stdio.h>
-#include <fcntl.h>
 #include <string.h>
 #include <netpacket/packet.h>
 #include <pthread.h>
 
 #include "ethercattype.h"
 #include "nicdrv.h"
+
 
 /** Redundancy modes */
 enum
@@ -176,9 +181,15 @@ const uint16 secMAC[3] = { 0x0404, 0x0404, 0x0404 };
 /** second MAC word is used for identification */
 #define RX_SEC secMAC[1]
 
-pthread_mutex_t ec_getindex_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t ec_tx_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t ec_rx_mutex = PTHREAD_MUTEX_INITIALIZER;
+#ifdef HAVE_RTNET
+ pthread_mutex_t ec_getindex_mutex = PTHREAD_MUTEX_INITIALIZER;
+ pthread_mutex_t ec_tx_mutex = PTHREAD_MUTEX_INITIALIZER;
+ pthread_mutex_t ec_rx_mutex = PTHREAD_MUTEX_INITIALIZER;
+#else
+ pthread_mutex_t ec_getindex_mutex;
+ pthread_mutex_t ec_tx_mutex;
+ pthread_mutex_t ec_rx_mutex;
+#endif
 
 /** Basic setup to connect NIC to socket.
  * @param[in] ifname	    = Name of NIC device, f.e. "eth0"
@@ -193,6 +204,10 @@ int ec_setupnic(const char * ifname, int secondary)
 	struct ifreq ifr;
 	struct sockaddr_ll sll;
 	int *psock;
+
+	pthread_mutex_init( &ec_getindex_mutex, 0 );
+	pthread_mutex_init( &ec_tx_mutex, 0 );
+	pthread_mutex_init( &ec_rx_mutex, 0 );
 
 	rval = 0;
 	if (secondary)
@@ -262,7 +277,7 @@ int ec_setupnic(const char * ifname, int secondary)
 	ec_setupheader(&ec_txbuf2);
 	ec_errcnt = ec_incnt = 0;
 	if (r == 0) rval = 1;
-	
+
 	return rval;
 }
 
