@@ -2,10 +2,10 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : nicdrv.c
- * Version : 1.2.5
- * Date    : 09-04-2011
- * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
- * Copyright (C) 2005-2011 Arthur Ketels
+ * Version : 1.2.4
+ * Date    : 10-04-2010
+ * Copyright (C) 2005-2010 Speciaal Machinefabriek Ketels v.o.f.
+ * Copyright (C) 2005-2010 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
  *
  * SOEM is free software; you can redistribute it and/or modify it under
@@ -170,8 +170,8 @@ int hlp_rxtime;
  * This address is not the MAC address used from the NIC.
  * EtherCAT does not care about MAC addressing, but it is used here to
  * differentiate the route the packet traverses through the EtherCAT
- * segment. This is needed to find out the packet flow in redundant
- * configurations. */
+ * segment. This is needed to fund out the packet flow in redundant
+ * confihurations. */
 const uint16 priMAC[3] = { 0x0101, 0x0101, 0x0101 };
 /** Secondary source MAC address used for EtherCAT. */
 const uint16 secMAC[3] = { 0x0404, 0x0404, 0x0404 };
@@ -182,13 +182,13 @@ const uint16 secMAC[3] = { 0x0404, 0x0404, 0x0404 };
 #define RX_SEC secMAC[1]
 
 #ifdef HAVE_RTNET
- pthread_mutex_t ec_getindex_mutex = PTHREAD_MUTEX_INITIALIZER;
- pthread_mutex_t ec_tx_mutex = PTHREAD_MUTEX_INITIALIZER;
- pthread_mutex_t ec_rx_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t ec_getindex_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t ec_tx_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t ec_rx_mutex = PTHREAD_MUTEX_INITIALIZER;
 #else
- pthread_mutex_t ec_getindex_mutex;
- pthread_mutex_t ec_tx_mutex;
- pthread_mutex_t ec_rx_mutex;
+pthread_mutex_t ec_getindex_mutex;
+pthread_mutex_t ec_tx_mutex;
+pthread_mutex_t ec_rx_mutex;
 #endif
 
 /** Basic setup to connect NIC to socket.
@@ -223,49 +223,70 @@ int ec_setupnic(const char * ifname, int secondary)
 	}	
 	/* we use RAW packet socket, with packet type ETH_P_ECAT */
 	*psock = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ECAT));
-	if(*psock<0)
-	  printf("Failed to create socket: %s\n",strerror(-(*psock)));
-	timeout.tv_sec =  0;
-	timeout.tv_usec = 1;
-	 
-	r = setsockopt(*psock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
-	if(r<0)
-	  printf("Failed to set option recvtimeo: %s\n",strerror(-r));
-	r = setsockopt(*psock, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
-	if(r<0)
-	  printf("Failed to set option sndtimeo: %s\n",strerror(-r));
-	i = 1;
-	r = setsockopt(*psock, SOL_SOCKET, SO_DONTROUTE, &i, sizeof(i));
-	if(r<0)
-	  printf("Failed to set option dontroute: %s\n",strerror(-r));
-
+	if(*psock<0){
+	  printf("creation of socket failed:%d\n",*psock);
+	  return 0;
+	}
 	/* connect socket to NIC by name */
 	strcpy(ifr.ifr_name, ifname);
 	r = ioctl(*psock, SIOCGIFINDEX, &ifr);
-	if(r<0)
-	  printf("Failed to get socket index: %s\n",strerror(-r));
+	if(r<0){
+	  printf("getting socket index failed:%d, %s\n",r,strerror(-r));
+	}
+	  
+	timeout.tv_sec =  0;
+#ifdef HAVE_RTNET
+   timeout.tv_usec = 1;
+	r = ioctl(*psock,RTNET_RTIOC_TIMEOUT,&timeout);
+	if(r<0){
+	  printf("setting socket timeout failed:%d, %s\n",r,strerror(-r));
+	}
+#else
+   timeout.tv_usec = 1000 * 100;
+	r = setsockopt(*psock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+	if(r<0){
+	  printf("setting socket options rcvtimeo failed:%d, %s\n",r,strerror(-r));
+	}
+	r = setsockopt(*psock, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+	if(r<0){
+	  printf("setting socket options sndtimeo failed:%d, %s\n",r,strerror(-r));
+	}
+
+	i = 1;
+	r = setsockopt(*psock, SOL_SOCKET, SO_DONTROUTE, &i, sizeof(i));
+	if(r<0){
+	  printf("setting socket options dontroute failed:%d, %s\n",r,strerror(-r));
+	}
+
+#endif
+
 	ifindex = ifr.ifr_ifindex;
+#ifdef HAVE_RTNET
 	strcpy(ifr.ifr_name, ifname);
 	ifr.ifr_flags = 0;
 	/* reset flags of NIC interface */
 	r = ioctl(*psock, SIOCGIFFLAGS, &ifr);
-	if(r<0)
-	  printf("Failed to get socket flags: %s\n",strerror(-r));
+	if(r<0){
+	  printf("resetting socket flags failed:%d, %s\n",r,strerror(-r));
+	}
 	/* set flags of NIC interface, here promiscuous and broadcast */
 	ifr.ifr_flags = ifr.ifr_flags | IFF_PROMISC | IFF_BROADCAST;
-	r = ioctl(*psock, SIOCSIFFLAGS, &ifr);
-	if(r<0)
-	  printf("Failed to set socket flags: %s\n",strerror(-r));
+	r = ioctl(*psock, SIOCGIFFLAGS, &ifr);
+	if(r<0){
+	  printf("setting socket flags failed:%d, %s\n",r,strerror(-r));
+	}
+#endif
+
 	/* bind socket to protocol, in this case RAW EtherCAT */
 	sll.sll_family = AF_PACKET;
 	sll.sll_ifindex = ifindex;
 	sll.sll_protocol = htons(ETH_P_ECAT);
 	r = bind(*psock, (struct sockaddr *)&sll, sizeof(sll));
-	if(r<0)
-	  printf("Failed to bind socket: %s\n",strerror(-r));
-
+	if(r<0){
+	  printf("binding socket failed:%d, %s\n",r,strerror(-r));
+	}
 	/* get flags */
-	fl = fcntl(*psock, F_GETFL, 0);
+	//fl = fcntl(*psock, F_GETFL, 0);
 	/* set nodelay option, so make socket non-blocking */
 //	r = fcntl(*psock, F_SETFL, fl | O_NDELAY);
 	/* setup ethernet headers in tx buffers so we don't have to repeat it */
@@ -287,8 +308,7 @@ int ec_setupnic(const char * ifname, int secondary)
 int ec_closenic(void) 
 {
 	if (sockhandle >= 0) close(sockhandle);
-	if (sockhandle2 >= 0) close(sockhandle2);
-	
+   if (sockhandle2 >= 0) close(sockhandle2);
 	return 0;
 }
 
