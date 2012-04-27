@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 #########################################################################
 
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.6)
 
 project(SOEM)
 
@@ -32,5 +32,25 @@ LIST( GET SOEM_VERSIONS 2 SOEM_VERSION_PATCH)
 find_package(Threads REQUIRED)
 
 set (CMAKE_C_FLAGS "-fdump-rtl-expand")
+
+option(ENABLE_RTNET "Enable RTnet over Xenomai." OFF)
+
+if(ENABLE_RTNET)
+  #common commands for building c++ executables and libraries
+  find_path(RTNET_INCLUDE_DIR NAMES rtnet.h PATH_SUFFIXES rtnet/include)
+  if(NOT RTNET_INCLUDE_DIR)
+    set(ENABLE_RTNET OFF)
+  endif()
+
+  if(RTNET_INCLUDE_DIR)
+    message("Found RTNET: ${RTNET_INCLUDE_DIR}")
+    # try Xenomai
+    execute_process(COMMAND xeno-config --skin=posix --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND xeno-config --skin=posix --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(CMAKE_C_FLAGS_RTNET "${CMAKE_C_FLAGS} ${XENO_CFLAGS}")
+    set(CMAKE_SHARED_LINKER_FLAGS_RTNET "${CMAKE_SHARED_LINKER_FLAGS} ${XENO_LDFLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS_RTNET "${CMAKE_SHARED_LINKER_FLAGS} ${XENO_LDFLAGS} -lnative")
+  endif()
+endif()
 
 add_subdirectory(src)

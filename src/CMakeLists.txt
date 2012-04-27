@@ -106,6 +106,65 @@ INSTALL(TARGETS soem_static soem_dynamic DESTINATION lib)
 INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
 
 
+if(ENABLE_RTNET)
+  # Create static library (.a) with all basic SOEM functions
+  include_directories(${RTNET_INCLUDE_DIR})
+  add_definitions(-DHAVE_RTNET)
+  set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS_RTNET})
+  set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_RTNET}) 
+  set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS_RTNET})
+  
+  add_library(soem_static_rt STATIC ${SOEM_SRC})
+  set_target_properties(soem_static_rt 
+    PROPERTIES DEFINE_SYMBOL "SOEM_DLL_EXPORT"
+    OUTPUT_NAME soemrt
+  # Set accumulated compilation flags: (.so and .a)
+    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD}"
+    LINK_FLAGS "${CMAKE_LD_FLAGS_ADD}"
+    VERSION "${SOEM_VERSION}"
+    CLEAN_DIRECT_OUTPUT 1)
+  # Create dynamic library (.so) with all basic SOEM functions
+  add_library(soem_dynamic_rt SHARED ${SOEM_SRC})
+  set_target_properties( soem_dynamic_rt PROPERTIES
+    DEFINE_SYMBOL "SOEM_DLL_EXPORT"
+    SOVERSION "${SOEM_VERSION_MAJOR}.${SOEM_VERSION_MINOR}.${SOEM_VERSION_PATCH}"
+    VERSION "${SOEM_VERSION}"
+    OUTPUT_NAME soemrt
+  # Set accumulated compilation flags: (.so and .a)
+    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD}"
+    LINK_FLAGS "${CMAKE_LD_FLAGS_ADD}"
+    INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+    CLEAN_DIRECT_OUTPUT 1)
+    IF (UNIX AND NOT APPLE)
+    SET_TARGET_PROPERTIES( soem_dynamic PROPERTIES
+      LINK_FLAGS "-Wl,-zdefs")
+    ENDIF ()
+
+  # Build example executables
+  # NOTE: The executables are statically linked (soem functions embedded)
+  # If you wish to link them dynamically with libsoem.so, 
+  # then change "soem_static" to "soem" in link commands below
+  add_executable(ebox_rt ebox.c)
+  target_link_libraries(ebox soem_static_rt ${CMAKE_THREAD_LIBS_INIT})
+
+  add_executable(simple_test_rt simple_test.c)
+  target_link_libraries(simple_test soem_static_rt)
+
+  add_executable(eepromtool_rt eepromtool.c)
+  target_link_libraries(eepromtool soem_static_rt)
+
+  add_executable(slaveinfo_rt slaveinfo.c)
+  target_link_libraries(slaveinfo soem_static_rt)
+
+  add_executable(red_test_rt red_test.c)
+  target_link_libraries(red_test soem_static_rt ${CMAKE_THREAD_LIBS_INIT})
+
+  # Install files into system directories
+  INSTALL(TARGETS ebox_rt simple_test_rt slaveinfo_rt red_test_rt eepromtool_rt DESTINATION bin)
+  INSTALL(TARGETS soem_static_rt soem_dynamic_rt DESTINATION lib)
+  #INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
+endif()
+
 ### OPTIONAL ###
 # CPack allows to automatically generate .deb (or whatever) package
 # uncomment if useful
