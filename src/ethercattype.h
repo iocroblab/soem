@@ -95,6 +95,21 @@ typedef unsigned long long  uint64;
 #define EC_ECATTYPE			0x1000
 /** number of frame buffers per channel (tx, rx1 rx2) */
 #define EC_MAXBUF			16
+
+#ifdef HAVE_RTNET
+/** timeout value in us for tx frame to return to rx */
+#define EC_TIMEOUTRET		50
+/** timeout value in us for return "safe" variant (f.e. wireless) */
+#define EC_TIMEOUTSAFE		2000
+/** timeout value in us for EEPROM access */
+#define EC_TIMEOUTEEP		2000
+/** timeout value in us for tx mailbox cycle */
+#define EC_TIMEOUTTXM		2000
+/** timeout value in us for rx mailbox cycle */
+#define EC_TIMEOUTRXM		70000
+/** timeout value in us for check statechange */
+#define EC_TIMEOUTSTATE		200000
+#else //HAVE_RTNET
 /** timeout value in us for tx frame to return to rx */
 #define EC_TIMEOUTRET		500
 //#define EC_TIMEOUTRET		20000
@@ -108,6 +123,9 @@ typedef unsigned long long  uint64;
 #define EC_TIMEOUTRXM		700000
 /** timeout value in us for check statechange */
 #define EC_TIMEOUTSTATE		2000000
+
+#endif //HAVE_RTNET
+
 /** size of EEPROM bitmap cache */
 #define EC_MAXEEPBITMAP		128
 /** size of EEPROM cache buffer */
