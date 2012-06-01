@@ -80,6 +80,11 @@
  * - Improved CoE PDO assignment read from slaves, no longer assume assign indexes
  * as functionally fixed.
  *
+ * Features as of 1.2.6 :
+ * - Added firmware update tool firm_update. Use with caution!
+ * - Improved slave reconfiguration.
+ * - Added mailbox error handling, and printing.
+ *
  * \section start Getting started
  * For examples see simple_test.c in ~/src.
  * First try (assume EtherCAT on eth0): sudo ./simple_test eth0
@@ -122,6 +127,14 @@
  * - Fixed siigetbyte() unaligned copy.
  * - Fixed bug in nicdrv.c, socket handles are 0 included.
  * - Fixed bug in ethercatconfig.c causing memory corruption.
+ *
+ * Version 1.2.6
+ * - Fixed FoE bugs.
+ * - Fixed bug in ethercatconfig.c, groups now correctly mirror slave LRW capabilies.
+ * - Fixed bugs in send/receive processdata, distributed clocks are now also
+ * available for LRD/LWR only slaves.
+ * - Fixed bugs in slave reconfiguration.
+ * - Fixed bugs in echtercatprint.c, index 0 is now correctly printed.
  * \section legal Legal notice
  * Copyright© 2005-2011 Speciaal Machinefabriek Ketels v.o.f. \n
  * Copyright© 2005-2011 Arthur Ketels \n

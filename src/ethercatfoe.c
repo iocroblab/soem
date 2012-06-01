@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatfoe.c
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -144,8 +144,12 @@ int ec_FOEread(uint16 slave, char *filename, uint32 password, int *psize, void *
 					{
 						segmentdata = etohs(aFOEp->MbxHeader.length) - 0x0006;
 						packetnumber = etohl(aFOEp->PacketNumber);
-						if ((packetnumber == ++prevpacket) && (dataread + segmentdata <= buffersize))
+						printf("FOE: %d\r",packetnumber);
+						if ((packetnumber == ++prevpacket) && (dataread <= buffersize))
+//						if ((dataread + segmentdata <= buffersize))
 						{
+							if((dataread + segmentdata) > buffersize)
+								segmentdata = buffersize - dataread;
 							memcpy(p, &aFOEp->Data[0], segmentdata);
 							dataread += segmentdata;
 							p += segmentdata;
@@ -258,31 +262,33 @@ int ec_FOEwrite(uint16 slave, char *filename, uint32 password, int psize, void *
 					if(aFOEp->OpCode == ECT_FOE_ACK)
 					{
 						packetnumber = etohl(aFOEp->PacketNumber);
+						printf("FOE: %d\r",packetnumber);
 						if (packetnumber == sendpacket)
 						{
 							tsize = psize;
 							if (tsize > maxdata)
-							{
-								worktodo = TRUE; 
 								tsize = maxdata;
-							}	
-							segmentdata = tsize;
-							psize -= segmentdata;
-							FOEp->MbxHeader.length = htoes(0x0006 + segmentdata);
-							FOEp->MbxHeader.address = htoes(0x0000);
-							FOEp->MbxHeader.priority = 0x00;
-							/* get new mailbox count value */
-							cnt = ec_nextmbxcnt(ec_slave[slave].mbx_cnt);
-							ec_slave[slave].mbx_cnt = cnt;
-							FOEp->MbxHeader.mbxtype = ECT_MBXT_FOE + (cnt << 4); /* FoE */
-							FOEp->OpCode = ECT_FOE_DATA;
-							FOEp->PacketNumber = htoel(++sendpacket);
-							memcpy(&FOEp->Data[0], p, segmentdata);
-							p += segmentdata;
-							/* send FoE data to slave */
-							wkc = ec_mbxsend(slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
-							if (wkc <= 0)
-								worktodo = FALSE;
+							if(tsize)
+							{
+								worktodo = TRUE;
+								segmentdata = tsize;
+								psize -= segmentdata;
+								FOEp->MbxHeader.length = htoes(0x0006 + segmentdata);
+								FOEp->MbxHeader.address = htoes(0x0000);
+								FOEp->MbxHeader.priority = 0x00;
+								/* get new mailbox count value */
+								cnt = ec_nextmbxcnt(ec_slave[slave].mbx_cnt);
+								ec_slave[slave].mbx_cnt = cnt;
+								FOEp->MbxHeader.mbxtype = ECT_MBXT_FOE + (cnt << 4); /* FoE */
+								FOEp->OpCode = ECT_FOE_DATA;
+								FOEp->PacketNumber = htoel(++sendpacket);
+								memcpy(&FOEp->Data[0], p, segmentdata);
+								p += segmentdata;
+								/* send FoE data to slave */
+								wkc = ec_mbxsend(slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
+								if (wkc <= 0)
+									worktodo = FALSE;
+							}
 						}
 						else
 						{

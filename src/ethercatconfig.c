@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatconfig.c
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -57,7 +57,6 @@
 #include "ethercatcoe.h"
 #include "ethercatsoe.h"
 #include "ethercatconfig.h"
-#include "ethercatconfiglist.h"
 
 // define if debug printf is needed
 //#define EC_DEBUG
@@ -67,6 +66,37 @@
 #else
 #define EC_PRINT(...) do {} while (0)
 #endif
+
+/** Slave configuration structure */
+typedef const struct
+{
+	/** Manufacturer code of slave */
+	uint32				man;
+	/** ID of slave */
+	uint32				id;
+	/** Readable name */
+	char				name[EC_MAXNAME + 1];
+	/** Data type */
+	uint8				Dtype;
+	/** Input bits */
+	uint16				Ibits;
+	/** Output bits */
+	uint16				Obits;
+	/** SyncManager 2 address */
+	uint16				SM2a;
+	/** SyncManager 2 flags */
+	uint32				SM2f;
+	/** SyncManager 3 address */
+	uint16				SM3a;
+	/** SyncManager 3 flags */
+	uint32				SM3f;
+	/** FMMU 0 activation */
+	uint8				FM0ac;
+	/** FMMU 1 activation */
+	uint8				FM1ac;
+} ec_configlist_t;
+
+#include "ethercatconfiglist.h"
 
 /** standard SM0 flags configuration for mailbox slaves */
 #define EC_DEFAULTMBXSM0	0x00010026
@@ -446,7 +476,8 @@ int ec_config_map_group(void *pIOmap, uint8 group)
     uint16 slave, configadr;
 	int Isize, Osize, BitCount, ByteCount, FMMUsize, FMMUdone;
 	uint16 SMlength;
-    uint8 BitPos, EndAddr;
+    uint8 BitPos;
+	uint16 EndAddr;
 	uint8 SMc, FMMUc;
 	uint32 LogAddr = 0;
 	uint32 oLogAddr = 0;
@@ -463,7 +494,8 @@ int ec_config_map_group(void *pIOmap, uint8 group)
 		oLogAddr = LogAddr;
 		BitPos = 0;
 		ec_group[group].nsegments = 0;
-		ec_group[group].expectedWKC = 0;
+		ec_group[group].outputsWKC = 0;
+		ec_group[group].inputsWKC = 0;
 
 		/* find output mapping of slave and program FMMU */
 		for (slave = 1; slave <= ec_slavecount; slave++)
@@ -646,8 +678,7 @@ int ec_config_map_group(void *pIOmap, uint8 group)
 					/* program FMMU for output */
 					ec_FPWR (configadr, ECT_REG_FMMU0 + (sizeof(ec_fmmut) * FMMUc), sizeof(ec_fmmut), 
 					         &ec_slave[slave].FMMU[FMMUc], EC_TIMEOUTRET);
-					/* add two for an output FMMU */
-					ec_group[group].expectedWKC += 2;
+					ec_group[group].outputsWKC++;
 					if (!ec_slave[slave].outputs)
 					{	
 						ec_slave[slave].outputs = pIOmap + etohl(ec_slave[slave].FMMU[FMMUc].LogStart);
@@ -792,7 +823,7 @@ int ec_config_map_group(void *pIOmap, uint8 group)
 						ec_FPWR (configadr, ECT_REG_FMMU0 + (sizeof(ec_fmmut) * FMMUc), sizeof(ec_fmmut), 
 						         &ec_slave[slave].FMMU[FMMUc], EC_TIMEOUTRET);
 						/* add one for an input FMMU */
-						ec_group[group].expectedWKC += 1;
+						ec_group[group].inputsWKC++;
 					}	
 					if (!ec_slave[slave].inputs)
 					{	
@@ -821,6 +852,9 @@ int ec_config_map_group(void *pIOmap, uint8 group)
 			ec_eeprom2pdi(slave); /* set Eeprom control to PDI */			
 			ec_FPWRw(configadr, ECT_REG_ALCTL, htoes(EC_STATE_SAFE_OP) , EC_TIMEOUTRET); /* set safeop status */
 						
+			if (ec_slave[slave].blockLRW)
+				ec_group[group].blockLRW++;						
+			ec_group[group].Ebuscurrent += ec_slave[slave].Ebuscurrent;
 		}
 		if (BitPos)
 		{
@@ -843,9 +877,6 @@ int ec_config_map_group(void *pIOmap, uint8 group)
 		ec_group[group].nsegments = currentsegment + 1;
 		ec_group[group].inputs = pIOmap + ec_group[group].Obytes;
 		ec_group[group].Ibytes = LogAddr - ec_group[group].Obytes;
-		if (ec_slave[slave].blockLRW)
-			ec_group[group].blockLRW++;						
-		ec_group[group].Ebuscurrent += ec_slave[slave].Ebuscurrent;
 		if (!group)
 		{	
 			ec_slave[0].inputs = pIOmap + ec_slave[0].Obytes;
@@ -891,34 +922,41 @@ int ec_config(uint8 usetable, void *pIOmap)
 int ec_recover_slave(uint16 slave)
 {
 	int rval;
-	uint16 ADPh, configadr;
+	uint16 ADPh, configadr, readadr, wkc;
 
 	rval = 0;
     configadr = ec_slave[slave].configadr;
-	/* clear possible slaves at EC_TEMPNODE */
-	ec_FPWRw(EC_TEMPNODE, ECT_REG_STADR, htoes(0) , 0);
     ADPh = (uint16)(1 - slave);
-	/* set temporary node address of slave */
-	if(ec_APWRw(ADPh, ECT_REG_STADR, htoes(EC_TEMPNODE) , EC_TIMEOUTRET) <= 0)
-		return 0; /* slave fails to respond */
-	
-    ec_slave[slave].configadr = EC_TEMPNODE; /* temporary config address */	
-	ec_eeprom2master(slave); /* set Eeprom control to master */			
+	/* check if we found another slave than the requested */
+	readadr = 0xffff;
+	wkc = ec_APRD(ADPh, ECT_REG_STADR, sizeof(readadr), &readadr, EC_TIMEOUTRET);
+	/* only try if no config address or the same as requested */
+	if( (wkc > 0) && ((readadr == 0) || (readadr == configadr)))
+	{
+		/* clear possible slaves at EC_TEMPNODE */
+		ec_FPWRw(EC_TEMPNODE, ECT_REG_STADR, htoes(0) , 0);
+		/* set temporary node address of slave */
+		if(ec_APWRw(ADPh, ECT_REG_STADR, htoes(EC_TEMPNODE) , EC_TIMEOUTRET) <= 0)
+			return 0; /* slave fails to respond */
 
-	/* check if slave is the same as configured before */
-	if ((ec_FPRDw(EC_TEMPNODE, ECT_REG_ALIAS, EC_TIMEOUTRET) == ec_slave[slave].aliasadr) &&
-	    (ec_readeeprom(slave, ECT_SII_ID, EC_TIMEOUTEEP) == ec_slave[slave].eep_id) &&
-	    (ec_readeeprom(slave, ECT_SII_MANUF, EC_TIMEOUTEEP) == ec_slave[slave].eep_man) &&
-	    (ec_readeeprom(slave, ECT_SII_REV, EC_TIMEOUTEEP) == ec_slave[slave].eep_rev))
-	{
-		rval = ec_FPWRw(EC_TEMPNODE, ECT_REG_STADR, htoes(configadr) , EC_TIMEOUTRET);
-	    ec_slave[slave].configadr = configadr;
-	}
-	else
-	{
-		/* slave is not the expected one, remove config address*/
-		ec_FPWRw(EC_TEMPNODE, ECT_REG_STADR, htoes(0) , EC_TIMEOUTRET);
-	    ec_slave[slave].configadr = configadr;
+		ec_slave[slave].configadr = EC_TEMPNODE; /* temporary config address */	
+		ec_eeprom2master(slave); /* set Eeprom control to master */			
+
+		/* check if slave is the same as configured before */
+		if ((ec_FPRDw(EC_TEMPNODE, ECT_REG_ALIAS, EC_TIMEOUTRET) == ec_slave[slave].aliasadr) &&
+		    (ec_readeeprom(slave, ECT_SII_ID, EC_TIMEOUTEEP) == ec_slave[slave].eep_id) &&
+		    (ec_readeeprom(slave, ECT_SII_MANUF, EC_TIMEOUTEEP) == ec_slave[slave].eep_man) &&
+		    (ec_readeeprom(slave, ECT_SII_REV, EC_TIMEOUTEEP) == ec_slave[slave].eep_rev))
+		{
+			rval = ec_FPWRw(EC_TEMPNODE, ECT_REG_STADR, htoes(configadr) , EC_TIMEOUTRET);
+			ec_slave[slave].configadr = configadr;
+		}
+		else
+		{
+			/* slave is not the expected one, remove config address*/
+			ec_FPWRw(EC_TEMPNODE, ECT_REG_STADR, htoes(0) , EC_TIMEOUTRET);
+			ec_slave[slave].configadr = configadr;
+		}
 	}
 
 	return rval;

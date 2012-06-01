@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatprint.c
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -79,6 +79,15 @@ typedef const struct
 	/** Readable description */
 	char				errordescription[EC_MAXERRORNAME + 1];
 } ec_soeerrorlist_t;
+
+/** MBX error list type definition */
+typedef const struct
+{
+	/** MBX error code */
+	uint16				errorcode;
+	/** Readable description */
+	char				errordescription[EC_MAXERRORNAME + 1];
+} ec_mbxerrorlist_t;
 
 char estring[EC_MAXERRORNAME];
 
@@ -207,6 +216,20 @@ const ec_soeerrorlist_t ec_soeerrorlist[] = {
 	{0xffff, "Unknown" }
 };
 	
+/** MBX error list definition */
+const ec_mbxerrorlist_t ec_mbxerrorlist[] = {
+	{0x0000, "No error" },
+	{0x0001, "Syntax of 6 octet Mailbox Header is wrong" },
+	{0x0002, "The mailbox protocol is not supported" },
+	{0x0003, "Channel Field contains wrong value"},
+	{0x0004, "The service is no supported"},
+	{0x0005, "Invalid mailbox header"},
+	{0x0006, "Length of received mailbox data is too short"},
+	{0x0007, "No more memory in slave"},
+	{0x0008, "The lenght of data is inconsistent"},
+	{0xffff, "Unknown"}
+};
+
 /** Look up text string that belongs to SDO error code.
  *
  * @param[in] sdoerrorcode	  = SDO error code as defined in EtherCAT protocol
@@ -216,12 +239,8 @@ char* ec_sdoerror2string( uint32 sdoerrorcode)
 {
 	int i = 0;
 
-	do 
-	{
-		i++;
-	}	
 	while ( (ec_sdoerrorlist[i].errorcode != 0xfffffffful) && 
-			(ec_sdoerrorlist[i].errorcode != sdoerrorcode) );
+			(ec_sdoerrorlist[i].errorcode != sdoerrorcode) ) i++;
 	
 	return (char*) ec_sdoerrorlist[i].errordescription;
 }
@@ -235,33 +254,40 @@ char* ec_ALstatuscode2string( uint16 ALstatuscode)
 {
 	int i = 0;
 
-	do 
-	{
-		i++;
-	}	
 	while ( (ec_ALstatuscodelist[i].ALstatuscode != 0xffff) && 
-			(ec_ALstatuscodelist[i].ALstatuscode != ALstatuscode) );
+			(ec_ALstatuscodelist[i].ALstatuscode != ALstatuscode) ) i++;
 	
 	return (char *) ec_ALstatuscodelist[i].ALstatuscodedescription;
 }
 
 /** Look up text string that belongs to SoE error code.
  *
- * @param[in] errorcode	  = AL status code as defined in EtherCAT protocol
+ * @param[in] errorcode	  = SoE error code as defined in EtherCAT protocol
  * @return readable string
  */
 char* ec_soeerror2string( uint16 errorcode)
 {
 	int i = 0;
 
-	do 
-	{
-		i++;
-	}	
 	while ( (ec_soeerrorlist[i].errorcode != 0xffff) && 
-			(ec_soeerrorlist[i].errorcode != errorcode) );
+			(ec_soeerrorlist[i].errorcode != errorcode) ) i++;
 	
 	return (char *) ec_soeerrorlist[i].errordescription;
+}
+
+/** Look up text string that belongs to MBX error code.
+ *
+ * @param[in] errorcode	  = MBX error code as defined in EtherCAT protocol
+ * @return readable string
+ */
+char* ec_mbxerror2string( uint16 errorcode)
+{
+	int i = 0;
+
+	while ( (ec_mbxerrorlist[i].errorcode != 0xffff) && 
+			(ec_mbxerrorlist[i].errorcode != errorcode) ) i++;
+	
+	return (char *) ec_mbxerrorlist[i].errordescription;
 }
 
 /** Look up error in ec_errorlist and convert to text string.
@@ -297,6 +323,10 @@ char* ec_elist2string(void)
 			case EC_ERR_TYPE_SOE_ERROR:
 				sprintf(estring, "%s SoE slave:%d IDN:%4.4x error:%4.4x %s\n", 
 					timestr, Ec.Slave, Ec.Index, Ec.AbortCode, ec_soeerror2string(Ec.ErrorCode));				
+				break;
+			case EC_ERR_TYPE_MBX_ERROR:
+				sprintf(estring, "%s MBX slave:%d error:%4.4x %s\n", 
+					timestr, Ec.Slave, Ec.ErrorCode, ec_mbxerror2string(Ec.ErrorCode));				
 				break;
 			default:
 				sprintf(estring, "%s error:%8.8x\n", 

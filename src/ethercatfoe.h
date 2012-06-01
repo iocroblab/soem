@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatfoe.h
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 

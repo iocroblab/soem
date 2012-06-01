@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercattype.h
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -95,24 +95,9 @@ typedef unsigned long long  uint64;
 #define EC_ECATTYPE			0x1000
 /** number of frame buffers per channel (tx, rx1 rx2) */
 #define EC_MAXBUF			16
-
-#ifdef HAVE_RTNET
 /** timeout value in us for tx frame to return to rx */
-#define EC_TIMEOUTRET		50
-/** timeout value in us for return "safe" variant (f.e. wireless) */
-#define EC_TIMEOUTSAFE		2000
-/** timeout value in us for EEPROM access */
-#define EC_TIMEOUTEEP		2000
-/** timeout value in us for tx mailbox cycle */
-#define EC_TIMEOUTTXM		2000
-/** timeout value in us for rx mailbox cycle */
-#define EC_TIMEOUTRXM		70000
-/** timeout value in us for check statechange */
-#define EC_TIMEOUTSTATE		200000
-#else //HAVE_RTNET
-/** timeout value in us for tx frame to return to rx */
-#define EC_TIMEOUTRET		500
-//#define EC_TIMEOUTRET		20000
+//#define EC_TIMEOUTRET		500
+#define EC_TIMEOUTRET		20000
 /** timeout value in us for return "safe" variant (f.e. wireless) */
 #define EC_TIMEOUTSAFE		20000
 /** timeout value in us for EEPROM access */
@@ -123,9 +108,6 @@ typedef unsigned long long  uint64;
 #define EC_TIMEOUTRXM		700000
 /** timeout value in us for check statechange */
 #define EC_TIMEOUTSTATE		2000000
-
-#endif //HAVE_RTNET
-
 /** size of EEPROM bitmap cache */
 #define EC_MAXEEPBITMAP		128
 /** size of EEPROM cache buffer */
@@ -390,6 +372,7 @@ enum
 enum
 {
 	ECT_SDO_DOWN_INIT = 0x21,
+	ECT_SDO_DOWN_EXP = 0x23,
 	ECT_SDO_DOWN_INIT_CA = 0x31,
 	ECT_SDO_UP_REQ = 0x40,
 	ECT_SDO_UP_REQ_CA = 0x50,
@@ -506,7 +489,8 @@ typedef enum
 	EC_ERR_TYPE_FOE_ERROR	    = 5,         
 	EC_ERR_TYPE_FOE_BUF2SMALL   = 6,         
 	EC_ERR_TYPE_FOE_PACKETNUMBER= 7,
-	EC_ERR_TYPE_SOE_ERROR		= 8
+	EC_ERR_TYPE_SOE_ERROR		= 8,
+	EC_ERR_TYPE_MBX_ERROR		= 9
 } ec_err_type;
 
 /** Struct to retrieve errors. */

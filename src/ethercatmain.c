@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatmain.c
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -100,6 +100,14 @@ typedef struct
     uint16          w1,w2;
 } ec_emcyt;
 
+/** mailbox error structure */
+typedef struct
+{
+    ec_mbxheadert   MbxHeader;
+	uint16			Type;
+	uint16			Detail;
+} ec_mbxerrort;
+
 /** Main slave data array.
  *  Each slave found on the network gets its own record.
  *  ec_slave[0] is reserved for the master. Structure gets filled
@@ -193,6 +201,24 @@ void ec_packeterror(uint16 Slave, uint16 Index, uint8 SubIdx, uint16 ErrorCode)
     EcatError = TRUE;
     Ec.Etype = EC_ERR_TYPE_PACKET_ERROR;
     Ec.ErrorCode = ErrorCode;
+    ec_pusherror(&Ec);
+}
+
+/** Report Mailbox Error
+ *
+ * @param[in]  Slave		= Slave number
+ * @param[in]  Detail	    = Following EtherCAT specification
+ */
+static void ec_mbxerror(uint16 Slave,uint16 Detail)
+{
+    ec_errort Ec;
+
+	gettimeofday(&Ec.Time, 0);
+    Ec.Slave = Slave;
+    Ec.Index = 0;
+    Ec.SubIdx = 0;
+    Ec.Etype = EC_ERR_TYPE_MBX_ERROR;
+    Ec.ErrorCode = Detail;
     ec_pusherror(&Ec);
 }
 
@@ -758,6 +784,7 @@ int ec_mbxreceive(uint16 slave, ec_mbxbuft *mbx, int timeout)
 	uint8 SMcontr;
 	ec_mbxheadert *mbxh;
     ec_emcyt *EMp;
+	ec_mbxerrort *MBXEp;
 	struct timeval mtv1, mtv2, mtve;
 	
 	configadr = ec_slave[slave].configadr;
@@ -786,8 +813,13 @@ int ec_mbxreceive(uint16 slave, ec_mbxbuft *mbx, int timeout)
 			do
 			{	
 	            wkc = ec_FPRD(configadr, mbxro, mbxl, mbx, EC_TIMEOUTRET); /* get mailbox */
-/* TODO : check for mailbox error response */				
-		        if ((wkc > 0) && ((mbxh->mbxtype & 0x0f) == 0x03)) /* CoE response? */
+		        if ((wkc > 0) && ((mbxh->mbxtype & 0x0f) == 0x00)) /* Mailbox error response? */
+   			    {
+					MBXEp = (ec_mbxerrort *)mbx;
+					ec_mbxerror(slave, etohs(MBXEp->Detail));   
+					wkc = 0; /* prevent emergency to cascade up, it is already handled. */   
+				}
+		        else if ((wkc > 0) && ((mbxh->mbxtype & 0x0f) == 0x03)) /* CoE response? */
    			    {
 					EMp = (ec_emcyt *)mbx;
 	                if ((etohs(EMp->CANOpen) >> 12) == 0x01) /* Emergency request? */
@@ -1419,6 +1451,15 @@ int ec_send_processdata_group(uint8 group)
 					w1 = LO_WORD(LogAdr);
 					w2 = HI_WORD(LogAdr);
 				    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LRD, idx, w1, w2, sublength, data);
+					if(first)
+					{
+						ec_DCl = sublength;
+						/* FPRMW in second datagram */
+						ec_DCtO = ec_adddatagram(&ec_txbuf[idx], EC_CMD_FRMW, idx, FALSE, 
+						    ec_slave[ec_group[group].DCnext].configadr, 
+						    ECT_REG_DCSYSTIME, sizeof(ec_DCtime), &ec_DCtime);
+						first = FALSE;
+					}					
 					/* send frame */
 					ec_outframe_red(idx);
 					/* push index and data pointer on stack */
@@ -1446,6 +1487,15 @@ int ec_send_processdata_group(uint8 group)
 					w1 = LO_WORD(LogAdr);
 					w2 = HI_WORD(LogAdr);
 				    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LWR, idx, w1, w2, sublength, data);
+					if(first)
+					{
+						ec_DCl = sublength;
+						/* FPRMW in second datagram */
+						ec_DCtO = ec_adddatagram(&ec_txbuf[idx], EC_CMD_FRMW, idx, FALSE, 
+						    ec_slave[ec_group[group].DCnext].configadr, 
+						    ECT_REG_DCSYSTIME, sizeof(ec_DCtime), &ec_DCtime);
+						first = FALSE;
+					}					
 					/* send frame */
 					ec_outframe_red(idx);
 					/* push index and data pointer on stack */
@@ -1518,23 +1568,38 @@ int ec_receive_processdata_group(uint8 group, int timeout)
 		idx = ec_idxstack.idx[pos];
 	    wkc2 = ec_waitinframe(ec_idxstack.idx[pos], timeout);
 		/* check if there is input data in frame */
-		if ((wkc2 > EC_NOFRAME) && ((ec_rxbuf[idx][EC_CMDOFFSET]==EC_CMD_LRD) || (ec_rxbuf[idx][EC_CMDOFFSET]==EC_CMD_LRW)))
-	    {
-			if(first)
-			{	
-		        memcpy(ec_idxstack.data[pos], &ec_rxbuf[idx][EC_HEADERSIZE], ec_DCl);
-				memcpy(&wkc, &ec_rxbuf[idx][EC_HEADERSIZE + ec_DCl], EC_WKCSIZE);
-				wkc = etohs(wkc);
-				memcpy(&ec_DCtime, &ec_rxbuf[idx][ec_DCtO], sizeof(ec_DCtime));
-				ec_DCtime = etohll(ec_DCtime);
-				first = FALSE;			}
-			else
-			{	
-				/* copy input data back to process data buffer */
-			    memcpy(ec_idxstack.data[pos], &ec_rxbuf[idx][EC_HEADERSIZE], ec_idxstack.length[pos]);
-				wkc += wkc2;
-			}	
-	    }
+		if (wkc2 > EC_NOFRAME)
+		{
+			if((ec_rxbuf[idx][EC_CMDOFFSET]==EC_CMD_LRD) || (ec_rxbuf[idx][EC_CMDOFFSET]==EC_CMD_LRW))
+			{
+				if(first)
+				{	
+					memcpy(ec_idxstack.data[pos], &ec_rxbuf[idx][EC_HEADERSIZE], ec_DCl);
+					memcpy(&wkc, &ec_rxbuf[idx][EC_HEADERSIZE + ec_DCl], EC_WKCSIZE);
+					wkc = etohs(wkc);
+					memcpy(&ec_DCtime, &ec_rxbuf[idx][ec_DCtO], sizeof(ec_DCtime));
+					ec_DCtime = etohll(ec_DCtime);
+					first = FALSE;				}
+				else
+				{	
+					/* copy input data back to process data buffer */
+					memcpy(ec_idxstack.data[pos], &ec_rxbuf[idx][EC_HEADERSIZE], ec_idxstack.length[pos]);
+					wkc += wkc2;
+				}	
+			}
+			else if(ec_rxbuf[idx][EC_CMDOFFSET]==EC_CMD_LWR)
+			{
+				if(first)
+				{	
+					memcpy(&wkc, &ec_rxbuf[idx][EC_HEADERSIZE + ec_DCl], EC_WKCSIZE);
+					wkc = etohs(wkc);
+					memcpy(&ec_DCtime, &ec_rxbuf[idx][ec_DCtO], sizeof(ec_DCtime));
+					ec_DCtime = etohll(ec_DCtime);
+					first = FALSE;				}
+				/* output WKC counts 2 times when using LRW, emulate the same for LWR */
+				wkc += wkc2 * 2;
+			}
+		}
 		/* release buffer */
 	    ec_setbufstat(idx, EC_BUF_EMPTY);
 		/* get next index */

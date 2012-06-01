@@ -43,6 +43,7 @@ set(SOEM_SRC
   ethercatbase.c
   ethercatconfig.c
   ethercatfoe.c
+  ethercatframe.c
   ethercatprint.c
   eepromtool.c
   ethercatcoe.c
@@ -89,7 +90,7 @@ add_executable(ebox ebox.c)
 target_link_libraries(ebox soem_static ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(simple_test simple_test.c)
-target_link_libraries(simple_test soem_static)
+target_link_libraries(simple_test soem_static ${CMAKE_THREAD_LIBS_INIT} )
 
 add_executable(eepromtool eepromtool.c)
 target_link_libraries(eepromtool soem_static)

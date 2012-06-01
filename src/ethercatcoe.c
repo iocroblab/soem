@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatcoe.c
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -360,7 +360,8 @@ int ec_SDOread(uint16 slave, uint16 index, uint8 subindex,
 
 /** CoE SDO write, blocking. Single subindex or Complete Access.
  * 
- * Only a "normal" download request is issued. If the paramater is larger than
+ * A "normal" download request is issued, unless we have a really small mailbox
+ * and small data, then a expedited transfer is used. If the paramater is larger than
  * the mailbox size then the download is segmented. The function will split the
  * parameter data in segments and send them to the slave one by one.
  *
@@ -391,125 +392,174 @@ int ec_SDOwrite(uint16 Slave, uint16 Index, uint8 SubIndex,
     aSDOp = (ec_SDOt *)&MbxIn;
     SDOp = (ec_SDOt *)&MbxOut;
     maxdata = ec_slave[Slave].mbx_l - 0x10; /* data section=mailbox size - 6 mbx - 2 CoE - 8 sdo req */
-    framedatasize = psize;
-    NotLast = FALSE;
-    if (framedatasize > maxdata)
-    {
-        framedatasize = maxdata;  /*  segmented transfer needed  */
-        NotLast = TRUE;
-    }
-    SDOp->MbxHeader.length = htoes(0x0a + framedatasize);
-    SDOp->MbxHeader.address = htoes(0x0000);
-    SDOp->MbxHeader.priority = 0x00;
-	/* get new mailbox counter, used for session handle */
-    cnt = ec_nextmbxcnt(ec_slave[Slave].mbx_cnt);
-    ec_slave[Slave].mbx_cnt = cnt;
-    SDOp->MbxHeader.mbxtype = ECT_MBXT_COE + (cnt << 4); /* CoE */
-    SDOp->CANOpen = htoes(0x000 + (ECT_COES_SDOREQ << 12)); /* number 9bits service upper 4 bits */
-    if (CA)
-        SDOp->Command = ECT_SDO_DOWN_INIT_CA; /* Complete Access, normal SDO init download transfer */
-    else
-        SDOp->Command = ECT_SDO_DOWN_INIT; /* normal SDO init download transfer */
-    SDOp->Index = htoes(Index);
-    SDOp->SubIndex = SubIndex;
-    if (CA && (SubIndex > 1))
-        SDOp->SubIndex = 1;
-    SDOp->ldata[0] = htoel(psize);
-    hp = p;
-	/* copy parameter data to mailbox */
-    memcpy(&SDOp->ldata[1], hp, framedatasize);
-    hp += framedatasize;
-    psize -= framedatasize;
-	/* send mailbox SDO download request to slave */
-    wkc = ec_mbxsend(Slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
-    if (wkc > 0)
-    {
-        ec_clearmbx(&MbxIn);
-		/* read slave response */
-        wkc = ec_mbxreceive(Slave, (ec_mbxbuft *)&MbxIn, Timeout);
-        if (wkc > 0)
-        {
-			/* response should be CoE, SDO response, correct index and subindex */
-            if (((aSDOp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_COE) && 
-                ((etohs(aSDOp->CANOpen) >> 12) == ECT_COES_SDORES) &&
-                (aSDOp->Index == SDOp->Index) &&
-                (aSDOp->SubIndex == SDOp->SubIndex))
-            {
-                /* all ok */
-                maxdata += 7;
-                toggle = 0;
-				/* repeat while segments left */
-                while (NotLast)
-                {
-                    SDOp = (ec_SDOt *)&MbxOut;
-                    framedatasize = psize;
-                    NotLast = FALSE;
-                    SDOp->Command = 0x01; /* last segment */
-                    if (framedatasize > maxdata)
-                    {
-                        framedatasize = maxdata;  /*  more segments needed  */
-                        NotLast = TRUE;
-                        SDOp->Command = 0x00; /* segments follow */
-                    }
-                    if (!NotLast && (framedatasize < 7))
-                    {
-                        SDOp->MbxHeader.length = htoes(0x0a); /* minimum size */
-                        SDOp->Command = 0x01 + ((7 - framedatasize) << 1); /* last segment reduced octets */
-                    }
-                    else
-                        SDOp->MbxHeader.length = htoes(framedatasize + 3); /* data + 2 CoE + 1 SDO */
-                    SDOp->MbxHeader.address = htoes(0x0000);
-                    SDOp->MbxHeader.priority = 0x00;
-					/* get new mailbox counter value */
-                    cnt = ec_nextmbxcnt(ec_slave[Slave].mbx_cnt);
-                    ec_slave[Slave].mbx_cnt = cnt;
-                    SDOp->MbxHeader.mbxtype = ECT_MBXT_COE + (cnt << 4); /* CoE */
-                    SDOp->CANOpen = htoes(0x000 + (ECT_COES_SDOREQ << 12)); /* number 9bits service upper 4 bits (SDO request) */
-                    SDOp->Command = SDOp->Command + toggle; /* add toggle bit to command byte */
-					/* copy parameter data to mailbox */
-                    memcpy(&SDOp->Index, hp, framedatasize);
-					/* update parameter buffer pointer */
-                    hp += framedatasize;
-                    psize -= framedatasize;
-					/* send SDO download request */
-                    wkc = ec_mbxsend(Slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
-                    if (wkc > 0)
-                    {
-                        ec_clearmbx(&MbxIn);
-						/* read slave response */
-                        wkc = ec_mbxreceive(Slave, (ec_mbxbuft *)&MbxIn, Timeout);
-                        if (wkc > 0)
-                        {
-                            if (((aSDOp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_COE) &&
-                                ((etohs(aSDOp->CANOpen) >> 12) == ECT_COES_SDORES) &&
-                                ((aSDOp->Command & 0xe0) == 0x20))
-                            {
-                                /* all OK, nothing to do */
-                            }
-                            else
-                            {
-                                if (aSDOp->Command == ECT_SDO_ABORT) /* SDO abort frame received */
-                                    ec_SDOerror(Slave, Index, SubIndex, etohl(aSDOp->ldata[0]));
-                                else
-                                    ec_packeterror(Slave, Index, SubIndex, 1); /* Unexpected frame returned */
-                                wkc = 0;
-                                NotLast = FALSE;
-                            }
-                        }
-                    }
-                    toggle = toggle ^ 0x10; /* toggle bit for segment request */
-                }
-            }
-			/* unexpected response from slave */
-            else
-            {
-                if (aSDOp->Command == ECT_SDO_ABORT) /* SDO abort frame received */
-                    ec_SDOerror(Slave, Index, SubIndex, etohl(aSDOp->ldata[0]));
-                else
-                    ec_packeterror(Slave, Index, SubIndex, 1); /* Unexpected frame returned */
-                wkc = 0;
-            }
-        }
+	/* if small mailbox size and small data use expedited transfer */
+	if ((maxdata < 4) && (psize <= 4))
+	{
+		SDOp->MbxHeader.length = htoes(0x000a);
+		SDOp->MbxHeader.address = htoes(0x0000);
+		SDOp->MbxHeader.priority = 0x00;
+		/* get new mailbox counter, used for session handle */
+		cnt = ec_nextmbxcnt(ec_slave[Slave].mbx_cnt);
+		ec_slave[Slave].mbx_cnt = cnt;
+		SDOp->MbxHeader.mbxtype = ECT_MBXT_COE + (cnt << 4); /* CoE */
+		SDOp->CANOpen = htoes(0x000 + (ECT_COES_SDOREQ << 12)); /* number 9bits service upper 4 bits */
+		SDOp->Command = ECT_SDO_DOWN_EXP | (((4 - psize) << 2) & 0x0c); /* expedited SDO download transfer */
+		SDOp->Index = htoes(Index);
+		SDOp->SubIndex = SubIndex;
+		hp = p;
+		/* copy parameter data to mailbox */
+		memcpy(&SDOp->ldata[0], hp, psize);
+		/* send mailbox SDO download request to slave */
+		wkc = ec_mbxsend(Slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
+		if (wkc > 0)
+		{
+			ec_clearmbx(&MbxIn);
+			/* read slave response */
+			wkc = ec_mbxreceive(Slave, (ec_mbxbuft *)&MbxIn, Timeout);
+			if (wkc > 0)
+			{
+				/* response should be CoE, SDO response, correct index and subindex */
+				if (((aSDOp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_COE) && 
+				    ((etohs(aSDOp->CANOpen) >> 12) == ECT_COES_SDORES) &&
+				    (aSDOp->Index == SDOp->Index) &&
+				    (aSDOp->SubIndex == SDOp->SubIndex))
+				{
+					/* all OK */
+				}
+				/* unexpected response from slave */
+				else
+				{
+					if (aSDOp->Command == ECT_SDO_ABORT) /* SDO abort frame received */
+						ec_SDOerror(Slave, Index, SubIndex, etohl(aSDOp->ldata[0]));
+					else
+						ec_packeterror(Slave, Index, SubIndex, 1); /* Unexpected frame returned */
+					wkc = 0;
+				}
+			}
+		}
+	}
+	else
+	{
+		framedatasize = psize;
+		NotLast = FALSE;
+		if (framedatasize > maxdata)
+		{
+			framedatasize = maxdata;  /*  segmented transfer needed  */
+			NotLast = TRUE;
+		}
+		SDOp->MbxHeader.length = htoes(0x0a + framedatasize);
+		SDOp->MbxHeader.address = htoes(0x0000);
+		SDOp->MbxHeader.priority = 0x00;
+		/* get new mailbox counter, used for session handle */
+		cnt = ec_nextmbxcnt(ec_slave[Slave].mbx_cnt);
+		ec_slave[Slave].mbx_cnt = cnt;
+		SDOp->MbxHeader.mbxtype = ECT_MBXT_COE + (cnt << 4); /* CoE */
+		SDOp->CANOpen = htoes(0x000 + (ECT_COES_SDOREQ << 12)); /* number 9bits service upper 4 bits */
+		if (CA)
+			SDOp->Command = ECT_SDO_DOWN_INIT_CA; /* Complete Access, normal SDO init download transfer */
+		else
+			SDOp->Command = ECT_SDO_DOWN_INIT; /* normal SDO init download transfer */
+		SDOp->Index = htoes(Index);
+		SDOp->SubIndex = SubIndex;
+		if (CA && (SubIndex > 1))
+			SDOp->SubIndex = 1;
+		SDOp->ldata[0] = htoel(psize);
+		hp = p;
+		/* copy parameter data to mailbox */
+		memcpy(&SDOp->ldata[1], hp, framedatasize);
+		hp += framedatasize;
+		psize -= framedatasize;
+		/* send mailbox SDO download request to slave */
+		wkc = ec_mbxsend(Slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
+		if (wkc > 0)
+		{
+			ec_clearmbx(&MbxIn);
+			/* read slave response */
+			wkc = ec_mbxreceive(Slave, (ec_mbxbuft *)&MbxIn, Timeout);
+			if (wkc > 0)
+			{
+				/* response should be CoE, SDO response, correct index and subindex */
+				if (((aSDOp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_COE) && 
+				    ((etohs(aSDOp->CANOpen) >> 12) == ECT_COES_SDORES) &&
+				    (aSDOp->Index == SDOp->Index) &&
+				    (aSDOp->SubIndex == SDOp->SubIndex))
+				{
+					/* all ok */
+					maxdata += 7;
+					toggle = 0;
+					/* repeat while segments left */
+					while (NotLast)
+					{
+						SDOp = (ec_SDOt *)&MbxOut;
+						framedatasize = psize;
+						NotLast = FALSE;
+						SDOp->Command = 0x01; /* last segment */
+						if (framedatasize > maxdata)
+						{
+							framedatasize = maxdata;  /*  more segments needed  */
+							NotLast = TRUE;
+							SDOp->Command = 0x00; /* segments follow */
+						}
+						if (!NotLast && (framedatasize < 7))
+						{
+							SDOp->MbxHeader.length = htoes(0x0a); /* minimum size */
+							SDOp->Command = 0x01 + ((7 - framedatasize) << 1); /* last segment reduced octets */
+						}
+						else
+							SDOp->MbxHeader.length = htoes(framedatasize + 3); /* data + 2 CoE + 1 SDO */
+						SDOp->MbxHeader.address = htoes(0x0000);
+						SDOp->MbxHeader.priority = 0x00;
+						/* get new mailbox counter value */
+						cnt = ec_nextmbxcnt(ec_slave[Slave].mbx_cnt);
+						ec_slave[Slave].mbx_cnt = cnt;
+						SDOp->MbxHeader.mbxtype = ECT_MBXT_COE + (cnt << 4); /* CoE */
+						SDOp->CANOpen = htoes(0x000 + (ECT_COES_SDOREQ << 12)); /* number 9bits service upper 4 bits (SDO request) */
+						SDOp->Command = SDOp->Command + toggle; /* add toggle bit to command byte */
+						/* copy parameter data to mailbox */
+						memcpy(&SDOp->Index, hp, framedatasize);
+						/* update parameter buffer pointer */
+						hp += framedatasize;
+						psize -= framedatasize;
+						/* send SDO download request */
+						wkc = ec_mbxsend(Slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
+						if (wkc > 0)
+						{
+							ec_clearmbx(&MbxIn);
+							/* read slave response */
+							wkc = ec_mbxreceive(Slave, (ec_mbxbuft *)&MbxIn, Timeout);
+							if (wkc > 0)
+							{
+								if (((aSDOp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_COE) &&
+								    ((etohs(aSDOp->CANOpen) >> 12) == ECT_COES_SDORES) &&
+								    ((aSDOp->Command & 0xe0) == 0x20))
+								{
+									/* all OK, nothing to do */
+								}
+								else
+								{
+									if (aSDOp->Command == ECT_SDO_ABORT) /* SDO abort frame received */
+										ec_SDOerror(Slave, Index, SubIndex, etohl(aSDOp->ldata[0]));
+									else
+										ec_packeterror(Slave, Index, SubIndex, 1); /* Unexpected frame returned */
+									wkc = 0;
+									NotLast = FALSE;
+								}
+							}
+						}
+						toggle = toggle ^ 0x10; /* toggle bit for segment request */
+					}
+				}
+				/* unexpected response from slave */
+				else
+				{
+					if (aSDOp->Command == ECT_SDO_ABORT) /* SDO abort frame received */
+						ec_SDOerror(Slave, Index, SubIndex, etohl(aSDOp->ldata[0]));
+					else
+						ec_packeterror(Slave, Index, SubIndex, 1); /* Unexpected frame returned */
+					wkc = 0;
+				}
+			}
+		}
     }
 
     return wkc;
@@ -1090,7 +1140,7 @@ int ec_readODdescription(uint16 Item, ec_ODlistt *pODlist)
  * @param[out] pOElist		= resulting object entry structure.
  * @return Workcounter of slave response.
  */
-static int ec_readOEsingle(uint16 Item, uint8 SubI, ec_ODlistt *pODlist, ec_OElistt *pOElist)
+int ec_readOEsingle(uint16 Item, uint8 SubI, ec_ODlistt *pODlist, ec_OElistt *pOElist)
 {
     ec_SDOservicet *SDOp, *aSDOp;
     uint16 wkc, Index, Slave;
@@ -1098,7 +1148,7 @@ static int ec_readOEsingle(uint16 Item, uint8 SubI, ec_ODlistt *pODlist, ec_OEli
     ec_mbxbuft MbxIn, MbxOut;
     uint8 cnt;
 
-    wkc = 0;
+	wkc = 0;
     Slave = pODlist->Slave;
     Index = pODlist->Index[Item];
     ec_clearmbx(&MbxIn);

@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatmain.h
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -273,8 +273,10 @@ typedef struct
 	uint16				Isegment;
 	/** Offset in input segment */
 	uint16				Ioffset;
-	/** Expected workcounter */
-	uint16				expectedWKC;
+	/** Expected workcounter outputs */
+	uint16				outputsWKC;
+	/** Expected workcounter inputs */
+	uint16				inputsWKC;
 	/** check slave states */
 	boolean				docheckstate;
 	/** IO segmentation list. Datagrams must not break SM in two. */

@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatconfiglist.h
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -58,35 +58,6 @@
 	 7: input.output device with mailbox configuration           
 */
 #define EC_CONFIGEND 0xffffffff
-
-/** Slave configuration structure */
-typedef const struct
-{
-	/** Manufacturer code of slave */
-	uint32				man;
-	/** ID of slave */
-	uint32				id;
-	/** Readable name */
-	char				name[EC_MAXNAME + 1];
-	/** Data type */
-	uint8				Dtype;
-	/** Input bits */
-	uint16				Ibits;
-	/** Output bits */
-	uint16				Obits;
-	/** SyncManager 2 address */
-	uint16				SM2a;
-	/** SyncManager 2 flags */
-	uint32				SM2f;
-	/** SyncManager 3 address */
-	uint16				SM3a;
-	/** SyncManager 3 flags */
-	uint32				SM3f;
-	/** FMMU 0 activation */
-	uint8				FM0ac;
-	/** FMMU 1 activation */
-	uint8				FM1ac;
-} ec_configlist_t;
 
 ec_configlist_t ec_configlist[] = {
       {/*Man=*/0x00000000,/*ID=*/0x00000000,/*Name=*/""          ,/*dtype=*/0,/*Ibits=*/ 0,/*Obits=*/ 0},

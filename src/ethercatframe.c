@@ -1,7 +1,7 @@
 /*
  * Simple Open EtherCAT Master Library 
  *
- * File    : nicdrv.h
+ * File    : ethercatframe.c
  * Version : 1.2.6
  * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
@@ -38,39 +38,79 @@
  * (www.beckhoff.com).
  */
 
-/** \file 
+/** \file
  * \brief
- * Headerfile for nicdrv.c 
+ * EtherCAT frame and datagram functions. 
  */
 
-#ifndef _nicdrvh_
-#define _nicdrvh_
+#include <stdio.h>
+#include <string.h>
+#include "ethercattype.h"
+#include "nicdrv.h"
+#include "ethercatbase.h"
 
-extern ec_bufT ec_rxbuf[EC_MAXBUF];
-extern ec_bufT ec_txbuf[EC_MAXBUF];
-extern ec_bufT ec_txbuf2;
-extern int ec_txbuflength[EC_MAXBUF];
-extern int ec_txbuflength2;
-extern int ec_incnt;
-extern int ec_errcnt;
-extern int ec_redstate;
+/** ethernet header definition */
+typedef struct PACKED 
+{
+	/** destination MAC */
+	uint16  da0,da1,da2;
+	/** source MAC */
+	uint16  sa0,sa1,sa2;
+	/** ethernet type */
+	uint16  etype;
+} ec_etherh_t;
 
-extern int hlp_txtime;
-extern int hlp_rxtime;
+/** ethernet header size */
+#define ETH_HEADERSIZE		sizeof(ec_etherheadert)
 
-extern int sockhandle, sockhandle2;
+/** EtherCAT header definition */
+typedef struct PACKED
+{
+	/** length of EtherCAT packet */
+	uint16	elength:11;
+	uint16	res:1;
+	uint16	ecattype:4;
+} ec_ecath_t;
 
-extern const uint16 priMAC[3];
-extern const uint16 secMAC[3];
+/** EtherCAT datagram header definition */
+typedef struct PACKED
+{
+	/** EtherCAT command, see ec_cmdtype */
+	uint8   command;
+	/** index, used in SOEM for Tx to Rx recombination */
+	uint8   index;
+	/** ADP */
+	uint16  ADP;
+	/** ADO */
+	uint16  ADO;
+	/** length of data portion in datagram */
+	uint16  dlength:11;
+	uint16	r:3;
+	uint16	c:1;
+	uint16	m:1;
+	/** EtherCAT event request */
+	uint16  eer;
+} ec_ecatd_t;
 
-int ec_setupnic(const char * ifname, int secondary);
-int ec_closenic(void);
-void ec_setupheader(void *p);
-void ec_setbufstat(uint8 idx, int bufstat);
-uint8 ec_getindex(void);
-int ec_outframe(uint8 idx, int sock);
-int ec_outframe_red(uint8 idx);
-int ec_waitinframe(uint8 idx, int timeout);
-int ec_srconfirm(uint8 idx,int timeout);
+#define EC_MAXDATAGRAM	115
 
-#endif
+typedef struct
+{
+	uint16		start;
+	uint16		wkc;
+} ec_dinfo_t;
+
+typedef struct
+{
+	int			txstat;
+	int			rxstat;
+	void		*txframe;
+	void		*rxframe;
+	int			headersize;
+	ec_dinfo_t	datagram[EC_MAXDATAGRAM];
+	uint8		ndatagram;
+	uint8		index;
+} ec_packetinfo_t;
+
+
+

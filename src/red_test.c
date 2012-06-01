@@ -45,6 +45,7 @@ uint16 ob2;
 pthread_cond_t      cond  = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t     mutex = PTHREAD_MUTEX_INITIALIZER;
 uint8 *digout = 0;
+int wcounter;
 
 void redtest(char *ifname, char *ifname2)
 {
@@ -98,9 +99,9 @@ void redtest(char *ifname, char *ifname2)
 				printf("Operational state reached for all slaves.\n");
 				dorun = 1;
 				/* acyclic loop 500 x 20ms = 10s */
-				for(i = 1; i <= 500; i++)
+				for(i = 1; i <= 5000; i++)
 				{
-					printf("Processdata cycle %5d , DCtime %12lld, O:", dorun, ec_DCtime);
+					printf("Processdata cycle %5d , Wck %3d, DCtime %12lld, O:", dorun, wcounter , ec_DCtime);
 					for(j = 0 ; j < oloop; j++)
 					{
 						printf(" %2.2x", *(ec_slave[0].outputs + j));
@@ -199,7 +200,7 @@ void ecatthread( void *ptr )
 
 			ec_send_processdata();
 			
-			ec_receive_processdata(EC_TIMEOUTRET);
+			wcounter = ec_receive_processdata(EC_TIMEOUTRET);
 			
 			dorun++;
 			/* if we have some digital output, cycle */

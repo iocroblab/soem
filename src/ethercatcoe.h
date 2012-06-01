@@ -2,8 +2,8 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatcoe.h
- * Version : 1.2.5
- * Date    : 09-04-2011
+ * Version : 1.2.6
+ * Date    : 25-07-2011
  * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
  * Copyright (C) 2005-2011 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
@@ -98,6 +98,7 @@ int ec_TxPDO(uint16 slave, uint16 TxPDOnumber , int *psize, void *p, int timeout
 int ec_readPDOmap(uint16 Slave, int *Osize, int *Isize);
 int ec_readPDOmapCA(uint16 Slave, int *Osize, int *Isize);
 int ec_readODlist(uint16 Slave, ec_ODlistt *pODlist);int ec_readODdescription(uint16 Item, ec_ODlistt *pODlist);
+int ec_readOEsingle(uint16 Item, uint8 SubI, ec_ODlistt *pODlist, ec_OElistt *pOElist);
 int ec_readOE(uint16 Item, ec_ODlistt *pODlist, ec_OElistt *pOElist);
 
 #endif
