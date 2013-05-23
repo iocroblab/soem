@@ -22,7 +22,7 @@ cmake_minimum_required (VERSION 2.6)
 project(SOEM)
 
 # SOEM version. Defined here but not exported to header files, because it's already defined there 
-set( SOEM_VERSION 1.2.7 )
+set( SOEM_VERSION 1.2.5 )
 string( REGEX MATCHALL "[0-9]+" SOEM_VERSIONS ${SOEM_VERSION} )
 LIST( GET SOEM_VERSIONS 0 SOEM_VERSION_MAJOR)
 LIST( GET SOEM_VERSIONS 1 SOEM_VERSION_MINOR)
