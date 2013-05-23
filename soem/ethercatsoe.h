@@ -2,10 +2,10 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatsoe.h
- * Version : 1.2.8
- * Date    : 14-06-2012
- * Copyright (C) 2005-2012 Speciaal Machinefabriek Ketels v.o.f.
- * Copyright (C) 2005-2012 Arthur Ketels
+ * Version : 1.3.0
+ * Date    : 24-02-2013
+ * Copyright (C) 2005-2013 Speciaal Machinefabriek Ketels v.o.f.
+ * Copyright (C) 2005-2013 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
  *
  * SOEM is free software; you can redistribute it and/or modify it under
@@ -46,6 +46,11 @@
 #ifndef _ethercatsoe_
 #define _ethercatsoe_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #define EC_SOE_DATASTATE_B   0x01
 #define EC_SOE_NAME_B        0x02
 #define EC_SOE_ATTRIBUTE_B   0x04
@@ -62,6 +67,7 @@
 #define EC_IDN_ATCONFIG      16
 
 /** SoE name structure */
+PACKED_BEGIN
 typedef struct PACKED
 {
    /** current length in bytes of list */
@@ -70,8 +76,10 @@ typedef struct PACKED
    uint16     maxlength;
    char       name[EC_SOE_MAXNAME];
 } ec_SoEnamet;
+PACKED_END
 
 /** SoE list structure */
+PACKED_BEGIN
 typedef struct PACKED
 {
    /** current length in bytes of list */
@@ -86,8 +94,10 @@ typedef struct PACKED
       uint64  lword[1];
    };   
 } ec_SoElistt;
+PACKED_END
 
 /** SoE IDN mapping structure */
+PACKED_BEGIN
 typedef struct PACKED
 {
    /** current length in bytes of list */
@@ -96,6 +106,7 @@ typedef struct PACKED
    uint16     maxlength;
    uint16     idn[EC_SOE_MAXMAPPING];
 } ec_SoEmappingt;
+PACKED_END
 
 #define EC_SOE_LENGTH_1         0x00
 #define EC_SOE_LENGTH_2         0x01
@@ -111,6 +122,7 @@ typedef struct PACKED
 #define EC_SOE_TYPE_PARAMETER   0x07
 
 /** SoE attribute structure */
+PACKED_BEGIN
 typedef struct PACKED
 {
    /** evaluation factor for display purposes */
@@ -134,9 +146,20 @@ typedef struct PACKED
    uint32     wpop        :1;
    uint32     reserved2   :1;
 } ec_SoEattributet;
+PACKED_END
 
+#ifdef EC_VER1
 int ec_SoEread(uint16 slave, uint8 driveNo, uint8 elementflags, uint16 idn, int *psize, void *p, int timeout);
 int ec_SoEwrite(uint16 slave, uint8 driveNo, uint8 elementflags, uint16 idn, int psize, void *p, int timeout);
 int ec_readIDNmap(uint16 slave, int *Osize, int *Isize);
+#endif
+
+int ecx_SoEread(ecx_contextt *context, uint16 slave, uint8 driveNo, uint8 elementflags, uint16 idn, int *psize, void *p, int timeout);
+int ecx_SoEwrite(ecx_contextt *context, uint16 slave, uint8 driveNo, uint8 elementflags, uint16 idn, int psize, void *p, int timeout);
+int ecx_readIDNmap(ecx_contextt *context, uint16 slave, int *Osize, int *Isize);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

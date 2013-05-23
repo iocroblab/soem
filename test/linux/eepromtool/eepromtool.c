@@ -1,15 +1,17 @@
 /** \file
  * \brief EEprom tool for Simple Open EtherCAT master
  *
- * Usage : eepromtool ifname slave OPTION fname
+ * Usage : eepromtool ifname slave OPTION fname|alias
  * ifname is NIC interface, f.e. eth0
  * slave = slave number in EtherCAT order 1..n
  * -r      read EEPROM, output binary format
  * -ri     read EEPROM, output Intel Hex format
  * -w      write EEPROM, input binary format
  * -wi     write EEPROM, input Intel Hex format
+ * -i      display EEPROM information
+ * -walias write slave alias in EEPROM
  *
- * (c)Arthur Ketels 2010 
+ * (c)Arthur Ketels 2010-2012 
  */
 
 #include <stdio.h>
@@ -31,12 +33,15 @@
 #define MAXBUF 32768
 #define STDBUF 2048
 #define MINBUF 128
+#define CRCBUF 14
 
 #define MODE_NONE         0
 #define MODE_READBIN      1
 #define MODE_READINTEL    2
 #define MODE_WRITEBIN     3
 #define MODE_WRITEINTEL   4
+#define MODE_WRITEALIAS   5
+#define MODE_INFO         6
 
 #define MAXSLENGTH        256
 
@@ -45,12 +50,39 @@ uint8 ob;
 uint16 ow;
 int os;
 int slave;
+int alias;
 struct timeval tstart,tend, tdif;
 int wkc;
 int mode;
 char sline[MAXSLENGTH];
 
 #define IHEXLENGTH 0x20
+
+void calc_crc(uint8 *crc, uint8 b)
+{
+   int j;
+   *crc ^= b;
+   for(j = 0; j <= 7 ; j++ )
+   {
+     if(*crc & 0x80)
+        *crc = (*crc << 1) ^ 0x07;
+     else
+        *crc = (*crc << 1);
+   }  
+}
+
+uint16 SIIcrc(uint8 *buf)
+{
+   int i; 
+   uint8 crc;
+    
+   crc = 0xff; 
+   for( i = 0 ; i <= 13 ; i++ )
+   {
+      calc_crc(&crc , *(buf++));  
+   } 
+   return (uint16)crc;
+}
 
 int input_bin(char *fname, int *length)
 {
@@ -265,6 +297,31 @@ int eeprom_write(int slave, int start, int length)
    return 0;
 }
 
+int eeprom_writealias(int slave, int alias, uint16 crc)
+{
+   int wkc;
+   uint16 aiadr;
+   uint8 eepctl;
+   int ret;
+   
+   if((ec_slavecount >= slave) && (slave > 0) && (alias <= 0xffff))
+   {
+      aiadr = 1 - slave;
+      eepctl = 2;
+      wkc = ec_APWR(aiadr, ECT_REG_EEPCFG, sizeof(eepctl), &eepctl , EC_TIMEOUTRET); /* force Eeprom from PDI */
+      eepctl = 0;
+      wkc = ec_APWR(aiadr, ECT_REG_EEPCFG, sizeof(eepctl), &eepctl , EC_TIMEOUTRET); /* set Eeprom to master */
+
+      ret = ec_writeeepromAP(aiadr, 0x04 , alias, EC_TIMEOUTEEP);
+      if (ret)
+        ret = ec_writeeepromAP(aiadr, 0x07 , crc, EC_TIMEOUTEEP);
+        
+      return ret;
+   }
+   
+   return 0;
+}
+
 void eepromtool(char *ifname, int slave, int mode, char *fname)
 {
    int w, rc = 0, estart, esize;
@@ -284,7 +341,7 @@ void eepromtool(char *ifname, int slave, int mode, char *fname)
          printf("%d slaves found.\n",ec_slavecount);
          if((ec_slavecount >= slave) && (slave > 0))
          {
-            if ((mode == MODE_READBIN) || (mode == MODE_READINTEL))
+            if ((mode == MODE_INFO) || (mode == MODE_READBIN) || (mode == MODE_READINTEL))
             {
                rc =  gettimeofday(&tstart, NULL);
                eeprom_read(slave, 0x0000, MINBUF); // read first 128 bytes
@@ -295,6 +352,7 @@ void eepromtool(char *ifname, int slave, int mode, char *fname)
                printf(" PDI Config       : %4.4X\n",*(wbuf + 0x01));
                printf(" Config Alias     : %4.4X\n",*(wbuf + 0x04));
                printf(" Checksum         : %4.4X\n",*(wbuf + 0x07));
+               printf("   calculated     : %4.4X\n",SIIcrc(&ebuf[0])); 
                printf(" Vendor ID        : %8.8X\n",*(uint32 *)(wbuf + 0x08));
                printf(" Product Code     : %8.8X\n",*(uint32 *)(wbuf + 0x0A));
                printf(" Revision Number  : %8.8X\n",*(uint32 *)(wbuf + 0x0C));
@@ -304,14 +362,16 @@ void eepromtool(char *ifname, int slave, int mode, char *fname)
                if (esize > MAXBUF) esize = MAXBUF;
                printf(" Size             : %4.4X = %d bytes\n",*(wbuf + 0x3E), esize);
                printf(" Version          : %4.4X\n",*(wbuf + 0x3F));
-
+            }
+            if ((mode == MODE_READBIN) || (mode == MODE_READINTEL))
+            {
                if (esize > MINBUF)
                   eeprom_read(slave, MINBUF, esize - MINBUF); // read reminder
 
                rc =  gettimeofday(&tend, NULL);
                timersub(&tend, &tstart, &tdif);
                if (mode == MODE_READINTEL) output_intelhex(fname, esize);
-               if (mode == MODE_READBIN)    output_bin(fname, esize);
+               if (mode == MODE_READBIN)   output_bin(fname, esize);
 
                printf("\nTotal EEPROM read time :%ldms\n", (tdif.tv_usec+(tdif.tv_sec*1000000L)) / 1000);
             }
@@ -319,7 +379,7 @@ void eepromtool(char *ifname, int slave, int mode, char *fname)
             {
                estart = 0;
                if (mode == MODE_WRITEINTEL) rc = input_intelhex(fname, &estart, &esize);
-               if (mode == MODE_WRITEBIN)     rc = input_bin(fname, &esize);
+               if (mode == MODE_WRITEBIN)   rc = input_bin(fname, &esize);
 
                if (rc > 0)
                {               
@@ -342,41 +402,77 @@ void eepromtool(char *ifname, int slave, int mode, char *fname)
                else
                   printf("Error reading file, abort.\n"); 
             }
+            if (mode == MODE_WRITEALIAS)
+            {
+               if( eeprom_read(slave, 0x0000, CRCBUF) ) // read first 14 bytes
+               {
+                  wbuf = (uint16 *)&ebuf[0];
+                  *(wbuf + 0x04) = alias;  
+                  if(eeprom_writealias(slave, alias, SIIcrc(&ebuf[0])))
+                  {
+                     printf("Alias %4.4X written successfully to slave %d\n", alias, slave);
+                  } 
+                  else
+                  {
+                     printf("Alias not written\n");
+                  }
+               }  
+               else
+               {
+                  printf("Could not read slave EEPROM");    
+               }
+            }
          }
          else
+         {
             printf("Slave number outside range.\n");
+         }
       }
       else
+      {
          printf("No slaves found!\n");
+      }
       printf("End, close socket\n");
       /* stop SOEM, close socket */
       ec_close();
    }
    else
+   {
       printf("No socket connection on %s\nExcecute as root\n",ifname);
+   }
 }   
 
 int main(int argc, char *argv[])
 {
    printf("SOEM (Simple Open EtherCAT Master)\nEEPROM tool\n");
 
-   if (argc > 4)
+   mode = MODE_NONE;
+   if (argc > 3)
    {      
       slave = atoi(argv[2]);
-      mode = MODE_NONE;
-      if ((strncmp(argv[3], "-r", sizeof("-r")) == 0))   mode = MODE_READBIN;
-      if ((strncmp(argv[3], "-ri", sizeof("-ri")) == 0)) mode = MODE_READINTEL;
-      if ((strncmp(argv[3], "-w", sizeof("-w")) == 0))   mode = MODE_WRITEBIN;
-      if ((strncmp(argv[3], "-wi", sizeof("-wi")) == 0)) mode = MODE_WRITEINTEL;
-      
+      if ((strncmp(argv[3], "-i", sizeof("-i")) == 0))   mode = MODE_INFO;
+      if (argc > 4)
+      {
+         if ((strncmp(argv[3], "-r", sizeof("-r")) == 0))   mode = MODE_READBIN;
+         if ((strncmp(argv[3], "-ri", sizeof("-ri")) == 0)) mode = MODE_READINTEL;
+         if ((strncmp(argv[3], "-w", sizeof("-w")) == 0))   mode = MODE_WRITEBIN;
+         if ((strncmp(argv[3], "-wi", sizeof("-wi")) == 0)) mode = MODE_WRITEINTEL;
+         if ((strncmp(argv[3], "-walias", sizeof("-walias")) == 0))
+         {
+            mode = MODE_WRITEALIAS;
+            alias = atoi(argv[4]);
+         }
+      }
       /* start tool */
       eepromtool(argv[1],slave,mode,argv[4]);
    }
    else
    {
-      printf("Usage: eepromtool ifname slave OPTION fname\n");
+      printf("Usage: eepromtool ifname slave OPTION fname|alias\n");
       printf("ifname = eth0 for example\n");
       printf("slave = slave number in EtherCAT order 1..n\n");
+      printf("    -i      display EEPROM information\n");
+      printf("    -walias write slave alias\n");
       printf("    -r      read EEPROM, output binary format\n");
       printf("    -ri     read EEPROM, output Intel Hex format\n");
       printf("    -w      write EEPROM, input binary format\n");

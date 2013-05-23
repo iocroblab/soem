@@ -14,13 +14,14 @@
 # http://www.rt-labs.com
 # Copyright (C) 2006. rt-labs AB, Sweden. All rights reserved.
 #------------------------------------------------------------------------------
-# $Id: rules.mk 175 2012-06-21 07:14:12Z rtlaka $
+# $Id: rules.mk 414 2012-12-03 10:48:42Z rtlaka $
 #------------------------------------------------------------------------------
 
 # Compiler specific settings
 include $(PRJ_ROOT)/make/compilers/$(CROSS_GCC)-gcc.mk
 
 # Include paths
+DEFAULT_INC_PATH += $(PRJ_ROOT)/osal
 DEFAULT_INC_PATH += $(PRJ_ROOT)/osal/$(BSP)
 DEFAULT_INC_PATH += $(PRJ_ROOT)/oshw/$(BSP)
 DEFAULT_INC_PATH += $(PRJ_ROOT)/soem
@@ -38,7 +39,7 @@ LD_PATHS = $(patsubst %,-L%,$(LD_PATH))
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"
 
 # Common settings
-CFLAGS += -DEVENT_INSTRUMENT -g -O0 -ffunction-sections
+CFLAGS += -g -O0 -ffunction-sections
 LDFLAGS += -Wl,--gc-sections
 
 # Command-line overrides

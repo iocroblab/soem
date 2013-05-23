@@ -28,16 +28,18 @@
 #include "ethercatcoe.h"
 #include "ethercatconfig.h"
 #include "ethercatdc.h"
+#include "ethercatprint.h"
 
 #define NSEC_PER_SEC 1000000000
+#define EC_TIMEOUTMON 500
 
 struct sched_param schedp;
 char IOmap[4096];
-pthread_t thread1;
+pthread_t thread1, thread2;
 struct timeval tv, t1, t2;
 int dorun = 0;
 int deltat, tmax = 0;
-int64 toff;
+int64 toff, gl_delta;
 int DCdiff;
 int os;
 uint8 ob;
@@ -45,7 +47,12 @@ uint16 ob2;
 pthread_cond_t      cond  = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t     mutex = PTHREAD_MUTEX_INITIALIZER;
 uint8 *digout = 0;
-int wcounter;
+int expectedWKC;
+boolean needlf;
+volatile int wkc;
+boolean inOP;
+uint8 currentgroup = 0;
+
 
 void redtest(char *ifname, char *ifname2)
 {
@@ -77,15 +84,20 @@ void redtest(char *ifname, char *ifname2)
             printf("         Out:%8.8x,%4d In:%8.8x,%4d\n",
                   (int)ec_slave[cnt].outputs, ec_slave[cnt].Obytes, (int)ec_slave[cnt].inputs, ec_slave[cnt].Ibytes);
             /* check for EL2004 or EL2008 */
-            if( !digout && ((ec_slave[cnt].eep_id == 0x07d43052) || (ec_slave[cnt].eep_id == 0x07d83052)))
+            if( !digout && ((ec_slave[cnt].eep_id == 0x0af83052) || (ec_slave[cnt].eep_id == 0x07d83052)))
             {
                digout = ec_slave[cnt].outputs;
             }   
          }
+         expectedWKC = (ec_group[0].outputsWKC * 2) + ec_group[0].inputsWKC;
+         printf("Calculated workcounter %d\n", expectedWKC);
+
          printf("Request operational state for all slaves\n");
          ec_slave[0].state = EC_STATE_OPERATIONAL;
          /* request OP state for all slaves */
          ec_writestate(0);
+         /* activate cyclic process data */
+         dorun = 1;
          /* wait for all slaves to reach OP state */
          ec_statecheck(0, EC_STATE_OPERATIONAL,  EC_TIMEOUTSTATE);
          oloop = ec_slave[0].Obytes;
@@ -97,11 +109,12 @@ void redtest(char *ifname, char *ifname2)
          if (ec_slave[0].state == EC_STATE_OPERATIONAL )
          {
             printf("Operational state reached for all slaves.\n");
-            dorun = 1;
+            inOP = TRUE;
             /* acyclic loop 5000 x 20ms = 10s */
             for(i = 1; i <= 5000; i++)
             {
-               printf("Processdata cycle %5d , Wck %3d, DCtime %12lld, O:", dorun, wcounter , ec_DCtime);
+               printf("Processdata cycle %5d , Wck %3d, DCtime %12lld, dt %12lld, O:",
+                  dorun, wkc , ec_DCtime, gl_delta);
                for(j = 0 ; j < oloop; j++)
                {
                   printf(" %2.2x", *(ec_slave[0].outputs + j));
@@ -111,14 +124,25 @@ void redtest(char *ifname, char *ifname2)
                {
                   printf(" %2.2x", *(ec_slave[0].inputs + j));
                }   
-               printf("\n");
-               usleep(20000);
+               printf("\r");
+               fflush(stdout);
+               osal_usleep(20000);
             }
             dorun = 0;
+            inOP = FALSE;
          }
          else
          {
             printf("Not all slaves reached operational state.\n");
+             ec_readstate();
+             for(i = 1; i<=ec_slavecount ; i++)
+             {
+                 if(ec_slave[i].state != EC_STATE_OPERATIONAL)
+                 {
+                     printf("Slave %d State=0x%2.2x StatusCode=0x%4.4x : %s\n",
+                         i, ec_slave[i].state, ec_slave[i].ALstatuscode, ec_ALstatuscode2string(ec_slave[i].ALstatuscode));
+                 }
+             }
          }         
          printf("Request safe operational state for all slaves\n");
          ec_slave[0].state = EC_STATE_SAFE_OP;
@@ -167,40 +191,35 @@ void ec_sync(int64 reftime, int64 cycletime , int64 *offsettime)
    if(delta>0){ integral++; }
    if(delta<0){ integral--; }
    *offsettime = -(delta / 100) - (integral / 20);
+   gl_delta = delta;
 }   
 
 /* RT EtherCAT thread */
 void ecatthread( void *ptr )
 {
-   struct timespec   ts;
+   struct timespec   ts, tleft;
    struct timeval    tp;
    int rc;
    int ht;
    int64 cycletime;
    
    rc = pthread_mutex_lock(&mutex);
-   rc =  gettimeofday(&tp, NULL);
-
-    /* Convert from timeval to timespec */
-   ts.tv_sec  = tp.tv_sec;
-   ht = (tp.tv_usec / 1000) + 1; /* round to nearest ms */
+   rc = clock_gettime(CLOCK_MONOTONIC, &ts);
+   ht = (ts.tv_nsec / 1000000) + 1; /* round to nearest ms */
    ts.tv_nsec = ht * 1000000;
    cycletime = *(int*)ptr * 1000; /* cycletime in ns */
    toff = 0;
    dorun = 0;
+   ec_send_processdata();    
    while(1)
    {   
       /* calculate next cycle start */
       add_timespec(&ts, cycletime + toff);
       /* wait to cycle start */
-      rc = pthread_cond_timedwait(&cond, &mutex, &ts);
+      rc = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, &tleft);
       if (dorun>0)
       {
-         rc =  gettimeofday(&tp, NULL);
-
-         ec_send_processdata();
-         
-         wcounter = ec_receive_processdata(EC_TIMEOUTRET);
+         wkc = ec_receive_processdata(EC_TIMEOUTRET);
          
          dorun++;
          /* if we have some digital output, cycle */
@@ -211,13 +230,90 @@ void ecatthread( void *ptr )
             /* calulate toff to get linux time and DC synced */
             ec_sync(ec_DCtime, cycletime, &toff);
          }   
+         ec_send_processdata();    
       }   
    }    
 }
 
+void ecatcheck( void *ptr )
+{
+    int slave;
+
+    while(1)
+    {
+        if( inOP && ((wkc < expectedWKC) || ec_group[currentgroup].docheckstate))
+        {
+            if (needlf)
+            {
+               needlf = FALSE;
+               printf("\n");
+            }
+            /* one ore more slaves are not responding */
+            ec_group[currentgroup].docheckstate = FALSE;
+            ec_readstate();
+            for (slave = 1; slave <= ec_slavecount; slave++)
+            {
+               if ((ec_slave[slave].group == currentgroup) && (ec_slave[slave].state != EC_STATE_OPERATIONAL))
+               {
+                  ec_group[currentgroup].docheckstate = TRUE;
+                  if (ec_slave[slave].state == (EC_STATE_SAFE_OP + EC_STATE_ERROR))
+                  {
+                     printf("ERROR : slave %d is in SAFE_OP + ERROR, attempting ack.\n", slave);
+                     ec_slave[slave].state = (EC_STATE_SAFE_OP + EC_STATE_ACK);
+                     ec_writestate(slave);
+                  }
+                  else if(ec_slave[slave].state == EC_STATE_SAFE_OP)
+                  {
+                     printf("WARNING : slave %d is in SAFE_OP, change to OPERATIONAL.\n", slave);
+                     ec_slave[slave].state = EC_STATE_OPERATIONAL;
+                     ec_writestate(slave);                              
+                  }
+                  else if(ec_slave[slave].state > 0)
+                  {
+                     if (ec_reconfig_slave(slave, EC_TIMEOUTMON))
+                     {
+                        ec_slave[slave].islost = FALSE;
+                        printf("MESSAGE : slave %d reconfigured\n",slave);                           
+                     }
+                  } 
+                  else if(!ec_slave[slave].islost)
+                  {
+                     /* re-check state */
+                     ec_statecheck(slave, EC_STATE_OPERATIONAL, EC_TIMEOUTRET);
+                     if (!ec_slave[slave].state)
+                     {
+                        ec_slave[slave].islost = TRUE;
+                        printf("ERROR : slave %d lost\n",slave);                           
+                     }
+                  }
+               }
+               if (ec_slave[slave].islost)
+               {
+                  if(!ec_slave[slave].state)
+                  {
+                     if (ec_recover_slave(slave, EC_TIMEOUTMON))
+                     {
+                        ec_slave[slave].islost = FALSE;
+                        printf("MESSAGE : slave %d recovered\n",slave);                           
+                     }
+                  }
+                  else
+                  {
+                     ec_slave[slave].islost = FALSE;
+                     printf("MESSAGE : slave %d found\n",slave);                           
+                  }
+               }
+            }
+            if(!ec_group[currentgroup].docheckstate)
+               printf("OK : all slaves resumed OPERATIONAL.\n");
+        }
+        osal_usleep(10000);
+    }   
+}   
+
 int main(int argc, char *argv[])
 {
-   int iret1;
+   int iret1, iret2;
    int ctime;
    struct sched_param    param;
    int                   policy = SCHED_OTHER;
@@ -228,23 +324,21 @@ int main(int argc, char *argv[])
    /* do not set priority above 49, otherwise sockets are starved */
    schedp.sched_priority = 30;
    sched_setscheduler(0, SCHED_FIFO, &schedp);
-
-   do
-   {
-      usleep(1000);
-   }
-   while (dorun);
    
    if (argc > 3)
    {      
-      dorun = 1;
+      dorun = 0;
       ctime = atoi(argv[3]);
+
       /* create RT thread */
       iret1 = pthread_create( &thread1, NULL, (void *) &ecatthread, (void*) &ctime);   
       memset(&param, 0, sizeof(param));
       /* give it higher priority */
       param.sched_priority = 40;
       iret1 = pthread_setschedparam(thread1, policy, &param);
+
+      /* create thread to handle slave error handling in OP */
+      iret2 = pthread_create( &thread2, NULL, (void *) &ecatcheck, (void*) &ctime);   
 
       /* start acyclic part */
       redtest(argv[1],argv[2]);

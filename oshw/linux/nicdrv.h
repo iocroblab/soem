@@ -2,10 +2,10 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : nicdrv.h
- * Version : 1.2.5
- * Date    : 09-04-2011
- * Copyright (C) 2005-2011 Speciaal Machinefabriek Ketels v.o.f.
- * Copyright (C) 2005-2011 Arthur Ketels
+ * Version : 1.3.0
+ * Date    : 24-02-2013
+ * Copyright (C) 2005-2013 Speciaal Machinefabriek Ketels v.o.f.
+ * Copyright (C) 2005-2013 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
  *
  * SOEM is free software; you can redistribute it and/or modify it under
@@ -46,31 +46,110 @@
 #ifndef _nicdrvh_
 #define _nicdrvh_
 
-extern ec_bufT ec_rxbuf[EC_MAXBUF];
-extern ec_bufT ec_txbuf[EC_MAXBUF];
-extern ec_bufT ec_txbuf2;
-extern int ec_txbuflength[EC_MAXBUF];
-extern int ec_txbuflength2;
-extern int ec_incnt;
-extern int ec_errcnt;
-extern int ec_redstate;
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-extern int hlp_txtime;
-extern int hlp_rxtime;
+#include <pthread.h>
 
-extern int sockhandle, sockhandle2;
+/** pointer structure to Tx and Rx stacks */
+typedef struct
+{
+   /** socket connection used */
+   int         *sock;
+   /** tx buffer */
+   ec_bufT     (*txbuf)[EC_MAXBUF];
+   /** tx buffer lengths */
+   int         (*txbuflength)[EC_MAXBUF];
+   /** temporary receive buffer */
+   ec_bufT     *tempbuf;
+   /** rx buffers */
+   ec_bufT     (*rxbuf)[EC_MAXBUF];
+   /** rx buffer status fields */
+   int         (*rxbufstat)[EC_MAXBUF];
+   /** received MAC source address (middle word) */
+   int         (*rxsa)[EC_MAXBUF];
+} ec_stackT;   
+
+/** pointer structure to buffers for redundant port */
+typedef struct
+{
+   ec_stackT   stack;
+   int         sockhandle;
+   /** rx buffers */
+   ec_bufT rxbuf[EC_MAXBUF];
+   /** rx buffer status */
+   int rxbufstat[EC_MAXBUF];
+   /** rx MAC source address */
+   int rxsa[EC_MAXBUF];
+   /** temporary rx buffer */
+   ec_bufT tempinbuf;
+} ecx_redportt;
+
+/** pointer structure to buffers, vars and mutexes for port instantiation */
+typedef struct
+{
+   ec_stackT   stack;
+   int         sockhandle;
+   /** rx buffers */
+   ec_bufT rxbuf[EC_MAXBUF];
+   /** rx buffer status */
+   int rxbufstat[EC_MAXBUF];
+   /** rx MAC source address */
+   int rxsa[EC_MAXBUF];
+   /** temporary rx buffer */
+   ec_bufT tempinbuf;
+   /** temporary rx buffer status */
+   int tempinbufs;
+   /** transmit buffers */
+   ec_bufT txbuf[EC_MAXBUF];
+   /** transmit buffer lenghts */
+   int txbuflength[EC_MAXBUF];
+   /** temporary tx buffer */
+   ec_bufT txbuf2;
+   /** temporary tx buffer length */
+   int txbuflength2;
+   /** last used frame index */
+   int lastidx;
+   /** current redundancy state */
+   int redstate;
+   /** pointer to redundancy port and buffers */
+   ecx_redportt *redport;   
+   pthread_mutex_t getindex_mutex; 
+   pthread_mutex_t tx_mutex;
+   pthread_mutex_t rx_mutex;
+} ecx_portt;
 
 extern const uint16 priMAC[3];
 extern const uint16 secMAC[3];
 
+#ifdef EC_VER1
+extern ecx_portt     ecx_port;
+extern ecx_redportt  ecx_redport;
+
 int ec_setupnic(const char * ifname, int secondary);
 int ec_closenic(void);
+void ec_setbufstat(int idx, int bufstat);
+int ec_getindex(void);
+int ec_outframe(int idx, int sock);
+int ec_outframe_red(int idx);
+int ec_waitinframe(int idx, int timeout);
+int ec_srconfirm(int idx,int timeout);
+#endif
+
 void ec_setupheader(void *p);
-void ec_setbufstat(uint8 idx, int bufstat);
-uint8 ec_getindex(void);
-int ec_outframe(uint8 idx, int sock);
-int ec_outframe_red(uint8 idx);
-int ec_waitinframe(uint8 idx, int timeout);
-int ec_srconfirm(uint8 idx,int timeout);
+int ecx_setupnic(ecx_portt *port, const char * ifname, int secondary);
+int ecx_closenic(ecx_portt *port);
+void ecx_setbufstat(ecx_portt *port, int idx, int bufstat);
+int ecx_getindex(ecx_portt *port);
+int ecx_outframe(ecx_portt *port, int idx, int sock);
+int ecx_outframe_red(ecx_portt *port, int idx);
+int ecx_waitinframe(ecx_portt *port, int idx, int timeout);
+int ecx_srconfirm(ecx_portt *port, int idx,int timeout);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -2,10 +2,10 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercattype.h
- * Version : 1.2.8
- * Date    : 14-06-2012
- * Copyright (C) 2005-2012 Speciaal Machinefabriek Ketels v.o.f.
- * Copyright (C) 2005-2012 Arthur Ketels
+ * Version : 1.3.0
+ * Date    : 24-02-2013
+ * Copyright (C) 2005-2013 Speciaal Machinefabriek Ketels v.o.f.
+ * Copyright (C) 2005-2013 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
  *
  * SOEM is free software; you can redistribute it and/or modify it under
@@ -27,7 +27,7 @@
  * This exception does not invalidate any other reasons why a work based on
  * this file might be covered by the GNU General Public License.
  *
- * The EtherCAT Technology, the trade name and logo “EtherCAT” are the intellectual
+ * The EtherCAT Technology, the trade name and logo EtherCAT are the intellectual
  * property of, and protected by Beckhoff Automation GmbH. You can use SOEM for
  * the sole purpose of creating, using and/or selling or otherwise distributing
  * an EtherCAT network master provided that an EtherCAT Master License is obtained
@@ -53,29 +53,19 @@
 #ifndef _EC_TYPE_H
 #define _EC_TYPE_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 /** Define Little or Big endian target */
 #define EC_LITTLE_ENDIAN
 
-#ifndef PACKED
-#define PACKED  __attribute__((__packed__))
-#endif
+/** define EC_VER1 if version 1 default context and functions are needed
+ * comment if application uses only ecx_ functions and own context */
+#define EC_VER1
 
-#include <sys/time.h>
-
-/* General types */
-typedef unsigned char       boolean;
-#define TRUE                1
-#define FALSE               0
-typedef signed char         int8;
-typedef signed short        int16;
-typedef signed int          int32;
-typedef unsigned char       uint8;
-typedef unsigned short      uint16;
-typedef unsigned int        uint32;
-typedef signed long long    int64;
-typedef unsigned long long  uint64;
-typedef float               float32;
-typedef double              float64;
+#include <osal.h>
 
 /** return value general error */
 #define EC_ERROR           -3
@@ -87,8 +77,7 @@ typedef double              float64;
 #define EC_MAXECATFRAME    1518
 /** maximum EtherCAT LRW frame length in bytes */
 /* MTU - Ethernet header - length - datagram header - WCK - FCS */
-#define EC_MAXLRWDATA      EC_MAXECATFRAME - 14 - 2 - 10 - 2 - 4
-//#define EC_MAXLRWDATA    45
+#define EC_MAXLRWDATA      (EC_MAXECATFRAME - 14 - 2 - 10 - 2 - 4)
 /** size of DC datagram used in first LRW frame */
 #define EC_FIRSTDCDATAGRAM 20
 /** standard frame buffer size in bytes */
@@ -98,8 +87,9 @@ typedef double              float64;
 /** number of frame buffers per channel (tx, rx1 rx2) */
 #define EC_MAXBUF          16
 /** timeout value in us for tx frame to return to rx */
-#define EC_TIMEOUTRET      500
-//#define EC_TIMEOUTRET    20000
+#define EC_TIMEOUTRET      2000
+/** timeout value in us for safe data transfer, max. triple retry */
+#define EC_TIMEOUTRET3     (EC_TIMEOUTRET * 3)
 /** timeout value in us for return "safe" variant (f.e. wireless) */
 #define EC_TIMEOUTSAFE     20000
 /** timeout value in us for EEPROM access */
@@ -121,7 +111,8 @@ typedef double              float64;
 typedef uint8 ec_bufT[EC_BUFSIZE];
 
 /** ethernet header definition */
-typedef struct PACKED 
+PACKED_BEGIN
+typedef struct PACKED
 {
    /** destination MAC */
    uint16  da0,da1,da2;
@@ -130,11 +121,13 @@ typedef struct PACKED
    /** ethernet type */
    uint16  etype;
 } ec_etherheadert;
+PACKED_END
 
 /** ethernet header size */
 #define ETH_HEADERSIZE      sizeof(ec_etherheadert)
 
 /** EtherCAT datagram header definition */
+PACKED_BEGIN
 typedef struct PACKED
 {
    /** length of EtherCAT datagram */
@@ -152,6 +145,7 @@ typedef struct PACKED
    /** interrupt, currently unused */
    uint16  irpt;
 } ec_comt;
+PACKED_END
 
 /** EtherCAT header size */
 #define EC_HEADERSIZE       sizeof(ec_comt)
@@ -498,7 +492,7 @@ typedef enum
 typedef struct
 {
    /** Time at which the error was generated. */
-   struct timeval Time;
+   ec_timet Time;
    /** Signal bit, error set but not read */
    boolean     Signal;
    /** Slave number that generated the error */
@@ -543,12 +537,10 @@ typedef struct
   ({ __typeof__(*(ptr)) __tmp; memcpy(&__tmp, (ptr), sizeof(*(ptr))); __tmp; })
 
 #define put_unaligned32(val, ptr)        \
-  ({   memcpy((ptr), &(val), 4);         \
-      (void)0; })
+  (memcpy((ptr), &(val), 4))
 
 #define put_unaligned64(val, ptr)        \
-  ({   memcpy((ptr), &(val), 8);         \
-      (void)0; })
+  (memcpy((ptr), &(val), 8))
 
 #if !defined(EC_BIG_ENDIAN) && defined(EC_LITTLE_ENDIAN)
 
@@ -584,6 +576,10 @@ typedef struct
 
   #error "Must define one of EC_BIG_ENDIAN or EC_LITTLE_ENDIAN"
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* _EC_TYPE_H */

@@ -2,10 +2,10 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatprint.c
- * Version : 1.2.8
- * Date    : 14-06-2012
- * Copyright (C) 2005-2012 Speciaal Machinefabriek Ketels v.o.f.
- * Copyright (C) 2005-2012 Arthur Ketels
+ * Version : 1.3.0
+ * Date    : 24-02-2013
+ * Copyright (C) 2005-2013 Speciaal Machinefabriek Ketels v.o.f.
+ * Copyright (C) 2005-2013 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
  *
  * SOEM is free software; you can redistribute it and/or modify it under
@@ -27,7 +27,7 @@
  * This exception does not invalidate any other reasons why a work based on
  * this file might be covered by the GNU General Public License.
  *
- * The EtherCAT Technology, the trade name and logo “EtherCAT” are the intellectual
+ * The EtherCAT Technology, the trade name and logo EtherCAT are the intellectual
  * property of, and protected by Beckhoff Automation GmbH. You can use SOEM for
  * the sole purpose of creating, using and/or selling or otherwise distributing
  * an EtherCAT network master provided that an EtherCAT Master License is obtained
@@ -48,13 +48,14 @@
  */
 
 #include <stdio.h>
+#include "oshw.h"
 #include "ethercattype.h"
 #include "ethercatmain.h"
 
 #define EC_MAXERRORNAME 127
 
 /** SDO error list type definition */
-typedef const struct
+typedef struct
 {
    /** Error code returned from SDO */
    uint32        errorcode;
@@ -63,7 +64,7 @@ typedef const struct
 } ec_sdoerrorlist_t;
 
 /** AL status code list type definition */
-typedef const struct
+typedef struct
 {
    /** AL status code */
    uint16        ALstatuscode;
@@ -72,7 +73,7 @@ typedef const struct
 } ec_ALstatuscodelist_t;
 
 /** SoE error list type definition */
-typedef const struct
+typedef struct
 {
    /** SoE error code */
    uint16        errorcode;
@@ -81,7 +82,7 @@ typedef const struct
 } ec_soeerrorlist_t;
 
 /** MBX error list type definition */
-typedef const struct
+typedef struct
 {
    /** MBX error code */
    uint16              errorcode;
@@ -101,6 +102,10 @@ const ec_sdoerrorlist_t ec_sdoerrorlist[] = {
    {0x06010000, "Unsupported access to an object" },
    {0x06010001, "Attempt to read to a write only object" },
    {0x06010002, "Attempt to write to a read only object" },
+   {0x06010003, "Subindex can not be written, SI0 must be 0 for write access" },
+   {0x06010004, "SDO Complete access not supported for variable length objects" },
+   {0x06010005, "Object length exceeds mailbox size" },
+   {0x06010006, "Object mapped to RxPDO, SDO download blocked" },
    {0x06020000, "The object does not exist in the object directory" },
    {0x06040041, "The object can not be mapped into the PDO" },
    {0x06040042, "The number and length of the objects to be mapped would exceed the PDO length" },
@@ -127,6 +132,7 @@ const ec_sdoerrorlist_t ec_sdoerrorlist[] = {
 const ec_ALstatuscodelist_t ec_ALstatuscodelist[] = {
    {0x0000 , "No error" },
    {0x0001 , "Unspecified error" },
+   {0x0002 , "No memory" },
    {0x0011 , "Invalid requested state change" },
    {0x0012 , "Unknown requested state" },
    {0x0013 , "Bootstrap not supported" },
@@ -138,26 +144,43 @@ const ec_ALstatuscodelist_t ec_ALstatuscodelist[] = {
    {0x0019 , "No valid outputs" },
    {0x001A , "Synchronization error" },
    {0x001B , "Sync manager watchdog" },
-   {0x001C , "Invalid Sync Manager Types" },
-   {0x001D , "Invalid Output Configuration" },
-   {0x001E , "Invalid Input Configuration" },
-   {0x001F , "Invalid Watchdog Configuration" },
+   {0x001C , "Invalid sync Manager types" },
+   {0x001D , "Invalid output configuration" },
+   {0x001E , "Invalid input configuration" },
+   {0x001F , "Invalid watchdog configuration" },
    {0x0020 , "Slave needs cold start" },
    {0x0021 , "Slave needs INIT" },
    {0x0022 , "Slave needs PREOP" },
    {0x0023 , "Slave needs SAFEOP" },
-   {0x002D , "Invalid Output FMMU Configuration" },
-   {0x002E , "Invalid Input FMMU Configuration" },
-   {0x0030 , "Invalid DC SYNCH Configuration" },
-   {0x0031 , "Invalid DC Latch Configuration" },
-   {0x0032 , "PLL Error" },
-   {0x0033 , "Invalid DC IO Error" },
-   {0x0034 , "Invalid DC Timeout Error" },
+   {0x0024 , "Invalid input mapping" },
+   {0x0025 , "Invalid output mapping" },
+   {0x0026 , "Inconsistent settings" },
+   {0x0027 , "Freerun not supported" },
+   {0x0028 , "Synchronisation not supported" },
+   {0x0029 , "Freerun needs 3buffer mode" },
+   {0x002A , "Background watchdog" },
+   {0x002B , "No valid Inputs and Outputs" },
+   {0x002C , "Fatal sync error" },
+   {0x002D , "No sync error" }, // was "Invalid Output FMMU Configuration"
+   {0x002E , "Invalid input FMMU configuration" },
+   {0x0030 , "Invalid DC SYNC configuration" },
+   {0x0031 , "Invalid DC latch configuration" },
+   {0x0032 , "PLL error" },
+   {0x0033 , "DC sync IO error" },
+   {0x0034 , "DC sync timeout error" },
+   {0x0035 , "DC invalid sync cycle time" },
+   {0x0035 , "DC invalid sync0 cycle time" },
+   {0x0035 , "DC invalid sync1 cycle time" },
    {0x0042 , "MBX_EOE" },
    {0x0043 , "MBX_COE" },
    {0x0044 , "MBX_FOE" },
    {0x0045 , "MBX_SOE" },
    {0x004F , "MBX_VOE" },
+   {0x0050 , "EEPROM no access" },
+   {0x0051 , "EEPROM error" },
+   {0x0060 , "Slave restarted locally" },
+   {0x0061 , "Device identification value updated" },
+   {0x00f0 , "Application controller available" },
    {0xffff , "Unknown" }
 };
 
@@ -304,16 +327,17 @@ char* ec_mbxerror2string( uint16 errorcode)
 
 /** Look up error in ec_errorlist and convert to text string.
  *
+ * @param[in]  context        = context struct
  * @return readable string
  */
-char* ec_elist2string(void)
+char* ecx_elist2string(ecx_contextt *context)
 {
    ec_errort Ec;
    char timestr[20];
    
-   if (ec_poperror(&Ec))
+   if (ecx_poperror(context, &Ec))
    {
-      sprintf(timestr, "Time:%12.3f", Ec.Time.tv_sec + (Ec.Time.tv_usec / 1000000.0) );
+      sprintf(timestr, "Time:%12.3f", Ec.Time.sec + (Ec.Time.usec / 1000000.0) );
       switch (Ec.Etype)
       {
          case EC_ERR_TYPE_SDO_ERROR:
@@ -323,7 +347,8 @@ char* ec_elist2string(void)
             break;
          }
          case EC_ERR_TYPE_EMERGENCY:
-         {   sprintf(estring, "%s EMERGENCY slave:%d error:%4.4x\n", 
+         {   
+            sprintf(estring, "%s EMERGENCY slave:%d error:%4.4x\n", 
                     timestr, Ec.Slave, Ec.ErrorCode);            
             break;
          }
@@ -334,12 +359,14 @@ char* ec_elist2string(void)
             break;
          }
          case EC_ERR_TYPE_SDOINFO_ERROR:
-         {   sprintf(estring, "%s SDO slave:%d index:%4.4x.%2.2x error:%8.8x %s\n", 
+         {   
+            sprintf(estring, "%s SDO slave:%d index:%4.4x.%2.2x error:%8.8x %s\n", 
                     timestr, Ec.Slave, Ec.Index, Ec.SubIdx, Ec.AbortCode, ec_sdoerror2string(Ec.AbortCode));            
             break;
          }
          case EC_ERR_TYPE_SOE_ERROR:
-         {   sprintf(estring, "%s SoE slave:%d IDN:%4.4x error:%4.4x %s\n", 
+         {   
+            sprintf(estring, "%s SoE slave:%d IDN:%4.4x error:%4.4x %s\n", 
                     timestr, Ec.Slave, Ec.Index, Ec.AbortCode, ec_soeerror2string(Ec.ErrorCode));            
             break;
          }
@@ -362,3 +389,10 @@ char* ec_elist2string(void)
       return "";
    }
 }
+
+#ifdef EC_VER1
+char* ec_elist2string(void)
+{
+   return ecx_elist2string(&ecx_context);
+}
+#endif

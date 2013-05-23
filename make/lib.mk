@@ -14,7 +14,7 @@
 # http://www.rt-labs.com
 # Copyright (C) 2006. rt-labs AB, Sweden. All rights reserved.
 #------------------------------------------------------------------------------
-# $Id: lib.mk 125 2012-04-01 17:36:17Z rtlaka $
+# $Id: lib.mk 452 2013-02-26 21:02:58Z smf.arthur $
 #------------------------------------------------------------------------------
 
 OBJDIR = ./obj/$(ARCH)
@@ -43,6 +43,7 @@ $(SUBDIRS):
 .PHONY: clean
 clean: $(SUBDIRS)
 	$(RM) $(OBJDIR)/*
+	rm -rf ./obj
 	$(RM) $(LIBDIR)/lib$(LIBNAME).a
 
 ifneq ($(MAKECMDGOALS),clean)

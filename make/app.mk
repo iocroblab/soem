@@ -14,17 +14,18 @@
 # http://www.rt-labs.com
 # Copyright (C) 2006. rt-labs AB, Sweden. All rights reserved.
 #------------------------------------------------------------------------------
-# $Id: app.mk 125 2012-04-01 17:36:17Z rtlaka $
+# $Id: app.mk 452 2013-02-26 21:02:58Z smf.arthur $
 #------------------------------------------------------------------------------
 
 OBJDIR = obj/$(ARCH)
-ifeq ($(ARCH),linux)
-LIBS += pthread
-endif
 LIBS += oshw osal soem
 
 include $(PRJ_ROOT)/make/rules.mk
 include $(PRJ_ROOT)/make/files.mk
+
+ifeq ($(ARCH),linux)
+LIBS += -lpthread -lrt
+endif
 
 SUBDIRS = $(patsubst %/,%,$(dir $(wildcard */Makefile)))
 
@@ -33,8 +34,7 @@ SUBDIRS = $(patsubst %/,%,$(dir $(wildcard */Makefile)))
 .PHONY: $(APPNAME)
 $(APPNAME): $(OBJDIR) $(SUBDIRS) $(OBJDIR_OBJS) $(EXTRA_OBJS)
 	@echo --- Linking $@
-	$(SILENT)$(CC) $(LDFLAGS) $(LD_PATHS) $(OBJDIR)/*.o $(LIBS) -o $@
-
+	$(SILENT)$(CC) $(LDFLAGS) $(LD_PATHS) $(OBJDIR)/*.o -o $@ $(LIBS)
 
 $(OBJDIR):
 	@test -e $(OBJDIR) || $(MKDIR) $(OBJDIR)
@@ -48,6 +48,7 @@ $(SUBDIRS):
 .PHONY: clean
 clean: $(SUBDIRS)
 	@$(RM) $(OBJDIR)/*
+	rm -rf obj/
 	@$(RM) $(APPNAME)
 	@$(RM) $(APPNAME).elf 
 	@$(RM) $(APPNAME).map

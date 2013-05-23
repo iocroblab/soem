@@ -2,10 +2,10 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatcoe.h
- * Version : 1.2.8
- * Date    : 14-06-2012
- * Copyright (C) 2005-2012 Speciaal Machinefabriek Ketels v.o.f.
- * Copyright (C) 2005-2012 Arthur Ketels
+ * Version : 1.3.0
+ * Date    : 24-02-2013
+ * Copyright (C) 2005-2013 Speciaal Machinefabriek Ketels v.o.f.
+ * Copyright (C) 2005-2013 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
  *
  * SOEM is free software; you can redistribute it and/or modify it under
@@ -45,6 +45,11 @@
 
 #ifndef _ethercatcoe_
 #define _ethercatcoe_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 /** max entries in Object Description list */
 #define EC_MAXODLIST   1024
@@ -88,6 +93,7 @@ typedef struct
    char   Name[EC_MAXOELIST][EC_MAXNAME+1];
 } ec_OElistt;
 
+#ifdef EC_VER1
 void ec_SDOerror(uint16 Slave, uint16 Index, uint8 SubIdx, int32 AbortCode);
 int ec_SDOread(uint16 slave, uint16 index, uint8 subindex,
                       boolean CA, int *psize, void *p, int timeout);
@@ -101,5 +107,24 @@ int ec_readODlist(uint16 Slave, ec_ODlistt *pODlist);
 int ec_readODdescription(uint16 Item, ec_ODlistt *pODlist);
 int ec_readOEsingle(uint16 Item, uint8 SubI, ec_ODlistt *pODlist, ec_OElistt *pOElist);
 int ec_readOE(uint16 Item, ec_ODlistt *pODlist, ec_OElistt *pOElist);
+#endif
+
+void ecx_SDOerror(ecx_contextt *context, uint16 Slave, uint16 Index, uint8 SubIdx, int32 AbortCode);
+int ecx_SDOread(ecx_contextt *context, uint16 slave, uint16 index, uint8 subindex,
+                      boolean CA, int *psize, void *p, int timeout);
+int ecx_SDOwrite(ecx_contextt *context, uint16 Slave, uint16 Index, uint8 SubIndex,
+    boolean CA, int psize, void *p, int Timeout);
+int ecx_RxPDO(ecx_contextt *context, uint16 Slave, uint16 RxPDOnumber , int psize, void *p);
+int ecx_TxPDO(ecx_contextt *context, uint16 slave, uint16 TxPDOnumber , int *psize, void *p, int timeout);
+int ecx_readPDOmap(ecx_contextt *context, uint16 Slave, int *Osize, int *Isize);
+int ecx_readPDOmapCA(ecx_contextt *context, uint16 Slave, int *Osize, int *Isize);
+int ecx_readODlist(ecx_contextt *context, uint16 Slave, ec_ODlistt *pODlist);
+int ecx_readODdescription(ecx_contextt *context, uint16 Item, ec_ODlistt *pODlist);
+int ecx_readOEsingle(ecx_contextt *context, uint16 Item, uint8 SubI, ec_ODlistt *pODlist, ec_OElistt *pOElist);
+int ecx_readOE(ecx_contextt *context, uint16 Item, ec_ODlistt *pODlist, ec_OElistt *pOElist);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

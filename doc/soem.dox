@@ -10,13 +10,20 @@
  * how an EtherCAT master functions and how it interacts with EtherCAT slaves.
  *
  * As all applications are different SOEM tries to not impose any design architecture.
- * It can be used in generic user mode, PREEMPT_RT or Xenomai.
+ * Under Linux it can be used in generic user mode, PREEMPT_RT or Xenomai. under Windows
+ * it can be used as user mode program.
  *
- * Preconditions :
+ * Preconditions Linux:
  * - Linux 2.6 kernel.
  * - GCC compiler (others might work, just not tested).
  * - One (or two if in redundant mode) 100Mb/s NIC that can connect to a RAW socket.
  * - Application must run as root / kernel.
+ *
+ * Preconditions Windows:
+ * - Windows2000 - Windows 7 (8 not tested, might work).
+ * - VC compiler (others might work, just not tested).
+ * - One (or two if in redundant mode) 100Mb/s NIC that can connect to a RAW socket.
+ * - WinPcap installed.
  *
  * Features as of 1.1.2 :
  * - Connects to a standard RAW socket.
@@ -96,9 +103,20 @@
  * - Rewrite of ec_recover_slave() and ec_reconfigure_slave()
  * - Added -map option in slaveinfo, shows SOEM IO mapping of all slaves found.
  *
+ * Features as of 1.3.0 :
+ * - Added win32 target.
+ * - Added rtk target.
+ * - Compiles under gcc / visual-c / borland-c.
+ * - Multiple port support. One master can run concurrent stacks on multiple network ports.
+ * - All global vars are encapsulated in context struct.
+ * - All timing abstracted in osal.c.
+ * - Linux timing converted to get_clock(CLOCK_MONOTONIC).
+ * - Error messages updated to latest ETG1020 document.
+ * - FoE transfers now support busy response.
  *
  * \section start Getting started
  *
+ * For Linux
  * - go to project directory
  * - source ./setup.sh linux 
  * - make all
@@ -106,6 +124,13 @@
  * For examples see simple_test.c in ~/test/linux/simple_test.
  * First try (assume EtherCAT on eth0): sudo ./simple_test eth0
  * As SOEM uses RAW sockets it will need to run as root.
+ *
+ * For Windows
+ * - have winpcap installed (included with WireShark)
+ * - go to project directory
+ * - for VC, run vcvarsall.bat
+ * f.e. : C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat x86
+ * - run make_test_win32_all.bat
  *
  * \section bugs Squashed bugs
  * Version 1.1.3
@@ -151,11 +176,17 @@
  * - Fixed SII string read bug.
  * - Fixed bug in table lookup for printing
  *
+ * Version 1.3.0
+ * - Fixed NetX100 configuration behaviour.
+ * - Fixed linux gettimeofday() to get_clock().
+ * - Fixed eeprom cache flush on reinit.
+ * - Fixed make for new gcc linker version.
+ *
  * \section legal Legal notice
- * Copyright© 2005-2012 Speciaal Machinefabriek Ketels v.o.f. \n
- * Copyright© 2005-2012 Arthur Ketels \n
+ * Copyright© 2005-2013 Speciaal Machinefabriek Ketels v.o.f. \n
+ * Copyright© 2005-2013 Arthur Ketels \n
  * Copyright© 2008-2010 TU/e Technische Universiteit Eindhoven \n
- * Copyright© 2012 RT-labs AB \n
+ * Copyright© 2012-2013 RT-labs AB \n
  *
  * SOEM is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License version 2 as published by the Free

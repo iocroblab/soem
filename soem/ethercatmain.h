@@ -2,10 +2,10 @@
  * Simple Open EtherCAT Master Library 
  *
  * File    : ethercatmain.h
- * Version : 1.2.8
- * Date    : 14-06-2012
- * Copyright (C) 2005-2012 Speciaal Machinefabriek Ketels v.o.f.
- * Copyright (C) 2005-2012 Arthur Ketels
+ * Version : 1.3.0
+ * Date    : 24-02-2013
+ * Copyright (C) 2005-2013 Speciaal Machinefabriek Ketels v.o.f.
+ * Copyright (C) 2005-2013 Arthur Ketels
  * Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven 
  *
  * SOEM is free software; you can redistribute it and/or modify it under
@@ -27,14 +27,14 @@
  * This exception does not invalidate any other reasons why a work based on
  * this file might be covered by the GNU General Public License.
  *
- * The EtherCAT Technology, the trade name and logo “EtherCAT” are the intellectual
+ * The EtherCAT Technology, the trade name and logo "EtherCAT" are the intellectual
  * property of, and protected by Beckhoff Automation GmbH. You can use SOEM for
  * the sole purpose of creating, using and/or selling or otherwise distributing
  * an EtherCAT network master provided that an EtherCAT Master License is obtained
  * from Beckhoff Automation GmbH.
  *
  * In case you did not receive a copy of the EtherCAT Master License along with
- * SOEM write to Beckhoff Automation GmbH, Eiserstraße 5, D-33415 Verl, Germany
+ * SOEM write to Beckhoff Automation GmbH, Eiserstrasse 5, D-33415 Verl, Germany
  * (www.beckhoff.com).
  */
 
@@ -46,18 +46,20 @@
 #ifndef _ethercatmain_
 #define _ethercatmain_
 
-#ifndef PACKED
-#define PACKED  __attribute__((__packed__))
+
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 /** max. etries in EtherCAT error list */
 #define EC_MAXELIST       64
 /** max. length of readable name in slavelist and Object Description List */
-#define EC_MAXNAME        36
+#define EC_MAXNAME        40
 /** max. number of slaves in array */
 #define EC_MAXSLAVE       200
 /** max. number of groups */
-#define EC_MAXGROUP       8
+#define EC_MAXGROUP       2
 /** max. number of IO segments per group */
 #define EC_MAXIOSEGMENTS  64
 /** max. mailbox size */
@@ -68,8 +70,19 @@
 #define EC_MAXSM          8
 /** max. FMMU used */
 #define EC_MAXFMMU        4
+/** max. Adapter */
+#define EC_MAXLEN_ADAPTERNAME    128
+
+typedef struct ec_adapter ec_adaptert;
+struct ec_adapter
+{
+   char   name[EC_MAXLEN_ADAPTERNAME];
+   char   desc[EC_MAXLEN_ADAPTERNAME];
+   ec_adaptert *next;
+};
 
 /** record for FMMU */
+PACKED_BEGIN
 typedef struct PACKED
 {
    uint32  LogStart;
@@ -83,21 +96,26 @@ typedef struct PACKED
    uint8   unused1;
    uint16  unused2;  
 }  ec_fmmut;
+PACKED_END
 
 /** record for sync manager */
+PACKED_BEGIN
 typedef struct PACKED
 {
    uint16  StartAddr;
    uint16  SMlength;
    uint32  SMflags;
 } ec_smt;
+PACKED_END
 
+PACKED_BEGIN
 typedef struct PACKED
 {
    uint16  State;
    uint16  Unused;
    uint16  ALstatuscode;
 } ec_state_status;
+PACKED_END
 
 #define ECT_MBXPROT_AOE      0x0001
 #define ECT_MBXPROT_EOE      0x0002
@@ -274,9 +292,9 @@ typedef struct
    /** Offset in input segment */
    uint16           Ioffset;
    /** Expected workcounter outputs */
-   uint16              outputsWKC;
+   uint16           outputsWKC;
    /** Expected workcounter inputs */
-   uint16              inputsWKC;
+   uint16           inputsWKC;
    /** check slave states */
    boolean          docheckstate;
    /** IO segmentation list. Datagrams must not break SM in two. */
@@ -323,6 +341,7 @@ typedef struct
 typedef uint8 ec_mbxbuft[EC_MAXMBX + 1];
 
 /** standard ethercat mailbox header */
+PACKED_BEGIN
 typedef struct PACKED
 {
    uint16  length;
@@ -330,15 +349,116 @@ typedef struct PACKED
    uint8   priority;
    uint8   mbxtype;
 } ec_mbxheadert;
+PACKED_END
 
 /** ALstatus and ALstatus code */
+PACKED_BEGIN
 typedef struct PACKED
 {
    uint16  alstatus;
    uint16  unused;
    uint16  alstatuscode;
 } ec_alstatust;
+PACKED_END
 
+/** stack structure to store segmented LRD/LWR/LRW constructs */
+typedef struct
+{
+   uint8   pushed;
+   uint8   pulled;
+   uint8   idx[EC_MAXBUF];
+   void    *data[EC_MAXBUF];
+   uint16  length[EC_MAXBUF];
+} ec_idxstackT;
+
+/** ringbuf for error storage */
+typedef struct 
+{
+   int16     head;
+   int16     tail;
+   ec_errort Error[EC_MAXELIST + 1];
+} ec_eringt;
+
+/** SyncManager Communication Type structure for CA */
+PACKED_BEGIN
+typedef struct PACKED
+{
+   uint8   n;
+   uint8   nu1;
+   uint8   SMtype[EC_MAXSM];
+} ec_SMcommtypet;   
+PACKED_END
+
+/** SDO assign structure for CA */
+PACKED_BEGIN
+typedef struct PACKED
+{
+   uint8   n;
+   uint8   nu1;
+   uint16  index[256];
+} ec_PDOassignt;   
+PACKED_END
+
+/** SDO description structure for CA */
+PACKED_BEGIN
+typedef struct PACKED
+{
+   uint8   n;
+   uint8   nu1;
+   uint32  PDO[256];
+} ec_PDOdesct;   
+PACKED_END
+
+/** Context structure , referenced by all ecx functions*/
+typedef struct
+{
+   /** port reference, may include red_port */
+   ecx_portt      *port;
+   /** slavelist reference */
+   ec_slavet      *slavelist;
+   /** number of slaves found in configuration */
+   int            *slavecount;
+   /** maximum number of slaves allowed in slavelist */
+   int            maxslave;
+   /** grouplist reference */
+   ec_groupt      *grouplist;
+   /** maximum number of groups allowed in grouplist */
+   int            maxgroup;
+   /** internal, reference to eeprom cache buffer */
+   uint8          *esibuf;
+   /** internal, reference to eeprom cache map */
+   uint32         *esimap;
+   /** internal, current slave for eeprom cache */
+   uint16         esislave;
+   /** internal, reference to error list */
+   ec_eringt      *elist;
+   /** internal, reference to processdata stack buffer info */
+   ec_idxstackT   *idxstack;
+   /** reference to ecaterror state */
+   boolean        *ecaterror;
+   /** internal, position of DC datagram in process data packet */
+   uint16         DCtO;
+   /** internal, length of DC datagram */
+   uint16         DCl;
+   /** reference to last DC time from slaves */
+   int64          *DCtime;
+   /** internal, SM buffer */
+   ec_SMcommtypet *SMcommtype;
+   /** internal, PDO assign list */
+   ec_PDOassignt  *PDOassign;
+   /** internal, PDO description list */
+   ec_PDOdesct    *PDOdesc;
+   /** internal, SM list from eeprom */
+   ec_eepromSMt   *eepSM;
+   /** internal, FMMU list from eeprom */
+   ec_eepromFMMUt *eepFMMU; 
+   /** registered FoE hook */
+   int            (*FOEhook)(uint16 slave, int packetnumber, int datasize);
+} ecx_contextt;
+
+#ifdef EC_VER1
+/** global struct to hold default master context */
+extern ecx_contextt  ecx_context;
 /** main slave data structure array */
 extern ec_slavet   ec_slave[EC_MAXSLAVE];
 /** number of slaves found by configuration function */
@@ -346,16 +466,14 @@ extern int         ec_slavecount;
 /** slave group structure */
 extern ec_groupt   ec_group[EC_MAXGROUP];
 extern boolean     EcatError;
-
-extern uint16      ec_DCtO;
 extern int64       ec_DCtime;
 
 void ec_pusherror(const ec_errort *Ec);
 boolean ec_poperror(ec_errort *Ec);
 boolean ec_iserror(void);
 void ec_packeterror(uint16 Slave, uint16 Index, uint8 SubIdx, uint16 ErrorCode);
-int ec_init(const char * ifname);
-int ec_init_redundant(const char *ifname, const char *if2name);
+int ec_init(char * ifname);
+int ec_init_redundant(char *ifname, char *if2name);
 void ec_close(void);
 uint8 ec_siigetbyte(uint16 slave, uint16 address);
 int16 ec_siifind(uint16 slave, uint16 cat);
@@ -367,12 +485,10 @@ int ec_siiPDO(uint16 slave, ec_eepromPDOt* PDO, uint8 t);
 int ec_readstate(void);
 int ec_writestate(uint16 slave);
 uint16 ec_statecheck(uint16 slave, uint16 reqstate, int timeout);
-uint8 ec_nextmbxcnt(uint8 cnt);
-void ec_clearmbx(ec_mbxbuft *Mbx);
 int ec_mbxempty(uint16 slave, int timeout);
 int ec_mbxsend(uint16 slave,ec_mbxbuft *mbx, int timeout);
 int ec_mbxreceive(uint16 slave, ec_mbxbuft *mbx, int timeout);
-void ec_esidump(uint16 slave, uint8 *esibuf, uint8 test);
+void ec_esidump(uint16 slave, uint8 *esibuf);
 uint32 ec_readeeprom(uint16 slave, uint16 eeproma, int timeout);
 int ec_writeeeprom(uint16 slave, uint16 eeproma, uint16 data, int timeout);
 int ec_eeprom2master(uint16 slave);
@@ -387,5 +503,50 @@ int ec_send_processdata_group(uint8 group);
 int ec_receive_processdata_group(uint8 group, int timeout);
 int ec_send_processdata(void);
 int ec_receive_processdata(int timeout);
+#endif
+
+ec_adaptert * ec_find_adapters(void);
+void ec_free_adapters(ec_adaptert * adapter);
+uint8 ec_nextmbxcnt(uint8 cnt);
+void ec_clearmbx(ec_mbxbuft *Mbx);
+void ecx_pusherror(ecx_contextt *context, const ec_errort *Ec);
+boolean ecx_poperror(ecx_contextt *context, ec_errort *Ec);
+boolean ecx_iserror(ecx_contextt *context);
+void ecx_packeterror(ecx_contextt *context, uint16 Slave, uint16 Index, uint8 SubIdx, uint16 ErrorCode);
+int ecx_init(ecx_contextt *context, char * ifname);
+int ecx_init_redundant(ecx_contextt *context, ecx_redportt *redport, char *ifname, char *if2name);
+void ecx_close(ecx_contextt *context);
+uint8 ecx_siigetbyte(ecx_contextt *context, uint16 slave, uint16 address);
+int16 ecx_siifind(ecx_contextt *context, uint16 slave, uint16 cat);
+void ecx_siistring(ecx_contextt *context, char *str, uint16 slave, uint16 Sn);
+uint16 ecx_siiFMMU(ecx_contextt *context, uint16 slave, ec_eepromFMMUt* FMMU);
+uint16 ecx_siiSM(ecx_contextt *context, uint16 slave, ec_eepromSMt* SM);
+uint16 ecx_siiSMnext(ecx_contextt *context, uint16 slave, ec_eepromSMt* SM, uint16 n);
+int ecx_siiPDO(ecx_contextt *context, uint16 slave, ec_eepromPDOt* PDO, uint8 t);
+int ecx_readstate(ecx_contextt *context);
+int ecx_writestate(ecx_contextt *context, uint16 slave);
+uint16 ecx_statecheck(ecx_contextt *context, uint16 slave, uint16 reqstate, int timeout);
+int ecx_mbxempty(ecx_contextt *context, uint16 slave, int timeout);
+int ecx_mbxsend(ecx_contextt *context, uint16 slave,ec_mbxbuft *mbx, int timeout);
+int ecx_mbxreceive(ecx_contextt *context, uint16 slave, ec_mbxbuft *mbx, int timeout);
+void ecx_esidump(ecx_contextt *context, uint16 slave, uint8 *esibuf);
+uint32 ecx_readeeprom(ecx_contextt *context, uint16 slave, uint16 eeproma, int timeout);
+int ecx_writeeeprom(ecx_contextt *context, uint16 slave, uint16 eeproma, uint16 data, int timeout);
+int ecx_eeprom2master(ecx_contextt *context, uint16 slave);
+int ecx_eeprom2pdi(ecx_contextt *context, uint16 slave);
+uint64 ecx_readeepromAP(ecx_contextt *context, uint16 aiadr, uint16 eeproma, int timeout);
+int ecx_writeeepromAP(ecx_contextt *context, uint16 aiadr, uint16 eeproma, uint16 data, int timeout);
+uint64 ecx_readeepromFP(ecx_contextt *context, uint16 configadr, uint16 eeproma, int timeout);
+int ecx_writeeepromFP(ecx_contextt *context, uint16 configadr, uint16 eeproma, uint16 data, int timeout);
+void ecx_readeeprom1(ecx_contextt *context, uint16 slave, uint16 eeproma);
+uint32 ecx_readeeprom2(ecx_contextt *context, uint16 slave, int timeout);
+int ecx_send_processdata_group(ecx_contextt *context, uint8 group);
+int ecx_receive_processdata_group(ecx_contextt *context, uint8 group, int timeout);
+int ecx_send_processdata(ecx_contextt *context);
+int ecx_receive_processdata(ecx_contextt *context, int timeout);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
