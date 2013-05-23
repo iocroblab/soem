@@ -48,3 +48,19 @@ Version 1.2.5 : 2011-06-13
 - Fixed siigetbyte() unaligned copy.
 - Fixed bug in nicdrv.c, socket handles are 0 included.
 - Fixed bug in ethercatconfig.c causing memory corruption.
+Version 1.2.8 : 2012-06-14
+- Changed directory structure.
+- Changed make file.
+- Moved hardware / OS dependend part in separate directories.
+- Added firm_update tool to upload firmware to slaves in Boot state, use with care.
+- Added DC for LRD/LWR case.
+- Separated expectedWKC to inputsWKC and outputsWKC.
+- Added PreOP->SafeOP hooks in configuration functions.
+- With CoE use expedited download if mailbox size is very small and object <= 4 bytes.
+- Fixed NetX mailbox configuration behaviour.
+- Fixed FoE write bug.
+- Added mailbox error handling.
+- Fixed SII string read bug.
+- Fixed bug in table lookup for printing
+- Rewrite of ec_recover_slave() and ec_reconfigure_slave()
+- Added -map option in slaveinfo, shows SOEM IO mapping of all slaves found.

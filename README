@@ -1,1 +1,9 @@
+To compile for linux:
+
+go to project directory
+
+source ./setup.sh linux
+
+make all
+
 Please read the doxygen documentation in doc/html/index.html
