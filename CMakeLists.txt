@@ -216,6 +216,10 @@ if(ENABLE_TESTS)
 
 endif(ENABLE_TESTS)
 
+##############################################################################
+# TODO 
+# INSTALL targets
+##############################################################################
 # add_executable(ebox ebox.c)
 # target_link_libraries(ebox soem_static ${CMAKE_THREAD_LIBS_INIT})
 # 

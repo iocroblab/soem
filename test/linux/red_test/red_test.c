@@ -82,7 +82,7 @@ void redtest(char *ifname, char *ifname2)
                   cnt, ec_slave[cnt].name, ec_slave[cnt].Obits, ec_slave[cnt].Ibits,
                   ec_slave[cnt].state, (int)ec_slave[cnt].pdelay, ec_slave[cnt].hasdc);
             printf("         Out:%8.8x,%4d In:%8.8x,%4d\n",
-                  (int)ec_slave[cnt].outputs, ec_slave[cnt].Obytes, (int)ec_slave[cnt].inputs, ec_slave[cnt].Ibytes);
+                  (intptr_t)ec_slave[cnt].outputs, ec_slave[cnt].Obytes, (intptr_t)ec_slave[cnt].inputs, ec_slave[cnt].Ibytes);
             /* check for EL2004 or EL2008 */
             if( !digout && ((ec_slave[cnt].eep_id == 0x0af83052) || (ec_slave[cnt].eep_id == 0x07d83052)))
             {
