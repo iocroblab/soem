@@ -1,8 +1,8 @@
 #########################################################################
 # CMakeLists.txt file for building SOEM with CMake                      #
 #                                                                       #
-# Copyright (c) 2012 Orestes Mas                                        #
-# Copyright (c) 2012-2013 leopold Palomo-Avellaneda                     #
+# Copyright (c) 2012 Orestes Mas <orestes@tsc.upc.edu>                  #
+# Copyright (c) 2012-2013 Leopold Palomo-Avellaneda <leo@alaxarxa.net>  #
 #                                                                       #
 # This file is free software: you can redistribute it and/or modify     #
 # it under the terms of the GNU General Public License as published by  #
