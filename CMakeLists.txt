@@ -241,7 +241,7 @@ endif(ENABLE_TESTS)
 # Install files into system directories
 INSTALL(TARGETS ebox eepromtool red_test simple_test slaveinfo firm_update DESTINATION bin)
 INSTALL(TARGETS soem_static soem_dynamic DESTINATION lib)
-INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
+INSTALL(FILES ${SOEM_HDRS} ${OSAL_H} DESTINATION include/soem)
 
  
 # # Build example executables
