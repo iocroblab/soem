@@ -90,6 +90,9 @@ set(SOEM_SRC
   soem/ethercatsoe.c
 )
 
+set(OSAL_H
+     osal/osal.h  )
+
 if(WIN32)
 ### OSAL source
   set(OSAL_SRC
@@ -176,42 +179,42 @@ if(ENABLE_TESTS)
 #ebox eepromtool red_test simple_test slaveinfo firm_update
   if(WIN32)
     add_executable(ebox test/win32/ebox/ebox.c)
-    target_link_libraries(ebox soem_static ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(ebox soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(simple_test test/win32/simple_test/simple_test.c)
-    target_link_libraries(simple_test soem_static)
+    target_link_libraries(simple_test soem_dynamic)
  
     add_executable(eepromtool test/win32/eepromtool/eepromtool.c)
-    target_link_libraries(eepromtool soem_static)
+    target_link_libraries(eepromtool soem_dynamic)
  
     add_executable(slaveinfo test/win32/slaveinfo/slaveinfo.c)
-    target_link_libraries(slaveinfo soem_static)
+    target_link_libraries(slaveinfo soem_dynamic)
  
     add_executable(red_test test/win32/red_test/red_test.c)
-    target_link_libraries(red_test soem_static ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(red_test soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
     
     add_executable(firm_update test/win32/firm_update/firm_update.c)
-    target_link_libraries(firm_update soem_static ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(firm_update soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
   endif()
 
   if(UNIX)
     add_executable(ebox test/linux/ebox/ebox.c)
-    target_link_libraries(ebox soem_static ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(ebox soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(simple_test test/linux/simple_test/simple_test.c)
-    target_link_libraries(simple_test soem_static)
+    target_link_libraries(simple_test soem_dynamic)
  
     add_executable(eepromtool test/linux/eepromtool/eepromtool.c)
-    target_link_libraries(eepromtool soem_static)
+    target_link_libraries(eepromtool soem_dynamic)
  
     add_executable(slaveinfo test/linux/slaveinfo/slaveinfo.c)
-    target_link_libraries(slaveinfo soem_static)
+    target_link_libraries(slaveinfo soem_dynamic)
  
     add_executable(red_test test/linux/red_test/red_test.c)
-    target_link_libraries(red_test soem_static ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(red_test soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
     
     add_executable(firm_update test/linux/firm_update/firm_update.c)
-    target_link_libraries(firm_update soem_static ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(firm_update soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
   endif()
 
 endif(ENABLE_TESTS)
@@ -221,7 +224,7 @@ endif(ENABLE_TESTS)
 # INSTALL targets
 ##############################################################################
 # add_executable(ebox ebox.c)
-# target_link_libraries(ebox soem_static ${CMAKE_THREAD_LIBS_INIT})
+# target_link_libraries(ebox soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
 # 
 # add_executable(simple_test simple_test.c)
 # target_link_libraries(simple_test soem_static)
@@ -235,10 +238,10 @@ endif(ENABLE_TESTS)
 # add_executable(red_test red_test.c)
 # target_link_libraries(red_test soem_static ${CMAKE_THREAD_LIBS_INIT})
 # 
-# # Install files into system directories
-# INSTALL(TARGETS ebox simple_test slaveinfo red_test eepromtool DESTINATION bin)
-# INSTALL(TARGETS soem_static soem_dynamic DESTINATION lib)
-# INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
+# Install files into system directories
+INSTALL(TARGETS ebox eepromtool red_test simple_test slaveinfo firm_update DESTINATION bin)
+INSTALL(TARGETS soem_static soem_dynamic DESTINATION lib)
+INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
 
  
 # # Build example executables
