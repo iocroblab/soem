@@ -448,7 +448,9 @@ int ecx_inframe(ecx_portt *port, int idx, int stacknumber)
                   /* put it in the buffer array (strip ethernet header) */
                   memcpy(rxbuf, &(*stack->tempbuf)[ETH_HEADERSIZE], (*stack->txbuflength)[idxf] - ETH_HEADERSIZE);
                   /* mark as received */
-                  (*stack->rxbufstat)[idxf] = EC_BUF_RCVD;
+                  // AS: Change for youBot: don't fill up buffers when responses are late
+               	  if((*stack->rxbufstat)[idxf] != EC_BUF_EMPTY)
+                   	  (*stack->rxbufstat)[idxf] = EC_BUF_RCVD;
                   (*stack->rxsa)[idxf] = ntohs(ehp->sa1);
                }
                else 
