@@ -51,7 +51,8 @@ extern "C"
 {
 #endif
 
-#include <pthread.h>
+//#include <pthread.h>
+#include <native/mutex.h>
 
 /** pointer structure to Tx and Rx stacks */
 typedef struct
@@ -116,9 +117,9 @@ typedef struct
    int redstate;
    /** pointer to redundancy port and buffers */
    ecx_redportt *redport;   
-   pthread_mutex_t getindex_mutex; 
-   pthread_mutex_t tx_mutex;
-   pthread_mutex_t rx_mutex;
+   RT_MUTEX getindex_mutex;
+   RT_MUTEX tx_mutex;
+   RT_MUTEX rx_mutex;
 } ecx_portt;
 
 extern const uint16 priMAC[3];
