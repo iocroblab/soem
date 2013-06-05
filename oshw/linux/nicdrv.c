@@ -147,9 +147,17 @@ int ecx_setupnic(ecx_portt *port, const char *ifname, int secondary)
    }
    else
    {
-	  rt_mutex_create(&port->getindex_mutex, "getindex_mutex");
-	  rt_mutex_create(&port->tx_mutex, "tx_mutex");
-	  rt_mutex_create(&port->rx_mutex, "rx_mutex");
+
+#ifdef RTNET
+      rt_mutex_create(&port->getindex_mutex, "getindex_mutex");
+      rt_mutex_create(&port->tx_mutex, "tx_mutex");
+      rt_mutex_create(&port->rx_mutex, "rx_mutex");
+#else
+      pthread_mutex_init(&(port->getindex_mutex), NULL);
+      pthread_mutex_init(&(port->tx_mutex)      , NULL);
+      pthread_mutex_init(&(port->rx_mutex)      , NULL);
+#endif //RTNET
+
       port->sockhandle        = -1;
       port->lastidx           = 0;
       port->redstate          = ECT_RED_NONE;
@@ -239,8 +247,11 @@ int ecx_getindex(ecx_portt *port)
 {
    int idx;
    int cnt;
-
+#ifdef RTNET
    rt_mutex_acquire(&port->getindex_mutex, TM_INFINITE);
+#else
+   pthread_mutex_lock( &(port->getindex_mutex) );
+#endif //RTNET
 
    idx = port->lastidx + 1;
    /* index can't be larger than buffer array */
@@ -263,9 +274,11 @@ int ecx_getindex(ecx_portt *port)
    if (port->redstate != ECT_RED_NONE)
       port->redport->rxbufstat[idx] = EC_BUF_ALLOC;
    port->lastidx = idx;
-
+#ifdef RTNET
    rt_mutex_release(&port->getindex_mutex);
-   
+#else
+   pthread_mutex_unlock( &(port->getindex_mutex) );
+#endif
    return idx;
 }
 
@@ -325,8 +338,11 @@ int ecx_outframe_red(ecx_portt *port, int idx)
    rval = ecx_outframe(port, idx, 0);
    if (port->redstate != ECT_RED_NONE)
    {   
-      //pthread_mutex_lock( &(port->tx_mutex) );
+#ifdef RTNET      
 	   rt_mutex_acquire(&port->tx_mutex, TM_INFINITE);
+#else      
+      pthread_mutex_lock( &(port->tx_mutex) );
+#endif
       ehp = (ec_etherheadert *)&(port->txbuf2);
       /* use dummy frame for secondary socket transmit (BRD) */
       datagramP = (ec_comt*)&(port->txbuf2[ETH_HEADERSIZE]);
@@ -336,8 +352,11 @@ int ecx_outframe_red(ecx_portt *port, int idx)
       ehp->sa1 = htons(secMAC[1]);
       /* transmit over secondary socket */
       SEND(port->redport->sockhandle, &(port->txbuf2), port->txbuflength2 , 0);
-      //pthread_mutex_unlock( &(port->tx_mutex) );
+#ifdef RTNET            
       rt_mutex_release(&port->tx_mutex);
+#else
+      pthread_mutex_unlock( &(port->tx_mutex) );
+#endif
       port->redport->rxbufstat[idx] = EC_BUF_TX;
    }   
    
@@ -416,8 +435,12 @@ int ecx_inframe(ecx_portt *port, int idx, int stacknumber)
    }
    else 
    {
+#ifdef RTNET     
 	  rt_mutex_acquire(&port->rx_mutex, TM_INFINITE);
-      /* non blocking call to retrieve frame from socket */
+#else
+     pthread_mutex_lock(&(port->rx_mutex));
+#endif
+     /* non blocking call to retrieve frame from socket */
       if (ecx_recvpkt(port, stacknumber)) 
       {
          rval = EC_OTHERFRAME;
@@ -461,7 +484,11 @@ int ecx_inframe(ecx_portt *port, int idx, int stacknumber)
             }
          }
       }
+#ifdef RTNET      
       rt_mutex_release(&port->rx_mutex);
+#else
+      pthread_mutex_unlock( &(port->rx_mutex) );
+#endif
       
    }
    
