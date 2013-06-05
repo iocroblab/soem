@@ -36,6 +36,11 @@ set (CMAKE_C_FLAGS "-fdump-rtl-expand")
 
 option(ENABLE_RTNET "Enable RTnet over Xenomai." OFF)
 option(ENABLE_TESTS "Enable test programs and utilities." ON)
+#option(ENABLE_YOUBOT_PATCH "Enable YouBot patch to solve a bug in the mailboxes." OFF)
+
+#if(ENABLE_YOUBOT_PATCH)
+#  add_definitions( -DUSE_YOUBOT )
+#endif()
 
 if(ENABLE_RTNET)
   #common commands for building c++ executables and libraries
@@ -52,6 +57,7 @@ if(ENABLE_RTNET)
     set(CMAKE_C_FLAGS_RTNET "${XENO_CFLAGS}")
     set(CMAKE_SHARED_LINKER_FLAGS_RTNET "${XENO_LDFLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS_RTNET "${XENO_LDFLAGS} -lnative")
+    add_definitions( -DRTNET )
   endif()
 endif()
 
@@ -140,6 +146,8 @@ if(UNIX)
 endif(UNIX)
 
 # Create static library (.a) with all basic SOEM functions
+
+
 add_library(soem_static STATIC ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
 set_target_properties(soem_static 
   PROPERTIES DEFINE_SYMBOL "SOEM_DLL_EXPORT"
@@ -241,6 +249,8 @@ endif(ENABLE_TESTS)
 # Install files into system directories
 INSTALL(TARGETS ebox eepromtool red_test simple_test slaveinfo firm_update DESTINATION bin)
 INSTALL(TARGETS soem_static soem_dynamic DESTINATION lib)
+
+# Just ones headers
 INSTALL(FILES ${SOEM_HDRS} ${OSAL_H} ${OSHW_HDRS} DESTINATION include/soem)
 
  
@@ -250,63 +260,63 @@ INSTALL(FILES ${SOEM_HDRS} ${OSAL_H} ${OSHW_HDRS} DESTINATION include/soem)
 # # then change "soem_static" to "soem" in link commands below
 # 
 # 
-# if(ENABLE_RTNET)
-#   # Create static library (.a) with all basic SOEM functions
-#   include_directories(${RTNET_INCLUDE_DIR})
-#   
-#   add_library(soem_static_rt STATIC ${SOEM_SRC})
-#   set_target_properties(soem_static_rt 
-#     PROPERTIES DEFINE_SYMBOL "SOEM_DLL_EXPORT"
-#     OUTPUT_NAME soemrt
-#   # Set accumulated compilation flags: (.so and .a)
-#     COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RTNET} -DHAVE_RTNET"
-#     LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_EXE_LINKER_FLAGS_RTNET}"
-#     VERSION "${SOEM_VERSION}"
-#     CLEAN_DIRECT_OUTPUT 1)
-#   # Create dynamic library (.so) with all basic SOEM functions
-#   add_library(soem_dynamic_rt SHARED ${SOEM_SRC})
-#   set_target_properties( soem_dynamic_rt PROPERTIES
-#     DEFINE_SYMBOL "SOEM_DLL_EXPORT"
-#     SOVERSION "${SOEM_VERSION_MAJOR}.${SOEM_VERSION_MINOR}.${SOEM_VERSION_PATCH}"
-#     VERSION "${SOEM_VERSION}"
-#     OUTPUT_NAME soemrt
-#   # Set accumulated compilation flags: (.so and .a)
-#     COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RTNET} -DHAVE_RTNET"
-#     LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_EXE_LINKER_FLAGS_RTNET}"
-#     INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-#     CLEAN_DIRECT_OUTPUT 1)
-#     IF (UNIX AND NOT APPLE)
-#     SET_TARGET_PROPERTIES( soem_dynamic PROPERTIES
-#       LINK_FLAGS "${LINK_FLAGS} -Wl,-zdefs")
-#     ENDIF ()
-# 
-#   # Build example executables
-#   # NOTE: The executables are statically linked (soem functions embedded)
-#   # If you wish to link them dynamically with libsoem.so, 
-#   # then change "soem_static" to "soem" in link commands below
-#   add_executable(ebox_rt ebox.c)
-#   target_link_libraries(ebox_rt soem_static_rt )
-#   set_target_properties(ebox_rt PROPERTIES
-#   LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET}" )
-# 
-#   add_executable(simple_test_rt simple_test.c)
-#   target_link_libraries(simple_test_rt soem_static_rt)
-# 
-#   add_executable(eepromtool_rt eepromtool.c)
-#   target_link_libraries(eepromtool_rt soem_static_rt)
-# 
-#   add_executable(slaveinfo_rt slaveinfo.c)
-#   target_link_libraries(slaveinfo_rt soem_static_rt)
-# 
-#   add_executable(red_test_rt red_test.c)
-#   target_link_libraries(red_test_rt soem_static_rt )
-#   set_target_properties(red_test_rt PROPERTIES
-#   LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET}" )
-# 
-# 
-#   # Install files into system directories
-#   INSTALL(TARGETS ebox_rt simple_test_rt slaveinfo_rt red_test_rt eepromtool_rt DESTINATION bin)
-#   INSTALL(TARGETS soem_static_rt soem_dynamic_rt DESTINATION lib)
-#   #INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
+if(ENABLE_RTNET)
+  # Create static library (.a) with all basic SOEM functions
+  include_directories(${RTNET_INCLUDE_DIR})
+  
+  add_library(soem_static_rt STATIC ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
+  set_target_properties(soem_static_rt 
+    PROPERTIES DEFINE_SYMBOL "SOEM_DLL_EXPORT"
+    OUTPUT_NAME soemrt
+  # Set accumulated compilation flags: (.so and .a)
+    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RTNET} -DHAVE_RTNET"
+    LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_EXE_LINKER_FLAGS_RTNET}"
+    VERSION "${SOEM_VERSION}"
+    CLEAN_DIRECT_OUTPUT 1)
+  # Create dynamic library (.so) with all basic SOEM functions
+  add_library(soem_dynamic_rt SHARED ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
+  set_target_properties( soem_dynamic_rt PROPERTIES
+    DEFINE_SYMBOL "SOEM_DLL_EXPORT"
+    SOVERSION "${SOEM_VERSION_MAJOR}.${SOEM_VERSION_MINOR}.${SOEM_VERSION_PATCH}"
+    VERSION "${SOEM_VERSION}"
+    OUTPUT_NAME soemrt
+  # Set accumulated compilation flags: (.so and .a)
+    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RTNET} -DHAVE_RTNET"
+    LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_EXE_LINKER_FLAGS_RTNET}"
+    INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+    CLEAN_DIRECT_OUTPUT 1)
+    IF (UNIX AND NOT APPLE)
+    SET_TARGET_PROPERTIES( soem_dynamic PROPERTIES
+      LINK_FLAGS "${LINK_FLAGS} -Wl,-zdefs")
+    ENDIF ()
+
+  # Build example executables
+  # NOTE: The executables are statically linked (soem functions embedded)
+  # If you wish to link them dynamically with libsoem.so, 
+  # then change "soem_static" to "soem" in link commands below
+  add_executable(ebox_rt ebox.c)
+  target_link_libraries(ebox_rt soem_static_rt )
+  set_target_properties(ebox_rt PROPERTIES
+  LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET}" )
+
+  add_executable(simple_test_rt simple_test.c)
+  target_link_libraries(simple_test_rt soem_static_rt)
+
+  add_executable(eepromtool_rt eepromtool.c)
+  target_link_libraries(eepromtool_rt soem_static_rt)
+
+  add_executable(slaveinfo_rt slaveinfo.c)
+  target_link_libraries(slaveinfo_rt soem_static_rt)
+
+  add_executable(red_test_rt red_test.c)
+  target_link_libraries(red_test_rt soem_static_rt )
+  set_target_properties(red_test_rt PROPERTIES
+  LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET}" )
+
+
+  # Install files into system directories
+  INSTALL(TARGETS ebox_rt simple_test_rt slaveinfo_rt red_test_rt eepromtool_rt DESTINATION bin)
+  INSTALL(TARGETS soem_static_rt soem_dynamic_rt DESTINATION lib)
+  #INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
 #endif()
 
