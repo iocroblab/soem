@@ -294,29 +294,29 @@ if(ENABLE_RTNET)
   # NOTE: The executables are statically linked (soem functions embedded)
   # If you wish to link them dynamically with libsoem.so, 
   # then change "soem_static" to "soem" in link commands below
-  add_executable(ebox_rt ebox.c)
-  target_link_libraries(ebox_rt soem_static_rt )
-  set_target_properties(ebox_rt PROPERTIES
-  LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET}" )
-
-  add_executable(simple_test_rt simple_test.c)
-  target_link_libraries(simple_test_rt soem_static_rt)
-
-  add_executable(eepromtool_rt eepromtool.c)
-  target_link_libraries(eepromtool_rt soem_static_rt)
-
-  add_executable(slaveinfo_rt slaveinfo.c)
-  target_link_libraries(slaveinfo_rt soem_static_rt)
-
-  add_executable(red_test_rt red_test.c)
-  target_link_libraries(red_test_rt soem_static_rt )
-  set_target_properties(red_test_rt PROPERTIES
-  LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET}" )
-
+  if(UNIX)
+    add_executable(ebox_rt test/linux/ebox/ebox.c)
+    target_link_libraries(ebox_rt soem_static ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT})
+ 
+    add_executable(simple_test_rt test/linux/simple_test/simple_test.c)
+    target_link_libraries(simple_test_rt soem_static)
+ 
+    add_executable(eepromtool_rt test/linux/eepromtool/eepromtool.c)
+    target_link_libraries(eepromtool_rt soem_static)
+ 
+    add_executable(slaveinfo_rt test/linux/slaveinfo/slaveinfo.c)
+    target_link_libraries(slaveinfo_rt soem_static)
+ 
+    add_executable(red_test_rt test/linux/red_test/red_test.c)
+    target_link_libraries(red_test_rt soem_static ${CMAKE_THREAD_LIBS_INIT})
+    
+    add_executable(firm_update_rt test/linux/firm_update/firm_update.c)
+    target_link_libraries(firm_update_rt soem_static ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT} )
+  endif()
 
   # Install files into system directories
   INSTALL(TARGETS ebox_rt simple_test_rt slaveinfo_rt red_test_rt eepromtool_rt DESTINATION bin)
   INSTALL(TARGETS soem_static_rt soem_dynamic_rt DESTINATION lib)
   #INSTALL(FILES ${SOEM_HDRS} DESTINATION include/soem)
-#endif()
+endif()
 
