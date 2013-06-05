@@ -50,9 +50,34 @@
 extern "C"
 {
 #endif
+#ifdef RTNET
 
-//#include <pthread.h>
+#include <arpa/inet.h> 
+#include <netinet/in.h>
+#include <rtnet.h>
 #include <native/mutex.h>
+
+//Definitions with RTNET
+#define SOCKET rt_dev_socket
+#define SEND rt_dev_send  
+#define RECV rt_dev_recv  
+#define BIND rt_dev_bind  
+#define CLOSE rt_dev_close
+#define SETSOCKOPT rt_dev_setsockopt
+#define IOCTL rt_dev_ioctl
+
+#else
+#include <pthread.h> 
+
+#define SOCKET socket
+#define RECV recv  
+#define SEND send  
+#define BIND bind  
+#define CLOSE close
+#define SETSOCKOPT setsockopt
+#define IOCTL ioctl
+
+#endif// RTNET
 
 /** pointer structure to Tx and Rx stacks */
 typedef struct
@@ -117,9 +142,16 @@ typedef struct
    int redstate;
    /** pointer to redundancy port and buffers */
    ecx_redportt *redport;   
+
+#ifdef RTNET
    RT_MUTEX getindex_mutex;
    RT_MUTEX tx_mutex;
    RT_MUTEX rx_mutex;
+#else
+   pthread_mutex_t getindex_mutex; 
+   pthread_mutex_t tx_mutex;
+   pthread_mutex_t rx_mutex;
+#endif
 } ecx_portt;
 
 extern const uint16 priMAC[3];
