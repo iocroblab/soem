@@ -945,13 +945,16 @@ int ecx_mbxreceive(ecx_contextt *context, uint16 slave, ec_mbxbuft *mbx, int tim
          do
          {
             wkc = ecx_FPRD(context->port, configadr, mbxro, mbxl, mbx, EC_TIMEOUTRET); /* get mailbox */
+#ifndef USE_YOUBOT
             if ((wkc > 0) && ((mbxh->mbxtype & 0x0f) == 0x00)) /* Mailbox error response? */
             {
                MBXEp = (ec_mbxerrort *)mbx;
                ecx_mbxerror(context, slave, etohs(MBXEp->Detail));
                wkc = 0; /* prevent emergency to cascade up, it is already handled. */
             }
-            else if ((wkc > 0) && ((mbxh->mbxtype & 0x0f) == 0x03)) /* CoE response? */
+            else 
+#endif           
+            if ((wkc > 0) && ((mbxh->mbxtype & 0x0f) == 0x03)) /* CoE response? */
             {
                EMp = (ec_emcyt *)mbx;
                if ((etohs(EMp->CANOpen) >> 12) == 0x01) /* Emergency request? */

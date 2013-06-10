@@ -36,11 +36,11 @@ set (CMAKE_C_FLAGS "-fdump-rtl-expand")
 
 option(ENABLE_RTNET "Enable RTnet over Xenomai." OFF)
 option(ENABLE_TESTS "Enable test programs and utilities." ON)
-#option(ENABLE_YOUBOT_PATCH "Enable YouBot patch to solve a bug in the mailboxes." OFF)
+option(ENABLE_YOUBOT_PATCH "Enable YouBot patch to solve a bug in the mailboxes." OFF)
 
-#if(ENABLE_YOUBOT_PATCH)
-#  add_definitions( -DUSE_YOUBOT )
-#endif()
+if(ENABLE_YOUBOT_PATCH)
+  add_definitions( -DUSE_YOUBOT )
+endif()
 
 if(ENABLE_RTNET)
   #common commands for building c++ executables and libraries
@@ -52,8 +52,12 @@ if(ENABLE_RTNET)
   if(RTNET_INCLUDE_DIR)
     message("Found RTNET: ${RTNET_INCLUDE_DIR}")
     # try Xenomai
-    execute_process(COMMAND xeno-config --skin=native --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
-    execute_process(COMMAND xeno-config --skin=native --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    # find Xenomai
+    find_program(XENOCONFIG xeno-config PATHS /usr/xenomai/bin /usr/bin/ /usr/local/bin)
+    message(STATUS "Xenomai found at: " ${XENOCONFIG})
+    execute_process(COMMAND ${XENOCONFIG} --skin=native --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${XENOCONFIG} --skin=native --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+
     set(CMAKE_C_FLAGS_RTNET "${XENO_CFLAGS}")
     set(CMAKE_SHARED_LINKER_FLAGS_RTNET "${XENO_LDFLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS_RTNET "${XENO_LDFLAGS} -lnative")
@@ -210,7 +214,7 @@ if(ENABLE_TESTS)
     target_link_libraries(ebox soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(simple_test test/linux/simple_test/simple_test.c)
-    target_link_libraries(simple_test soem_dynamic)
+    target_link_libraries(simple_test soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(eepromtool test/linux/eepromtool/eepromtool.c)
     target_link_libraries(eepromtool soem_dynamic)
@@ -299,7 +303,7 @@ if(ENABLE_RTNET)
     target_link_libraries(ebox_rt soem_static ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(simple_test_rt test/linux/simple_test/simple_test.c)
-    target_link_libraries(simple_test_rt soem_static)
+    target_link_libraries(simple_test_rt soem_static ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(eepromtool_rt test/linux/eepromtool/eepromtool.c)
     target_link_libraries(eepromtool_rt soem_static)
