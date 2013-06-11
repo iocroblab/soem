@@ -304,17 +304,17 @@ if(ENABLE_RTNET)
   # then change "soem_static" to "soem" in link commands below
   if(UNIX)
     add_executable(ebox_rt test/linux/ebox/ebox.c)
-    target_link_libraries(ebox_rt soem_static_rt ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(ebox_rt libsoemrt.a ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(simple_test_rt test/linux/simple_test/simple_test.c)
-    target_link_libraries(simple_test_rt soem_static_rt ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(simple_test_rt libsoemrt.a {CMAKE_SHARED_LINKER_FLAGS_RTNET}  ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(eepromtool_rt test/linux/eepromtool/eepromtool.c)
-    target_link_libraries(eepromtool_rt soem_static_rt)
+    target_link_libraries(eepromtool_rt libsoemrt.a ${CMAKE_SHARED_LINKER_FLAGS_RTNET})
  
     add_executable(slaveinfo_rt test/linux/slaveinfo/slaveinfo.c)
-    target_link_libraries(slaveinfo_rt soem_static_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET})
-  set_target_properties(slaveinfo_rt PROPERTIES
+    target_link_libraries(slaveinfo_rt soem_dynamic_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET})
+    set_target_properties(slaveinfo_rt PROPERTIES
     COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RTNET} -DRTNET"
     LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_EXE_LINKER_FLAGS_RTNET}")
  
