@@ -55,8 +55,8 @@ if(ENABLE_RTNET)
     # find Xenomai
     find_program(XENOCONFIG xeno-config PATHS /usr/xenomai/bin /usr/bin/ /usr/local/bin)
     message(STATUS "Xenomai found at: " ${XENOCONFIG})
-    execute_process(COMMAND ${XENOCONFIG} --skin=posix --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
-    execute_process(COMMAND ${XENOCONFIG} --skin=posix --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${XENOCONFIG} --skin=native --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${XENOCONFIG} --skin=native --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
     execute_process(COMMAND ${XENOCONFIG} --skin=rtdm --cflags OUTPUT_VARIABLE XENO_CFLAGS_RTDM OUTPUT_STRIP_TRAILING_WHITESPACE)
     execute_process(COMMAND ${XENOCONFIG} --skin=rtdm --ldflags OUTPUT_VARIABLE XENO_LDFLAGS_RTDM OUTPUT_STRIP_TRAILING_WHITESPACE)
 
