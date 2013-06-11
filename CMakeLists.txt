@@ -302,7 +302,6 @@ if(ENABLE_RTNET)
   # If you wish to link them dynamically with libsoem.so, 
   # then change "soem_static" to "soem" in link commands below
 
-
   if(ENABLE_TESTS)
     add_executable(ebox_rt test/linux/ebox/ebox.c)
     target_link_libraries(ebox_rt libsoemrt.a ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT})
