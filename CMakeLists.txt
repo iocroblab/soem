@@ -55,13 +55,17 @@ if(ENABLE_RTNET)
     # find Xenomai
     find_program(XENOCONFIG xeno-config PATHS /usr/xenomai/bin /usr/bin/ /usr/local/bin)
     message(STATUS "Xenomai found at: " ${XENOCONFIG})
-    execute_process(COMMAND ${XENOCONFIG} --skin=native --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
-    execute_process(COMMAND ${XENOCONFIG} --skin=native --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${XENOCONFIG} --skin=posix --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${XENOCONFIG} --skin=posix --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${XENOCONFIG} --skin=rtdm --cflags OUTPUT_VARIABLE XENO_CFLAGS_RTDM OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${XENOCONFIG} --skin=rtdm --ldflags OUTPUT_VARIABLE XENO_LDFLAGS_RTDM OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-    set(CMAKE_C_FLAGS_RTNET "${XENO_CFLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_RTNET "${XENO_LDFLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS_RTNET "${XENO_LDFLAGS} -lnative")
+    set(CMAKE_C_FLAGS_RTNET "${XENO_CFLAGS} ${XENO_CFLAGS_RTDM}")
+    set(CMAKE_SHARED_LINKER_FLAGS_RTNET "${XENO_LDFLAGS} ${XENO_LDFLAGS_RTDM}")
+    set(CMAKE_EXE_LINKER_FLAGS_RTNET "${XENO_LDFLAGS} -lnative -lrtdm")
     message(STATUS "Compiler flags: " ${CMAKE_C_FLAGS_RTNET})
+    message(STATUS "Linker flags: " ${CMAKE_SHARED_LINKER_FLAGS_RTNET})
+    message(STATUS "EXE Linker flags: " ${CMAKE_EXE_LINKER_FLAGS_RTNET})
   endif()
 endif()
 
@@ -267,7 +271,7 @@ INSTALL(FILES ${SOEM_HDRS} ${OSAL_H} ${OSHW_HDRS} DESTINATION include/soem)
 if(ENABLE_RTNET)
   # Create static library (.a) with all basic SOEM functions
   include_directories(${RTNET_INCLUDE_DIR})
-  
+
   add_library(soem_static_rt STATIC ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
   set_target_properties(soem_static_rt 
     PROPERTIES DEFINE_SYMBOL "SOEM_DLL_EXPORT"
@@ -300,22 +304,25 @@ if(ENABLE_RTNET)
   # then change "soem_static" to "soem" in link commands below
   if(UNIX)
     add_executable(ebox_rt test/linux/ebox/ebox.c)
-    target_link_libraries(ebox_rt soem_static ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(ebox_rt soem_static_rt ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(simple_test_rt test/linux/simple_test/simple_test.c)
-    target_link_libraries(simple_test_rt soem_static ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(simple_test_rt soem_static_rt ${CMAKE_THREAD_LIBS_INIT})
  
     add_executable(eepromtool_rt test/linux/eepromtool/eepromtool.c)
-    target_link_libraries(eepromtool_rt soem_static)
+    target_link_libraries(eepromtool_rt soem_static_rt)
  
     add_executable(slaveinfo_rt test/linux/slaveinfo/slaveinfo.c)
-    target_link_libraries(slaveinfo_rt soem_static)
+    target_link_libraries(slaveinfo_rt soem_static_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET})
+  set_target_properties(slaveinfo_rt PROPERTIES
+    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RTNET} -DRTNET"
+    LINK_FLAGS "${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_EXE_LINKER_FLAGS_RTNET}")
  
     add_executable(red_test_rt test/linux/red_test/red_test.c)
-    target_link_libraries(red_test_rt soem_static ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(red_test_rt soem_static_rt ${CMAKE_THREAD_LIBS_INIT})
     
     add_executable(firm_update_rt test/linux/firm_update/firm_update.c)
-    target_link_libraries(firm_update_rt soem_static ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT} )
+    target_link_libraries(firm_update_rt soem_static_rt ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT} )
   endif()
 
   # Install files into system directories
