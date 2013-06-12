@@ -56,6 +56,7 @@ extern "C"
 #include <netinet/in.h>
 #include <rtnet.h>
 #include <native/mutex.h>
+#include <sched.h>
 
 //Definitions with RTNET
 #define SOCKET rt_dev_socket

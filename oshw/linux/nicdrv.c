@@ -304,6 +304,11 @@ int ecx_outframe(ecx_portt *port, int idx, int stacknumber)
 {
    int lp, rval;
    ec_stackT *stack;
+//#ifdef RTNET
+//   struct sched_param param = { .sched_priority = 1 };
+//   pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
+// #endif
+                     
 
    if (!stacknumber)
    {
@@ -330,7 +335,9 @@ int ecx_outframe_red(ecx_portt *port, int idx)
    ec_comt *datagramP;
    ec_etherheadert *ehp;
    int rval;
-
+//#ifdef RTNET
+//   struct sched_param param = { .sched_priority = 1 };
+//#endif   
    ehp = (ec_etherheadert *)&(port->txbuf[idx]);
    /* rewrite MAC source address 1 to primary */
    ehp->sa1 = htons(priMAC[1]);
@@ -339,7 +346,8 @@ int ecx_outframe_red(ecx_portt *port, int idx)
    if (port->redstate != ECT_RED_NONE)
    {   
 #ifdef RTNET      
-	   rt_mutex_acquire(&port->tx_mutex, TM_INFINITE);
+      rt_mutex_acquire(&port->tx_mutex, TM_INFINITE);
+//      pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
 #else      
       pthread_mutex_lock( &(port->tx_mutex) );
 #endif
@@ -436,7 +444,7 @@ int ecx_inframe(ecx_portt *port, int idx, int stacknumber)
    else 
    {
 #ifdef RTNET     
-	  rt_mutex_acquire(&port->rx_mutex, TM_INFINITE);
+     rt_mutex_acquire(&port->rx_mutex, TM_INFINITE);
 #else
      pthread_mutex_lock(&(port->rx_mutex));
 #endif

@@ -83,7 +83,7 @@ if(ENABLE_RTNET)
   endif()
 endif()
 
-set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE Release)
 
 ########################
 # Defining the sources

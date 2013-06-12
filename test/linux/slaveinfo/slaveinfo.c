@@ -14,6 +14,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef RTNET
+#include <sys/mman.h>
+#include <sched.h>
+#endif
+
 #include "ethercattype.h"
 #include "nicdrv.h"
 #include "ethercatbase.h"
@@ -625,6 +630,11 @@ int main(int argc, char *argv[])
    
    if (argc > 1)
    {      
+   #ifdef RTNET
+//       mlockall(MCL_CURRENT | MCL_FUTURE);
+       struct sched_param param = { .sched_priority = 1 };
+       pthread_setschedparam(pthread_self(), SCHED_FIFO, &param); 
+   #endif
       if ((argc > 2) && (strncmp(argv[2], "-sdo", sizeof("-sdo")) == 0)) printSDO = TRUE;
       if ((argc > 2) && (strncmp(argv[2], "-map", sizeof("-map")) == 0)) printMAP = TRUE;
       /* start slaveinfo */
