@@ -347,7 +347,6 @@ int ecx_outframe_red(ecx_portt *port, int idx)
    {   
 #ifdef RTNET      
       rt_mutex_acquire(&port->tx_mutex, TM_INFINITE);
-//      pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
 #else      
       pthread_mutex_lock( &(port->tx_mutex) );
 #endif

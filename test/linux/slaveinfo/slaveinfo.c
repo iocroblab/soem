@@ -631,7 +631,7 @@ int main(int argc, char *argv[])
    if (argc > 1)
    {      
    #ifdef RTNET
-//       mlockall(MCL_CURRENT | MCL_FUTURE);
+       mlockall(MCL_CURRENT | MCL_FUTURE);
        struct sched_param param = { .sched_priority = 1 };
        pthread_setschedparam(pthread_self(), SCHED_FIFO, &param); 
    #endif
