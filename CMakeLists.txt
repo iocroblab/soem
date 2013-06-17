@@ -43,7 +43,6 @@ include(CheckLibraryExists)
 CHECK_LIBRARY_EXISTS(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME)
 if(HAVE_CLOCK_GETTIME)
   set(CMAKE_SHARED_LINKER_FLAGS "-lrt ${CMAKE_SHARED_LINKER_FLAGS}")
-  set(CMAKE_EXE_LINKER_FLAGS "-lrt ${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 option(ENABLE_STATIC_LIB "Enable libsoem static." ON)
@@ -83,10 +82,12 @@ if(ENABLE_RTNET)
 
 # setting some flags    
     set(XENO_CFLAGS_RTDM "-DRTNET ${XENO_CFLAGS_RTDM}")
-    # for the examples
-    set(XENO_CFLAGS_POSIX "-DRTNET ${XENO_CFLAGS_POSIX}")
     # We need to add the native lib
     set(CMAKE_LINKER_FLAGS_RTNET "-lnative ${XENO_LDFLAGS_RTDM}")
+
+    # for the examples
+    set(XENO_CFLAGS_POSIX "-DRTNET ${XENO_CFLAGS_POSIX}")
+    set(CMAKE_EXE_LINKER_FLAGS_RTNET "-lnative ${XENO_LDFLAGS_POSIX}")
 
     message(STATUS "Compiler RTNET Flags for the library: " ${XENO_CFLAGS_RTDM})
     message(STATUS "Linker RTNET flags for the library: " ${CMAKE_LINKER_FLAGS_RTNET})
@@ -268,7 +269,7 @@ INSTALL(FILES ${SOEM_HDRS} ${OSAL_H} ${OSHW_HDRS} DESTINATION include/soem)
 
 # Static tests
 if(ENABLE_TESTS_STATIC)
-  set(CMAKE_EXE_LINKER_FLAGS_STATIC "${CMAKE_EXE_LINKER_FLAGS} -static")
+  set(CMAKE_EXE_LINKER_FLAGS_STATIC "${CMAKE_SHARED_LINKER_FLAGS}")
   add_executable(ebox_s test/linux/ebox/ebox.c)
   target_link_libraries(ebox_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} ${CMAKE_THREAD_LIBS_INIT})
  
@@ -302,7 +303,7 @@ if(ENABLE_RTNET)
   if(ENABLE_STATIC_LIB)
     add_library(soem_static_rt STATIC ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
 
-  set_target_properties(soem_static_rt 
+  set_target_properties(soem_static_rt PROPERTIES
     OUTPUT_NAME soemrt 
     COMPILE_FLAGS "${XENO_CFLAGS_RTDM}"
     LINK_FLAGS "${CMAKE_LINKER_FLAGS_RTNET}"
@@ -364,9 +365,10 @@ if(ENABLE_RTNET)
   endif()
 
  if(ENABLE_TESTS_STATIC)
-    set(CMAKE_EXE_LINKER_FLAGS_RTNET_STATIC "${CMAKE_EXE_LINKER_FLAGS_RTNET} -static")
+    set(CMAKE_EXE_LINKER_FLAGS_RTNET_STATIC "${CMAKE_EXE_LINKER_FLAGS_RTNET} ${CMAKE_LINKER_FLAGS_RTNET}")
+    message(STATUS "Linker RTNET POSIX flags for the examples (STATIC): "${CMAKE_EXE_LINKER_FLAGS_RTNET_STATIC})
 
-    add_executable(ebox_rt test/linux/ebox/ebox.c)
+    add_executable(ebox_rt_s test/linux/ebox/ebox.c)
     target_link_libraries(ebox_rt_s soem_static_rt )
     set_target_properties(ebox_rt_s PROPERTIES
       COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
