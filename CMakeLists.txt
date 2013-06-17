@@ -72,41 +72,24 @@ if(ENABLE_RTNET)
     message(STATUS "Xenomai found at: " ${XENOCONFIG})
     #execute_process(COMMAND ${XENOCONFIG} --skin=native --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
     #execute_process(COMMAND ${XENOCONFIG} --skin=native --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+
     execute_process(COMMAND ${XENOCONFIG} --skin=rtdm --cflags OUTPUT_VARIABLE XENO_CFLAGS_RTDM OUTPUT_STRIP_TRAILING_WHITESPACE)
     execute_process(COMMAND ${XENOCONFIG} --skin=rtdm --ldflags OUTPUT_VARIABLE XENO_LDFLAGS_RTDM OUTPUT_STRIP_TRAILING_WHITESPACE)
     
     # Needed for the examples
     execute_process(COMMAND ${XENOCONFIG} --skin=posix --cflags OUTPUT_VARIABLE XENO_CFLAGS_POSIX OUTPUT_STRIP_TRAILING_WHITESPACE)
     execute_process(COMMAND ${XENOCONFIG} --skin=posix --ldflags OUTPUT_VARIABLE XENO_LDFLAGS_POSIX OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-
-    #set(CMAKE_C_FLAGS_RTNET "${XENO_CFLAGS} ${XENO_CFLAGS_RTDM}")
-    #set(CMAKE_SHARED_LINKER_FLAGS_RTNET "${XENO_LDFLAGS} ${XENO_LDFLAGS_RTDM}")
-    #set(CMAKE_EXE_LINKER_FLAGS_RTNET "${XENO_LDFLAGS} -lnative -lrtdm")
-    #message(STATUS "Compiler flags: " ${CMAKE_C_FLAGS_RTNET})
-    #message(STATUS "Linker flags: " ${CMAKE_SHARED_LINKER_FLAGS_RTNET})
-    #message(STATUS "EXE Linker flags: " ${CMAKE_EXE_LINKER_FLAGS_RTNET})
-
-    message(STATUS "Compiler POSIX flags: " ${XENO_CFLAGS_POSIX})
-    message(STATUS "Linker POSIX flags: " ${XENO_LDFLAGS_POSIX})
-    message(STATUS "Compiler RTDM flags: " ${XENO_CFLAGS_RTDM})
-    message(STATUS "Linker RTDM flags: " ${XENO_LDFLAGS_RTDM})
-
-    #set(CMAKE_EXE_LINKER_FLAGS_RTNET ${XENO_LDFLAGS_RTDM} ${XENO_LDFLAGS_POSIX})
-    #message(STATUS "EXE Linker flags: " ${CMAKE_EXE_LINKER_FLAGS_RTNET})
     
 
-    #set(RT_COMPILE_FLAGS_t ${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RTNET} -DRTNET)
-    #set(RT_LINK_FLAGS_t ${CMAKE_LD_FLAGS_ADD} ${CMAKE_SHARED_LINKER_FLAGS_RTNET} ${CMAKE_EXE_LINKER_FLAGS_RTNET})
+    set(XENO_CFLAGS_POSIX "${XENO_CFLAGS_POSIX} -DRTNET)
+    # We need to add the native lib
+    set(CMAKE_SHARED_LINKER_FLAGS_RTNET "${XENO_LDFLAGS_RTDM} -lnative")
 
-    # erase semicolon in the list
-    #foreach(arg ${RT_COMPILE_FLAGS_t})
-    #  set(RT_COMPILE_FLAGS "${RT_COMPILE_FLAGS} ${arg}")
-    #endforeach()
-
-    #foreach(arg ${RT_LINK_FLAGS_t})
-    #  set(RT_LINK_FLAGS "${RT_LINK_FLAGS} ${arg}")
-    #endforeach()
+    message(STATUS "Compiler RTNET Flags for the library: " ${XENO_CFLAGS_RTDM})
+    message(STATUS "Linker RTNET flags: " ${CMAKE_SHARED_LINKER_FLAGS_RTNET})
+    
+    message(STATUS "Compiler RTNET POSIX flags fotr the examples: " ${XENO_CFLAGS_POSIX})
+    message(STATUS "Linker RTNET POSIX flags for the examples: " ${CMAKE_EXE_LINKER_FLAGS_RTNET})
 
   endif()
 endif()
@@ -200,13 +183,12 @@ endif(UNIX)
 if(ENABLE_STATIC_LIB)
   add_library(soem_static STATIC ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
   set_target_properties(soem_static 
-    PROPERTIES DEFINE_SYMBOL "SOEM_DLL_EXPORT"
     OUTPUT_NAME soem
 # Set accumulated compilation flags: (.so and .a)
 #  COMPILE_FLAGS "${CMAKE_C_FLAGS}"
 #  LINK_FLAGS "${CMAKE_LD_FLAGS}"
-    VERSION "${SOEM_VERSION}"
-    CLEAN_DIRECT_OUTPUT 1)
+   INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+   CLEAN_DIRECT_OUTPUT 1)
 endif()
 
 # Create dynamic library (.so) with all basic SOEM functions
@@ -284,22 +266,55 @@ INSTALL(TARGETS soem_dynamic DESTINATION lib)
 # Just ones headers
 INSTALL(FILES ${SOEM_HDRS} ${OSAL_H} ${OSHW_HDRS} DESTINATION include/soem)
 
+# Static tests
+if(ENABLE_TESTS_STATIC)
+  add_executable(ebox_s test/linux/ebox/ebox.c)
+  target_link_libraries(ebox_s soem_static "-static" ${CMAKE_THREAD_LIBS_INIT})
+ 
+#  add_executable(simple_test_rt_s test/linux/simple_test/simple_test.c)
+#  target_link_libraries(simple_test_rt_s soem_dynamic_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET}  ${CMAKE_THREAD_LIBS_INIT})
+ 
+#    add_executable(eepromtool_rt_s test/linux/eepromtool/eepromtool.c)
+#    target_link_libraries(eepromtool_rt_s soem_dynamic_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET})
+ 
+#    add_executable(slaveinfo_rt_s test/linux/slaveinfo/slaveinfo.c)
+#    target_link_libraries(slaveinfo_rt_s soem_dynamic_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET})
+#    set_target_properties(slaveinfo_rt_s PROPERTIES
+#    COMPILE_FLAGS "${RT_COMPILE_FLAGS}"
+#      LINK_FLAGS "${RT_LINK_FLAGS}")
+
+#    add_executable(red_test_rt_s test/linux/red_test/red_test.c)
+#    target_link_libraries(red_test_rt_s soem_dynamic_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET} ${CMAKE_THREAD_LIBS_INIT})
+    
+#    add_executable(firm_update_rt_s test/linux/firm_update/firm_update.c)
+#    target_link_libraries(firm_update_rt_s soem_dynamic_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET}  ${CMAKE_THREAD_LIBS_INIT} )
+#  endif()
+
+  # Install files into system directories
+#  if(ENABLE_TESTS)
+#    INSTALL(TARGETS ebox_rt eepromtool_rt red_test_rt simple_test_rt slaveinfo_rt firm_update_rt 
+#          DESTINATION bin)
+#  endif()
+#  if(ENABLE_TESTS_STATIC)
+#    INSTALL(TARGETS ebox_rt_s eepromtool_rt_s red_test_rt_s simple_test_rt_s slaveinfo_rt_s firm_update_rt_s
+#          DESTINATION bin)
+#  endif()
+
 if(ENABLE_RTNET)
 
   # Create static library (.a) with all basic SOEM functions
   include_directories(${RTNET_INCLUDE_DIR})
 
-if(ENABLE_STATIC_LIB)
-  add_library(soem_static_rt STATIC ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
+  if(ENABLE_STATIC_LIB)
+    add_library(soem_static_rt STATIC ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
 
   set_target_properties(soem_static_rt 
-    PROPERTIES DEFINE_SYMBOL "SOEM_DLL_EXPORT"
     OUTPUT_NAME soemrt 
-    COMPILE_FLAGS "${XENO_CFLAGS_RTDM} -DRTNET"
-    LINK_FLAGS "${XENO_LDFLAGS_RTDM} ${CMAKE_SHARED_LINKER_FLAGS}"
+    COMPILE_FLAGS "${XENO_CFLAGS_RTDM}"
+    LINK_FLAGS "${XENO_LDFLAGS_RTDM}"
     VERSION "${SOEM_VERSION}"
     CLEAN_DIRECT_OUTPUT 1)
-endif()
+  endif()
 
   # Create dynamic library (.so) with all basic SOEM functions
   add_library(soem_dynamic_rt SHARED ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
@@ -308,8 +323,8 @@ endif()
     SOVERSION "${SOEM_VERSION_MAJOR}.${SOEM_VERSION_MINOR}.${SOEM_VERSION_PATCH}"
     VERSION "${SOEM_VERSION}"
     OUTPUT_NAME soemrt
-    COMPILE_FLAGS "${XENO_CFLAGS_RTDM} -DRTNET"
-    LINK_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${XENO_LDFLAGS_RTDM}"
+    COMPILE_FLAGS "${XENO_CFLAGS_RTDM}"
+    LINK_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}"
 
     INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
     CLEAN_DIRECT_OUTPUT 1)
@@ -318,38 +333,38 @@ endif()
     add_executable(ebox_rt test/linux/ebox/ebox.c)
     target_link_libraries(ebox_rt soem_dynamic_rt )
     set_target_properties(ebox_rt PROPERTIES
-      COMPILE_FLAGS "${XENO_CFLAGS_POSIX} -DRTNET"
-      LINK_FLAGS "${XENO_LDFLAGS_POSIX}")
+      COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
+      LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
  
     add_executable(simple_test_rt test/linux/simple_test/simple_test.c)
     target_link_libraries(simple_test_rt soem_dynamic_rt)
     set_target_properties(simple_test_rt PROPERTIES
-      COMPILE_FLAGS "${XENO_CFLAGS_POSIX} -DRTNET"
-      LINK_FLAGS "${XENO_LDFLAGS_POSIX}")
+      COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
+      LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
  
     add_executable(eepromtool_rt test/linux/eepromtool/eepromtool.c)
     target_link_libraries(eepromtool_rt soem_dynamic_rt)
     set_target_properties(eepromtool_rt PROPERTIES       
-      COMPILE_FLAGS "${XENO_CFLAGS_POSIX} -DRTNET"
-      LINK_FLAGS "${XENO_LDFLAGS_POSIX}")
+      COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
+      LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
  
     add_executable(slaveinfo_rt test/linux/slaveinfo/slaveinfo.c)
     target_link_libraries(slaveinfo_rt soem_dynamic_rt)
     set_target_properties(slaveinfo_rt PROPERTIES       
-      COMPILE_FLAGS "${XENO_CFLAGS_POSIX} -DRTNET"
-      LINK_FLAGS "${XENO_LDFLAGS_POSIX}")
+      COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
+      LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
 
     add_executable(red_test_rt test/linux/red_test/red_test.c)
     target_link_libraries(red_test_rt soem_dynamic_rt)
     set_target_properties(red_test_rt PROPERTIES       
-      COMPILE_FLAGS "${XENO_CFLAGS_POSIX} -DRTNET"
-      LINK_FLAGS "${XENO_LDFLAGS_POSIX}")
+      COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
+      LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
     
     add_executable(firm_update_rt test/linux/firm_update/firm_update.c)
     target_link_libraries(firm_update_rt soem_dynamic_rt)
     set_target_properties(firm_update_rt PROPERTIES       
-      COMPILE_FLAGS "${XENO_CFLAGS_POSIX} -DRTNET"
-      LINK_FLAGS "${XENO_LDFLAGS_POSIX}")
+      COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
+      LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
 
   endif()
 
