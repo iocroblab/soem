@@ -15,6 +15,11 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#ifdef RTNET
+#include <sys/mman.h>
+#include <sched.h>
+#endif
+
 #include "ethercattype.h"
 #include "nicdrv.h"
 #include "ethercatbase.h"
@@ -235,6 +240,12 @@ int main(int argc, char *argv[])
     int iret1;
    printf("SOEM (Simple Open EtherCAT Master)\nSimple test\n");
 
+  #ifdef RTNET
+      mlockall(MCL_CURRENT | MCL_FUTURE);
+      struct sched_param param = { .sched_priority = 1 };
+      pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
+   #endif
+                         
    if (argc > 1)
    {      
       /* create thread to handle slave error handling in OP */
