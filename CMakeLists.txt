@@ -303,12 +303,14 @@ if(ENABLE_RTNET)
   if(ENABLE_STATIC_LIB)
     add_library(soem_static_rt STATIC ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
 
-  set_target_properties(soem_static_rt PROPERTIES
-    OUTPUT_NAME soemrt 
-    COMPILE_FLAGS "${XENO_CFLAGS_RTDM}"
-    LINK_FLAGS "${CMAKE_LINKER_FLAGS_RTNET}"
-    INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-    CLEAN_DIRECT_OUTPUT 1)
+    set_target_properties(soem_static_rt PROPERTIES
+      OUTPUT_NAME soemrt 
+      COMPILE_FLAGS "${XENO_CFLAGS_RTDM}"
+      LINK_FLAGS "${CMAKE_LINKER_FLAGS_RTNET}"
+      INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+      CLEAN_DIRECT_OUTPUT 1)
+
+    install(TARGETS soem_static_rt DESTINATION lib)
   endif()
 
   # Create dynamic library (.so) with all basic SOEM functions
@@ -322,6 +324,9 @@ if(ENABLE_RTNET)
     LINK_FLAGS "${CMAKE_LINKER_FLAGS_RTNET}"
     INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
     CLEAN_DIRECT_OUTPUT 1)
+
+  # Defaul install
+  install(TARGETS soem_dynamic_rt DESTINATION lib)
 
   if(ENABLE_TESTS)
     add_executable(ebox_rt test/linux/ebox/ebox.c)
@@ -360,13 +365,13 @@ if(ENABLE_RTNET)
       COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
       LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
 
-    INSTALL(TARGETS ebox_rt eepromtool_rt red_test_rt simple_test_rt slaveinfo_rt firm_update_rt 
+    install(TARGETS ebox_rt eepromtool_rt red_test_rt simple_test_rt slaveinfo_rt firm_update_rt 
           DESTINATION bin)
   endif()
 
  if(ENABLE_TESTS_STATIC)
     set(CMAKE_EXE_LINKER_FLAGS_RTNET_STATIC "${CMAKE_EXE_LINKER_FLAGS_RTNET} ${CMAKE_LINKER_FLAGS_RTNET}")
-    message(STATUS "Linker RTNET POSIX flags for the examples (STATIC): "${CMAKE_EXE_LINKER_FLAGS_RTNET_STATIC})
+    message(STATUS "Linker RTNET POSIX flags for the examples (STATIC): " ${CMAKE_EXE_LINKER_FLAGS_RTNET_STATIC})
 
     add_executable(ebox_rt_s test/linux/ebox/ebox.c)
     target_link_libraries(ebox_rt_s soem_static_rt )
@@ -404,16 +409,9 @@ if(ENABLE_RTNET)
       COMPILE_FLAGS "${XENO_CFLAGS_POSIX}"
       LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET_STATIC}")
     
-    INSTALL(TARGETS ebox_rt_s eepromtool_rt_s red_test_rt_s simple_test_rt_s slaveinfo_rt_s firm_update_rt_s
+    install(TARGETS ebox_rt_s eepromtool_rt_s red_test_rt_s simple_test_rt_s slaveinfo_rt_s firm_update_rt_s
           DESTINATION bin)
   endif()
 
-  # Install files into system directories
-  if(ENABLE_TESTS)
-    
-  endif()
-  if(ENABLE_TESTS_STATIC)
-    
-  endif()
 endif()
 
