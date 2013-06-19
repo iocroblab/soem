@@ -42,7 +42,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
 include(CheckLibraryExists)
 CHECK_LIBRARY_EXISTS(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME)
 if(HAVE_CLOCK_GETTIME)
-  set(CMAKE_SHARED_LINKER_FLAGS "-lrt ${CMAKE_SHARED_LINKER_FLAGS}")
+  set(CMAKE_SHARED_EXTRA_LIBS "-lrt")
 endif()
 
 option(ENABLE_STATIC_LIB "Enable libsoem static." ON)
@@ -197,6 +197,7 @@ endif()
 
 # Create dynamic library (.so) with all basic SOEM functions
 add_library(soem_dynamic SHARED ${SOEM_SRC} ${OSHW_SRC} ${OSAL_SRC})
+target_link_libraries (soem_dynamic ${CMAKE_SHARED_EXTRA_LIBS})
 set_target_properties( soem_dynamic PROPERTIES
   DEFINE_SYMBOL "SOEM_DLL_EXPORT"
   SOVERSION "${SOEM_VERSION_MAJOR}.${SOEM_VERSION_MINOR}.${SOEM_VERSION_PATCH}"
