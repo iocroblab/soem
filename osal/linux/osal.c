@@ -23,6 +23,12 @@
 #include <unistd.h>
 #include <osal.h>
 
+#ifdef RTNET
+#include <native/timer.h>
+#include <native/task.h>
+#endif
+
+
 #define USECS_PER_SEC     1000000
 
 int osal_usleep (uint32 usec)
@@ -31,7 +37,11 @@ int osal_usleep (uint32 usec)
    ts.tv_sec = usec / USECS_PER_SEC;
    ts.tv_nsec = (usec % USECS_PER_SEC) * 1000;
    /* usleep is depricated, use nanosleep instead */
+#ifdef RTNET
+   return rt_task_sleep(usec * 1000);
+#else
    return nanosleep(&ts, NULL);
+#endif
 }
 
 int osal_gettimeofday(struct timeval *tv, struct timezone *tz)
@@ -43,10 +53,17 @@ int osal_gettimeofday(struct timeval *tv, struct timezone *tz)
     * Gettimeofday uses CLOCK_REALTIME that can get NTP timeadjust.
     * If this function preempts timeadjust and it uses vpage it live-locks.
     * Also when using XENOMAI, only clock_gettime is RT safe */
+#ifdef RTNET
+   RTIME rt = rt_timer_read();
+   tv->tv_sec = rt / 1e9;
+   tv->tv_usec = (rt % (int)1e9) / 1000;
+   return return_value;
+#else
    return_value = clock_gettime (CLOCK_MONOTONIC, &ts), 0;
    tv->tv_sec = ts.tv_sec;
    tv->tv_usec = ts.tv_nsec / 1000;
    return return_value;
+#endif
 }
 
 ec_timet osal_current_time (void)
