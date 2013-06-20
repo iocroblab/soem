@@ -92,7 +92,7 @@ if(ENABLE_RTNET)
     message(STATUS "Compiler RTNET Flags for the library: " ${XENO_CFLAGS_RTDM})
     message(STATUS "Linker RTNET flags for the library: " ${CMAKE_LINKER_FLAGS_RTNET})
     
-    message(STATUS "Compiler RTNET POSIX flags fotr the examples: " ${XENO_CFLAGS_POSIX})
+    message(STATUS "Compiler RTNET POSIX flags for the examples: " ${XENO_CFLAGS_POSIX})
     message(STATUS "Linker RTNET POSIX flags for the examples: " ${CMAKE_EXE_LINKER_FLAGS_RTNET})
 
   endif()
@@ -272,22 +272,28 @@ INSTALL(FILES ${SOEM_HDRS} ${OSAL_H} ${OSHW_HDRS} DESTINATION include/soem)
 if(ENABLE_TESTS_STATIC)
   set(CMAKE_EXE_LINKER_FLAGS_STATIC "${CMAKE_SHARED_LINKER_FLAGS}")
   add_executable(ebox_s test/linux/ebox/ebox.c)
-  target_link_libraries(ebox_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(ebox_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} 
+         ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_SHARED_EXTRA_LIBS} )
  
   add_executable(simple_test_s test/linux/simple_test/simple_test.c)
-  target_link_libraries(simple_test_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(simple_test_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} 
+         ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_SHARED_EXTRA_LIBS} )
  
   add_executable(eepromtool_s test/linux/eepromtool/eepromtool.c)
-  target_link_libraries(eepromtool_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(eepromtool_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} 
+         ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_SHARED_EXTRA_LIBS} )
  
   add_executable(slaveinfo_s test/linux/slaveinfo/slaveinfo.c)
-  target_link_libraries(slaveinfo_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(slaveinfo_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} 
+         ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_SHARED_EXTRA_LIBS} )
   
   add_executable(red_test_s test/linux/red_test/red_test.c)
-  target_link_libraries(red_test_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(red_test_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} 
+         ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_SHARED_EXTRA_LIBS} )
     
   add_executable(firm_update_s test/linux/firm_update/firm_update.c)
-  target_link_libraries(firm_update_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(firm_update_s soem_static ${CMAKE_EXE_LINKER_FLAGS_STATIC} 
+         ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_SHARED_EXTRA_LIBS} )
 
 # Installing
   INSTALL(TARGETS ebox_s eepromtool_s red_test_s simple_test_s slaveinfo_s firm_update_s DESTINATION bin)
