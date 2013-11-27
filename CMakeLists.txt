@@ -25,9 +25,9 @@ project(SOEM)
 # SOEM version. Defined here but not exported to header files, because it's already defined there 
 set( SOEM_VERSION 1.3.0 )
 string( REGEX MATCHALL "[0-9]+" SOEM_VERSIONS ${SOEM_VERSION} )
-LIST( GET SOEM_VERSIONS 0 SOEM_VERSION_MAJOR)
-LIST( GET SOEM_VERSIONS 1 SOEM_VERSION_MINOR)
-LIST( GET SOEM_VERSIONS 2 SOEM_VERSION_PATCH)
+list( GET SOEM_VERSIONS 0 SOEM_VERSION_MAJOR)
+list( GET SOEM_VERSIONS 1 SOEM_VERSION_MINOR)
+list( GET SOEM_VERSIONS 2 SOEM_VERSION_PATCH)
 
 # Some example programs use "libpthread"
 # http://stackoverflow.com/questions/1620918/cmake-and-libpthread
@@ -92,44 +92,9 @@ if(ENABLE_RTNET)
    message("Found xenomai rtdm libs : ${XENO_RTDM_LIBRARIES}" )
    message("--> with LDFLAGS : ${XENO_RTDM_LDFLAGS}" )
 
-#<XPREFIX>_FOUND          ... set to 1 if module(s) exist
-#   <XPREFIX>_LIBRARIES      ... only the libraries (w/o the '-l')
-#   <XPREFIX>_LIBRARY_DIRS   ... the paths of the libraries (w/o the '-L')
-#   <XPREFIX>_LDFLAGS        ... all required linker flags
-#   <XPREFIX>_LDFLAGS_OTHER  ... all other linker flags
-#   <XPREFIX>_INCLUDE_DIRS   ... the '-I' preprocessor flags (w/o the '-I')
-#   <XPREFIX>_CFLAGS         ... all required cflags
-#   <XPREFIX>_CFLAGS_OTHER   ... the other compiler flags
-#
-#   <XPREFIX> = <PREFIX>        for common case
-#   <XPREFIX> = <PREFIX>_STATIC for static linking
-#
-# There are some special variables whose prefix depends on the count
-# of given modules. When there is only one module, <PREFIX> stays
-# unchanged. When there are multiple modules, the prefix will be
-# changed to <PREFIX>_<MODNAME>:
-#   <XPREFIX>_VERSION    ... version of the module
-#   <XPREFIX>_PREFIX     ... prefix-directory of the module
-#   <XPREFIX>_INCLUDEDIR ... include-dir of the module
-#   <XPREFIX>_LIBDIR     ... lib-dir of the module
-
-
-#     find_program(XENOCONFIG xeno-config PATHS /usr/xenomai/bin /usr/bin/ /usr/local/bin)
-#     message(STATUS "Xenomai found at: " ${XENOCONFIG})
-#     #execute_process(COMMAND ${XENOCONFIG} --skin=native --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
-#     #execute_process(COMMAND ${XENOCONFIG} --skin=native --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
-# 
-#     execute_process(COMMAND ${XENOCONFIG} --skin=rtdm --cflags OUTPUT_VARIABLE XENO_CFLAGS_RTDM OUTPUT_STRIP_TRAILING_WHITESPACE)
-#     execute_process(COMMAND ${XENOCONFIG} --skin=rtdm --ldflags OUTPUT_VARIABLE XENO_LDFLAGS_RTDM OUTPUT_STRIP_TRAILING_WHITESPACE)
-#     
-#     # Needed for the examples
-#     execute_process(COMMAND ${XENOCONFIG} --skin=posix --cflags OUTPUT_VARIABLE XENO_CFLAGS_POSIX OUTPUT_STRIP_TRAILING_WHITESPACE)
-#     execute_process(COMMAND ${XENOCONFIG} --skin=posix --ldflags OUTPUT_VARIABLE XENO_LDFLAGS_POSIX OUTPUT_STRIP_TRAILING_WHITESPACE)
-    
 
 # setting some flags for the lib
 # ########################################################
-    #set(SOEM_CFLAGS_RTNET "-DRTNET ${XENO_RTDM_CFLAGS}")
 # Arranging some list ...
     string (REPLACE ";" " " SOEM_CFLAGS_RTNET "${XENO_RTDM_CFLAGS}")
     set(SOEM_CFLAGS_RTNET "-DRTNET ${SOEM_CFLAGS_RTNET}")
@@ -141,8 +106,8 @@ if(ENABLE_RTNET)
     message(STATUS "Linker RTNET flags for the library: " ${CMAKE_LINKER_FLAGS_RTNET})
     
 
-# setting some flags for the examples
-# ########################################################
+   # setting some flags for the examples
+    # ########################################################
     #set(SOEM_CFLAGS_POSIX "-DRTNET ${XENO_POSIX_CFLAGS}")
     #set(CMAKE_EXE_LINKER_FLAGS_RTNET "-lnative ${XENO_POSIX_LDFLAGS}")
     
@@ -153,8 +118,6 @@ if(ENABLE_RTNET)
 
   endif()
 endif()
-
-#set(CMAKE_BUILD_TYPE Release)
 
 ########################
 # Defining the sources
@@ -310,19 +273,22 @@ if(ENABLE_TESTS)
     target_link_libraries(firm_update soem_dynamic ${CMAKE_THREAD_LIBS_INIT})
   endif()
 # Installing
-  INSTALL(TARGETS ebox eepromtool red_test simple_test slaveinfo firm_update DESTINATION bin)
+  install(TARGETS ebox eepromtool red_test simple_test slaveinfo firm_update DESTINATION bin)
 
 endif(ENABLE_TESTS)
 
 
 if(ENABLE_STATIC_LIB)
-  INSTALL(TARGETS soem_static DESTINATION lib)
+  install(TARGETS soem_static DESTINATION lib)
 endif()
 
 # Defaul install
-INSTALL(TARGETS soem_dynamic DESTINATION lib)
+install(TARGETS soem_dynamic DESTINATION lib)
 # Just ones headers
-INSTALL(FILES ${SOEM_HDRS} ${OSAL_H} ${OSHW_HDRS} DESTINATION include/soem)
+install(FILES ${SOEM_HDRS} ${OSAL_H} ${OSHW_HDRS} DESTINATION include/soem)
+
+#pkg-config files
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/soem.pc DESTINATION lib/pkgconfig )
 
 # Static tests
 if(ENABLE_TESTS_STATIC)
@@ -352,7 +318,7 @@ if(ENABLE_TESTS_STATIC)
          ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_SHARED_EXTRA_LIBS} )
 
 # Installing
-  INSTALL(TARGETS ebox_s eepromtool_s red_test_s simple_test_s slaveinfo_s firm_update_s DESTINATION bin)
+  install(TARGETS ebox_s eepromtool_s red_test_s simple_test_s slaveinfo_s firm_update_s DESTINATION bin)
 
 endif()
 
@@ -391,6 +357,8 @@ if(ENABLE_RTNET)
 
   # Defaul install
   install(TARGETS soem_dynamic_rt DESTINATION lib)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/soemrt.pc DESTINATION lib/pkgconfig )
+
 
   if(ENABLE_TESTS)
     add_executable(ebox_rt test/linux/ebox/ebox.c)

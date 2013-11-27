@@ -6,6 +6,6 @@ includedir=${prefix}/include
 Name: SoemRT                          # human-readable name
 Description: Simple Open EtherCAT Master Library Realtime# human-readable description
 Version: @SOEM_VERSION@
-Libs: -L${libdir} -lsoem @CMAKE_SHARED_EXTRA_LIBS@
+Libs: -L${libdir} -lsoemrt @CMAKE_SHARED_EXTRA_LIBS@
 Libs.private: @CMAKE_LINKER_FLAGS_RTNET@ 
 Cflags: -I${includedir}  -I${includedir}/soem -DRTNET
