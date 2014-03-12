@@ -16,8 +16,7 @@
 
 #ifdef RTNET // with xenomai
 #include <sys/mman.h>
-#include <sched.h>
-#include <native/task.h>>
+#include <native/task.h>
 #endif
 
 #include "ethercattype.h"
@@ -633,10 +632,8 @@ int main(int argc, char *argv[])
    {      
    #ifdef RTNET
        mlockall(MCL_CURRENT | MCL_FUTURE);
-       RT_TASK master;
-//       struct sched_param param = { .sched_priority = 1 };
-//       pthread_setschedparam(pthread_self(), SCHED_FIFO, &param); 
-       rt_task_shadow (&master, "EcMaster",99, T_JOINABLE);
+       RT_TASK task;
+       rt_task_shadow (&task, "SlaveInfo",99, T_JOINABLE);
    #endif
       if ((argc > 2) && (strncmp(argv[2], "-sdo", sizeof("-sdo")) == 0)) printSDO = TRUE;
       if ((argc > 2) && (strncmp(argv[2], "-map", sizeof("-map")) == 0)) printMAP = TRUE;

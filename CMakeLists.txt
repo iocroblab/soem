@@ -370,7 +370,7 @@ if(ENABLE_RTNET)
     add_executable(simple_test_rt test/linux/simple_test/simple_test.c)
     target_link_libraries(simple_test_rt soem_dynamic_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET})
     set_target_properties(simple_test_rt PROPERTIES
-      COMPILE_FLAGS "${SOEM_CFLAGS_POSIX}")
+      COMPILE_FLAGS "${SOEM_CFLAGS_RTNET}")
       #LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
  
     add_executable(eepromtool_rt test/linux/eepromtool/eepromtool.c)
@@ -382,7 +382,7 @@ if(ENABLE_RTNET)
     add_executable(slaveinfo_rt test/linux/slaveinfo/slaveinfo.c)
     target_link_libraries(slaveinfo_rt soem_dynamic_rt ${CMAKE_EXE_LINKER_FLAGS_RTNET})
     set_target_properties(slaveinfo_rt PROPERTIES       
-      COMPILE_FLAGS "${SOEM_CFLAGS_POSIX}")
+      COMPILE_FLAGS "${SOEM_CFLAGS_RTNET}")
       #LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RTNET}")
 
     add_executable(red_test_rt test/linux/red_test/red_test.c)

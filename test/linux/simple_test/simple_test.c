@@ -17,7 +17,7 @@
 
 #ifdef RTNET
 #include <sys/mman.h>
-#include <sched.h>
+#include <native/task.h>
 #endif
 
 #include "ethercattype.h"
@@ -242,8 +242,8 @@ int main(int argc, char *argv[])
 
   #ifdef RTNET
       mlockall(MCL_CURRENT | MCL_FUTURE);
-      struct sched_param param = { .sched_priority = 1 };
-      pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
+      RT_TASK task;
+      rt_task_shadow(&task, "SimpleTest", 99, T_JOINABLE);
    #endif
                          
    if (argc > 1)
